@@ -1,7 +1,7 @@
 ﻿using System;
 using Kuiper.Systems;
 
-namespace edge_of_kuiper
+namespace Kuiper
 {
     class Program
     {
