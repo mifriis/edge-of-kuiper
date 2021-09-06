@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuiper-game", "kuiper-game\kuiper-game.csproj", "{9DA57EB8-65E9-46FA-843B-97449C2F2C54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuiper-tests", "kuiper-tests\kuiper-tests.csproj", "{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Debug|x64.Build.0 = Debug|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Debug|x86.Build.0 = Debug|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Release|x64.ActiveCfg = Release|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Release|x64.Build.0 = Release|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Release|x86.ActiveCfg = Release|Any CPU
+		{9DA57EB8-65E9-46FA-843B-97449C2F2C54}.Release|x86.Build.0 = Release|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Debug|x64.Build.0 = Debug|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Debug|x86.Build.0 = Debug|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Release|x64.ActiveCfg = Release|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Release|x64.Build.0 = Release|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Release|x86.ActiveCfg = Release|Any CPU
+		{DCAFFDA3-7083-4B2E-93E3-7EC0EBF4A80B}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
