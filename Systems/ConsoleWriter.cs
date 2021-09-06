@@ -6,7 +6,12 @@ namespace Kuiper.Systems
     {   
         public static void Write(string input)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
+            Write(input, ConsoleColor.Green);
+        }
+
+        public static void Write(string input, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
             Console.WriteLine(input);
             Console.ResetColor();
         }
