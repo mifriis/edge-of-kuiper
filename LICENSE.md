@@ -1,4 +1,4 @@
-# Edge of Kuiper (c) by Michael Nissen Thorup Friis
+Edge of Kuiper (c) by Michael Nissen Thorup Friis
 
 Edge of Kuiper is licensed under a
 **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License**
