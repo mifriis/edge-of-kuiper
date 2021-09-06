@@ -43,7 +43,7 @@ namespace Kuiper.Systems
         {
             _currentCaptain.LastSeen = DateTime.Now;
             SaveLoad.SaveGame(_currentCaptain);
-            ConsoleWriter.Write($"{Environment.NewLine}Game saved successfully.");
+            ConsoleWriter.Write($"{Environment.NewLine}Game saved successfully.", ConsoleColor.Red);
         }
 
         public void SetupCaptain()
