@@ -1,15 +1,13 @@
 ﻿using System;
 using Kuiper.Systems;
 
-namespace edge_of_kuiper
+namespace Kuiper
 {
     class Program
     {
         static void Main(string[] args)
         {
             var console = new CaptainsConsole();
-            Console.ReadKey(true);
-            Console.WriteLine("Press ESC to stop");
             do 
             {
                 while (! Console.KeyAvailable) 
