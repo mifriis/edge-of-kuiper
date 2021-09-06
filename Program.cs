@@ -8,8 +8,6 @@ namespace edge_of_kuiper
         static void Main(string[] args)
         {
             var console = new CaptainsConsole();
-            Console.ReadKey(true);
-            Console.WriteLine("Press ESC to stop");
             do 
             {
                 while (! Console.KeyAvailable) 
