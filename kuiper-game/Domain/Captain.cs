@@ -23,6 +23,8 @@ namespace Kuiper.Domain
         public DateTime GameLastSeen { get; set; }
         public DateTime RealLastSeen { get; set; }
 
+        public Ship Ship { get; set;}
+
         public void MarkLastSeen()
         {
             GameLastSeen = TimeDilation.CalculateTime(GameLastSeen,RealLastSeen,DateTime.Now);
