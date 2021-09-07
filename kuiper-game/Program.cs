@@ -1,22 +1,22 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Kuiper.Systems;
+using Lamar.Microsoft.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Kuiper
 {
     class Program
     {
-        static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var console = new CaptainsConsole();
-            do 
-            {
-                while (! Console.KeyAvailable) 
-                {
-                    console.ConsoleMapper(Console.ReadLine());                          
-                }       
-            } 
-            while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-            Console.ReadLine();
+            await CreateHostBuilder(args).Build().RunAsync();
         }
+
+        static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseLamar(new MainRegistry())
+                .UseConsoleLifetime();
+        
     }
 }
