@@ -41,7 +41,7 @@ namespace Kuiper.Systems
 
         public void Save()
         {
-            _currentCaptain.LastSeen = DateTime.Now;
+            _currentCaptain.MarkLastSeen();
             SaveLoad.SaveGame(_currentCaptain);
             ConsoleWriter.Write($"{Environment.NewLine}Game saved successfully.", ConsoleColor.Red);
         }
@@ -50,17 +50,15 @@ namespace Kuiper.Systems
         {
             ConsoleWriter.Write("Greetings captain, what is your name?");
             var name = Console.ReadLine();
-            var currentDate = DateTime.Now;
             var saves = SaveLoad.LookForSaves(name);
             if(saves.Count() > 0)
             {
                 _currentCaptain = SaveLoad.Load(saves.FirstOrDefault());
-                ConsoleWriter.Write($"{Environment.NewLine}Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastSeen}!");    
+                ConsoleWriter.Write($"{Environment.NewLine}Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.GameLastSeen}!");    
                 return;
             }
-
-            ConsoleWriter.Write($"{Environment.NewLine}Welcome, Captain {name}, you have logged in on {currentDate:d} at {currentDate:t}!");
-            _currentCaptain = new Captain(name);
+            _currentCaptain = new Captain(name, TimeDilation.GameStartDate, DateTime.Now);
+            ConsoleWriter.Write($"{Environment.NewLine}Welcome, Captain {name}, you have logged in on {_currentCaptain.GameLastSeen}");
         }
     }
 }

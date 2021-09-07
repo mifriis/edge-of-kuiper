@@ -20,4 +20,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\kuiper-game\kuiper-game.csproj" />
+  </ItemGroup>
+
 </Project>
