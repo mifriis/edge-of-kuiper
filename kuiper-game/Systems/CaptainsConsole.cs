@@ -37,6 +37,9 @@ namespace Kuiper.Systems
                 case "ship location":
                     Ship("location");
                     break;
+                case "ship set course":
+                    Ship("set course");
+                    break;
                 default:
                     ConsoleWriter.Write($"{Environment.NewLine}{input} not recognized. Try 'help' for list of commands");
                     break;
@@ -56,10 +59,31 @@ namespace Kuiper.Systems
                 case "description":
                     ConsoleWriter.Write(_currentCaptain.Ship.Description);
                     break;
+                case "set course":
+                    SetCourse();
+                    break;
                 default:
                     ConsoleWriter.Write($"{Environment.NewLine}{subChoice} not recognized. Try ship location, ship stats or ship description");
                     break;
             }
+        }
+
+        private void SetCourse()
+        {
+            ConsoleWriter.Write($"What location should the ship set a course for?");
+            foreach (var location in Locations.Destinations)
+            {
+                ConsoleWriter.Write($"* {location.Name}");
+            }
+            var input = Console.ReadLine();
+            var target = Locations.Destinations.First(x => x.Name == input);
+            if(target != null)
+            {
+                 var courseText = _currentCaptain.Ship.SetCourse(target);
+                 ConsoleWriter.Write(courseText);
+                 return;
+            }
+            ConsoleWriter.Write($"No location found with the name {target}");
         }
 
         public void Help()
@@ -93,8 +117,9 @@ namespace Kuiper.Systems
                 return;
             }
             _currentCaptain = new Captain(name, TimeDilation.GameStartDate, DateTime.Now);
-            _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
-            _currentCaptain.Ship.Location = Locations.Earth;
+            _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000, _currentCaptain);
+            _currentCaptain.Ship.CurrentLocation = Locations.Earth;
+            _currentCaptain.Ship.Status = ShipStatus.InOrbit;
             ConsoleWriter.Write($"{Environment.NewLine}Welcome, Captain {name}, you have logged in on {_currentCaptain.GameLastSeen}");
         }
     }
