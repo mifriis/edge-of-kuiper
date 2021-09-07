@@ -10,7 +10,7 @@ namespace Kuiper.Systems
 {
     public static class SaveLoad
     {
-        private static string savePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/saves";
+        private static string savePath = Directory.CreateDirectory(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "saves")).FullName;
 
         public static void SaveGame(Captain captain) 
         {
