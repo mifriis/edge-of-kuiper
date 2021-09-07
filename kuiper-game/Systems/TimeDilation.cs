@@ -1,7 +1,4 @@
 using System;
-using System.Linq;
-using Kuiper.Domain;
-using Newtonsoft.Json;
 
 namespace Kuiper.Systems
 {
@@ -17,8 +14,6 @@ namespace Kuiper.Systems
             var newGameDate = gameLastPlayerDate.Add(acceleratedTimeSpan);
             
             return newGameDate;
-        }
-
-        
+        }       
     }
 }

@@ -4,8 +4,10 @@ namespace Kuiper.Domain
 {
     public static class Locations
     {
+        
+        public static Location Luna = new Location("Luna", 384400, new List<Location>());
         public static Location Earth = new Location("Earth", 150740000, new List<Location>() { Luna });
-        public static Location Luna = new Location("Luna", 384400, null);
+        public static IEnumerable<Location> Destinations = new List<Location>() { Earth, Luna};
     }
     public class Location
     {
@@ -13,7 +15,7 @@ namespace Kuiper.Domain
         {
             Name = name;
             Sattelites = sattelites;
-            orbitalRadius = OrbitalRadius;
+            OrbitalRadius = orbitalRadius;
         }
 
         public string Name { get; }
