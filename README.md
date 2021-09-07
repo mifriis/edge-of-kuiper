@@ -6,6 +6,9 @@ This game puts you into the captains chair of your very own spaceship in the Sol
 * Invest
 * Take missions
 * Combat
+* Interact with random events
+* Hire crew
+* Outfit your ship
 
 It's an async realtime game experience where time since your last visit is accelerated and happenings are generated.
 
