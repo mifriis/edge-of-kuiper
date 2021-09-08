@@ -8,17 +8,17 @@ namespace Kuiper.Domain
 
     public static class ShipStatusExtensions
     {
-    public static string ToFriendlyString(this ShipStatus status)
-    {
-        switch(status)
+        public static string ToFriendlyString(this ShipStatus status)
         {
-        case ShipStatus.Enroute:
-            return "The ship is enroute to it's destination";
-        case ShipStatus.InOrbit:
-            return "The ship is in orbit above it's location";
-        default:
-            return "Get your damn dirty hands off me you FILTHY APE!";
+            switch(status)
+            {
+            case ShipStatus.Enroute:
+                return "enroute to";
+            case ShipStatus.InOrbit:
+                return "in orbit above";
+            default:
+                return "Get your damn dirty hands off me you FILTHY APE!";
+            }
         }
-    }
     }
 }
