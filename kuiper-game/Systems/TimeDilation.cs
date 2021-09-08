@@ -14,6 +14,6 @@ namespace Kuiper.Systems
             var newGameDate = gameLastPlayerDate.Add(acceleratedTimeSpan);
             
             return newGameDate;
-        }       
+        }
     }
 }

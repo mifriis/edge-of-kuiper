@@ -41,6 +41,9 @@ namespace Kuiper.Systems
                 case "ship set course":
                     Ship("set course");
                     break;
+                case "status":
+                    _currentCaptain.Ship.StatusReport();
+                    break;
                 default:
                     ConsoleWriter.Write($"{input} not recognized. Try 'help' for list of commands");
                     break;
@@ -95,14 +98,13 @@ namespace Kuiper.Systems
 
         public void Save()
         {
-            _currentCaptain.MarkLastSeen();
             SaveLoad.SaveGame(_currentCaptain);
             ConsoleWriter.Write($"Game saved successfully.", ConsoleColor.Red);
         }
 
         public void CurrentTime()
         {
-            var currentGameTime = TimeDilation.CalculateTime(_currentCaptain.GameLastSeen, _currentCaptain.RealLastSeen, DateTime.Now);
+            var currentGameTime = _currentCaptain.StartTime.GetCurrentInGameTime();
             ConsoleWriter.Write($"The time is currently: {currentGameTime}");
         }
     }
