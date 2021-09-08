@@ -8,14 +8,19 @@ namespace Kuiper
 {
     public class MainLoopWorker : IHostedService
     {
+        private readonly ICaptainsConsole _console;
+
+        public MainLoopWorker(ICaptainsConsole console)
+        {
+            _console = console;
+        }
         public Task StartAsync(CancellationToken cancellationToken)
         {            
-            var console = new CaptainsConsole();
             do 
             {
                 while (! Console.KeyAvailable) 
                 {
-                    console.ConsoleMapper(Console.ReadLine());                          
+                    _console.ConsoleMapper(Console.ReadLine());                          
                 }       
             } 
             while (Console.ReadKey(true).Key != ConsoleKey.Escape);
