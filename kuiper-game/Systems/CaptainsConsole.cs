@@ -1,22 +1,21 @@
 using System;
 using System.Linq;
 using Kuiper.Domain;
-using Newtonsoft.Json;
+using Kuiper.Services;
 
 namespace Kuiper.Systems
 {
-    public class CaptainsConsole
+    public class CaptainsConsole : ICaptainsConsole
     {
-        Captain _currentCaptain;
-        public CaptainsConsole()
-        {
-            if(_currentCaptain == null) 
-            {
-                //attempt to load captain
-                SetupCaptain();
-            }
-        }
+        private readonly ICaptainService _captainService;
+        private readonly Captain _currentCaptain;
 
+        public CaptainsConsole(ICaptainService captainService)
+        {
+            _captainService = captainService;
+
+            _currentCaptain = _captainService.SetupCaptain();
+        }
         public void ConsoleMapper(string input)
         {
             switch (input)
@@ -27,15 +26,70 @@ namespace Kuiper.Systems
                 case "save":
                     Save();
                     break;
+                case "time":
+                    CurrentTime();
+                    break;
+                case "ship description":
+                    Ship("description");
+                    break;
+                case "ship stats":
+                    Ship("stats");
+                    break;
+                case "ship location":
+                    Ship("location");
+                    break;
+                case "ship set course":
+                    Ship("set course");
+                    break;
                 default:
-                    ConsoleWriter.Write($"{Environment.NewLine}{input} not recognized. Try 'help' for list of commands");
+                    ConsoleWriter.Write($"{input} not recognized. Try 'help' for list of commands");
                     break;
             }
         }
 
+        private void Ship(string subChoice)
+        {
+            switch (subChoice)
+            {
+                case "location":
+                    ConsoleWriter.Write(_currentCaptain.Ship.LocationDescription);
+                    break;
+                case "stats":
+                    ConsoleWriter.Write(_currentCaptain.Ship.ShipStatsDescription);
+                    break;
+                case "description":
+                    ConsoleWriter.Write(_currentCaptain.Ship.Description);
+                    break;
+                case "set course":
+                    SetCourse();
+                    break;
+                default:
+                    ConsoleWriter.Write($"{subChoice} not recognized. Try ship location, ship stats or ship description");
+                    break;
+            }
+        }
+
+        private void SetCourse()
+        {
+            ConsoleWriter.Write($"What location should the ship set a course for?");
+            foreach (var location in Locations.Destinations)
+            {
+                ConsoleWriter.Write($"* {location.Name}");
+            }
+            var input = Console.ReadLine();
+            var target = Locations.Destinations.First(x => x.Name == input);
+            if(target != null)
+            {
+                 var courseText = _captainService.SetCourse(target);
+                 ConsoleWriter.Write(courseText);
+                 return;
+            }
+            ConsoleWriter.Write($"No location found with the name {target}");
+        }
+
         public void Help()
         {
-            ConsoleWriter.Write($"{Environment.NewLine}No help availiable.");
+            ConsoleWriter.Write($"No help availiable.");
 
         }
 
@@ -43,22 +97,13 @@ namespace Kuiper.Systems
         {
             _currentCaptain.MarkLastSeen();
             SaveLoad.SaveGame(_currentCaptain);
-            ConsoleWriter.Write($"{Environment.NewLine}Game saved successfully.", ConsoleColor.Red);
+            ConsoleWriter.Write($"Game saved successfully.", ConsoleColor.Red);
         }
 
-        public void SetupCaptain()
+        public void CurrentTime()
         {
-            ConsoleWriter.Write("Greetings captain, what is your name?");
-            var name = Console.ReadLine();
-            var saves = SaveLoad.LookForSaves(name);
-            if(saves.Count() > 0)
-            {
-                _currentCaptain = SaveLoad.Load(saves.FirstOrDefault());
-                ConsoleWriter.Write($"{Environment.NewLine}Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.GameLastSeen}!");    
-                return;
-            }
-            _currentCaptain = new Captain(name, TimeDilation.GameStartDate, DateTime.Now);
-            ConsoleWriter.Write($"{Environment.NewLine}Welcome, Captain {name}, you have logged in on {_currentCaptain.GameLastSeen}");
+            var currentGameTime = TimeDilation.CalculateTime(_currentCaptain.GameLastSeen, _currentCaptain.RealLastSeen, DateTime.Now);
+            ConsoleWriter.Write($"The time is currently: {currentGameTime}");
         }
     }
 }

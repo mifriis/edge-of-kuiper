@@ -1,3 +1,5 @@
+using Kuiper.Services;
+using Kuiper.Systems;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +10,8 @@ namespace Kuiper
         public MainRegistry()
         {
             this.AddHostedService<MainLoopWorker>();
+            this.AddSingleton<ICaptainService, CaptainService>();
+            this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
         }
     }
 }
