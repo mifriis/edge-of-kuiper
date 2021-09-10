@@ -12,11 +12,12 @@ namespace Kuiper.Domain
             Name = name;
         }
 
-        public Captain(string name, DateTime newCaptainGameTime, DateTime newCaptainRealTime)
+        public Captain(string name, DateTime newCaptainGameTime, DateTime newCaptainRealTime, Account account)
         {
             Name = name;
             GameLastSeen = newCaptainGameTime;
             RealLastSeen = newCaptainRealTime;
+            Account = account;
         }
 
         public string Name { get; }
@@ -24,12 +25,12 @@ namespace Kuiper.Domain
         public DateTime RealLastSeen { get; set; }
 
         public Ship Ship { get; set;}
+        public Account Account { get; }
 
         public void MarkLastSeen()
         {
             GameLastSeen = TimeDilation.CalculateTime(GameLastSeen,RealLastSeen,DateTime.Now);
             RealLastSeen = DateTime.Now;
         }
-
     }
 }
