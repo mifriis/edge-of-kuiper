@@ -1,5 +1,25 @@
 # Edge of Kuiper
 
+```
+ ┌────────────────────────────────────┐
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │   Combat  │     │  Missions │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │  Mining   │     │ Exploring │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │  Trading  │     │ Investing │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │           Edge-of-Kuiper           │
+ │      A Real-Time SpaceSim RPG      │
+ └────────────────────────────────────┘
+```
+
 This game puts you into the captains chair of your very own spaceship in the Sol system. Your purpose is to make money and retire.
 
 * Trade
