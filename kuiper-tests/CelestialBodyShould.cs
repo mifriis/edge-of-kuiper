@@ -166,7 +166,7 @@ namespace Kuiper.Tests.Unit.Domain
             var earth = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
 
             //Act
-            var results = earth.Position;
+            var results = earth.GetPosition(new TimeSpan(0));
 
             Assert.Equal(startingPoint, results);
 

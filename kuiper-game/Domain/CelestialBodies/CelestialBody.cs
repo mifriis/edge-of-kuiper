@@ -10,7 +10,7 @@ namespace kuiper.Domain.CelestialBodies
         public float OrbitRadius => orbitRadius;
         public float Velocity => velocity;
         public float OriginDegrees => originDegrees;
-        public PointF GetPosition(DateTime currentGameTime)
+        public PointF GetPosition(TimeSpan gametimePassed)
         {
             throw new NotImplementedException();
         }
