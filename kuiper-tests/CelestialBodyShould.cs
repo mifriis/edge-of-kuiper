@@ -2,7 +2,7 @@ using Xunit;
 using Kuiper.Systems;
 using kuiper.Domain.CelestialBodies;
 using System;
-using System.Drawing;
+using System.Numerics;
 
 namespace Kuiper.Tests.Unit.Domain
 {
@@ -25,7 +25,7 @@ namespace Kuiper.Tests.Unit.Domain
         {
             //Arrange
             var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var planet = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
+            var planet = CelestialBody.Create("Earth", 1.0, 29.8, 170, star, CelestialBodyType.Planet);
 
             //Act
 
@@ -161,15 +161,15 @@ namespace Kuiper.Tests.Unit.Domain
         public void ReturnItsInitialPositionInSpace() 
         {
             // Arrange
-            var startingPoint = new PointF(1f, 1f);
+            var startingPoint = new Vector2(-0.9848077f, 0.17364818f);
             var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
             var earth = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
 
             //Act
             var results = earth.GetPosition(new TimeSpan(0));
 
+            // Assert
             Assert.Equal(startingPoint, results);
-
         }
     }
 }

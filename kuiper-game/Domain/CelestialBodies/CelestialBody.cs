@@ -1,31 +1,79 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Numerics;
 
 namespace kuiper.Domain.CelestialBodies
 {
     public abstract class CelestialBody
     {
-        public string Name => name;
-        public float OrbitRadius => orbitRadius;
-        public float Velocity => velocity;
-        public float OriginDegrees => originDegrees;
-        public PointF GetPosition(TimeSpan gametimePassed)
+        public string Name
         {
-            throw new NotImplementedException();
+            get
+            {
+                return name;
+            }
         }
 
-        public CelestialBody Parent => parent;
-        public IEnumerable<CelestialBody> Satellites => satellites;
+        public double OrbitRadius
+        {
+            get
+            {
+                return orbitRadius;
+            }
+        }
+
+        public double Velocity
+        {
+            get
+            {
+                return velocity;
+            }
+        }
+
+        public double OriginDegrees
+        {
+            get
+            {
+                return originDegrees;
+            }
+        }
+
+        public Vector2 GetPosition(TimeSpan gametimePassed)
+        {
+            if (parent == null) return new Vector2(0,0);
+
+            var currentDegrees = originDegrees; // Apply time to this.
+            var positionInRadians = currentDegrees * (Math.PI/180);
+
+            var x = (float)(parent.GetPosition(gametimePassed).X + Math.Cos(positionInRadians) * OrbitRadius);
+            var y = (float)(parent.GetPosition(gametimePassed).Y + Math.Sin(positionInRadians) * OrbitRadius);
+            return  new Vector2(x, y);
+        }
+
+        public CelestialBody Parent
+        {
+            get
+            {
+                return parent;
+            }
+        }
+
+        public IEnumerable<CelestialBody> Satellites
+        {
+            get
+            {
+                return satellites;
+            }
+        }
 
         private string name;
-        private float orbitRadius;
-        private float velocity;
-        private float originDegrees;
+        private double orbitRadius;
+        private double velocity;
+        private double originDegrees;
         private CelestialBody parent;
         private List<CelestialBody> satellites;
 
-        public static CelestialBody Create(string name, float orbitRadius, float velocity, float originDegrees, CelestialBody parent, CelestialBodyType bodyType)
+        public static CelestialBody Create(string name, double orbitRadius, double velocity, double originDegrees, CelestialBody parent, CelestialBodyType bodyType)
         {
             CelestialBody body = null;
 
@@ -60,8 +108,8 @@ namespace kuiper.Domain.CelestialBodies
             satellites.Add(satellite);
         }
 
-        private static CelestialBody create<T>(string name, float orbitRadius, float velocity,
-            float originDegrees, CelestialBody parent) where T : CelestialBody, new()
+        private static CelestialBody create<T>(string name, double orbitRadius, double velocity,
+            double originDegrees, CelestialBody parent) where T : CelestialBody, new()
         {
             var body = new T()
             {
