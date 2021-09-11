@@ -171,5 +171,21 @@ namespace Kuiper.Tests.Unit.Domain
             // Assert
             Assert.Equal(startingPoint, results);
         }
+
+        [Fact]
+        public void ReturnItsPositionInSpaceAtAGivenTime() 
+        {
+            // Arrange
+            var currentPoint = new Vector2(-0.9917729f, 0.14527623f);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var earth = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
+            var moon = CelestialBody.Create("Luna", 0.00257356604f, 1.022f, 125, earth, CelestialBodyType.Moon);
+
+            //Act
+            var results = moon.GetPosition(new TimeSpan(42,0,0));
+
+            // Assert
+            Assert.Equal(currentPoint, results);
+        }
     }
 }

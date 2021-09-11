@@ -6,6 +6,7 @@ namespace kuiper.Domain.CelestialBodies
 {
     public abstract class CelestialBody
     {
+        private const int AUINKM =  149597871; // 1 AU in KM. Maybe this belongs somewhere else?
         public string Name
         {
             get
@@ -41,13 +42,15 @@ namespace kuiper.Domain.CelestialBodies
         public Vector2 GetPosition(TimeSpan gametimePassed)
         {
             if (parent == null) return new Vector2(0,0);
+            var velocityInRadiansPerSecond = 
+                velocity / (OrbitRadius * AUINKM);
+            var positionInRadians = originDegrees * (Math.PI/180);
+            positionInRadians += (velocityInRadiansPerSecond * gametimePassed.TotalSeconds);
 
-            var currentDegrees = originDegrees; // Apply time to this.
-            var positionInRadians = currentDegrees * (Math.PI/180);
+            var x = parent.GetPosition(gametimePassed).X + Math.Cos(positionInRadians) * OrbitRadius;
+            var y = parent.GetPosition(gametimePassed).Y + Math.Sin(positionInRadians) * OrbitRadius;
 
-            var x = (float)(parent.GetPosition(gametimePassed).X + Math.Cos(positionInRadians) * OrbitRadius);
-            var y = (float)(parent.GetPosition(gametimePassed).Y + Math.Sin(positionInRadians) * OrbitRadius);
-            return  new Vector2(x, y);
+            return new Vector2((float)x, (float)y);
         }
 
         public CelestialBody Parent
