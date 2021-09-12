@@ -92,7 +92,7 @@ namespace Kuiper.Systems
             var target = Locations.Destinations.First(x => x.Name == input);
             if(target != null)
             {
-                 var courseText = _captainService.SetCourse(target);
+                 var courseText = CaptainLocator.Captain.Ship.SetCourse(target);
                  ConsoleWriter.Write(courseText);
                  return;
             }

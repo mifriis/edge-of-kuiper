@@ -36,41 +36,6 @@ namespace Kuiper.Services
             }
             return _currentCaptain;
         }
-
-        public string SetCourse(Location targetLocation)
-        {
-            var ship = _currentCaptain.Ship;
-            if(targetLocation == ship.CurrentLocation)
-            {
-                return $"{ship.Name} is already in orbit above {ship.CurrentLocation.Name}";
-            }
-            if(targetLocation == ship.TargetLocation)
-            {
-                return $"{ship.Name} is already enroute to {ship.TargetLocation.Name}";
-            }
-            ship.Status = ShipStatus.Enroute;
-            ship.TargetLocation = targetLocation;
-            long distance = 0;
-            if(targetLocation.Sattelites.Contains(ship.CurrentLocation))
-            {
-                //Travel from a moon to parent
-                distance = ship.CurrentLocation.OrbitalRadius;
-                
-            }
-            if(ship.CurrentLocation.Sattelites.Contains(targetLocation))
-            {
-                //Travel from a parent to one of it's moons
-                distance = targetLocation.OrbitalRadius;
-            }
-            if(distance == 0)
-            {
-                throw new NotImplementedException("Don't go to Mars just yet");
-            }
-            var hoursToTargetLocation = TimeSpan.FromHours(distance/ship.Speed);
-            ship.ArrivalTime = GameTime.Now().Add(hoursToTargetLocation);
-            return $"{ship.Name} will arrive in orbit above {targetLocation.Name} on {ship.ArrivalTime}";
-        }
-
         public Captain GetCaptain()
         {
             if(_currentCaptain != null)

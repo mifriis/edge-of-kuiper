@@ -51,6 +51,42 @@ namespace Kuiper.Domain
             }
         }
 
+        public string SetCourse(Location target)
+        {
+            if(target == CurrentLocation)
+            {
+                return $"{Name} is already in orbit above {CurrentLocation.Name}";
+            }
+            if(target == TargetLocation)
+            {
+                return $"{Name} is already enroute to {TargetLocation.Name}";
+            }
+            Status = ShipStatus.Enroute;
+            TargetLocation = target;
+            long distance = 0;
+
+            if(target.Sattelites.Contains(CurrentLocation))
+            {
+                //Travel from a moon to parent
+                distance = CurrentLocation.OrbitalRadius;
+                
+            }
+            if(CurrentLocation.Sattelites.Contains(target))
+            {
+                //Travel from a parent to one of it's moons
+                distance = target.OrbitalRadius;
+            }
+            if(distance == 0)
+            {
+                throw new NotImplementedException("Don't go to Mars just yet");
+            }
+            var hoursToTargetLocation = TimeSpan.FromHours(distance/Speed);
+            ArrivalTime = GameTime.Now() + hoursToTargetLocation;
+            var evt = new CourseSet(GameTime.Now(), hoursToTargetLocation);
+            Enqueue(evt);
+            return evt.StartEvent();
+        }
+
         public string ScanForAsteroids()
         {
             if(Status == ShipStatus.InOrbit)
@@ -70,7 +106,7 @@ namespace Kuiper.Domain
 
         public void StatusReport() 
         {
-            foreach (var evt in EventQueue.Where(x => x.StartTime.Add(x.TaskDuration) < GameTime.Now()))
+            foreach (var evt in EventQueue.ToList().Where(x => x.StartTime.Add(x.TaskDuration) < GameTime.Now()))
             {
                 ConsoleWriter.Write(HandleEvent((dynamic)evt));
             }
@@ -78,6 +114,15 @@ namespace Kuiper.Domain
 
         private string HandleEvent(MiningScan evt)
         {
+            EventQueue.Remove(evt);
+            return evt.EndEvent();
+        }
+
+        private string HandleEvent(CourseSet evt)
+        {
+            CurrentLocation = TargetLocation;
+            TargetLocation = null;
+            Status = ShipStatus.InOrbit;
             EventQueue.Remove(evt);
             return evt.EndEvent();
         }

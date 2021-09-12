@@ -8,7 +8,7 @@ namespace Kuiper.Services
     {
         public int Next(int start, int end)
         {
-            var seed = new Random().Next(start,end);
+            var seed = new System.Random().Next(start,end);
             return seed;
         }
     }
