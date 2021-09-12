@@ -8,10 +8,12 @@ using Newtonsoft.Json;
 class MiningScan : IShipEvent
 {
     private const int chance = 80;
-    public MiningScan(DateTime startTime)
+    public MiningScan(DateTime startTime, IDiceRoller diceRoller, IRandom random)
     { 
         StartTime = startTime;
         TaskDuration = TimeSpan.FromHours(7);
+        _diceRoller = diceRoller;
+        _random = random;
     }
 
     public string Name => "Asteroid Scan";
@@ -22,6 +24,9 @@ class MiningScan : IShipEvent
 
     public TimeSpan TaskDuration {get;}
 
+    private readonly IDiceRoller _diceRoller;
+    private readonly IRandom _random;
+
     public string StartEvent()
     {
         return $"{CaptainLocator.Captain.Ship.Name} will finish scanning at {GameTime.Now().Add(TaskDuration)} ";
@@ -29,10 +34,9 @@ class MiningScan : IShipEvent
 
     public string EndEvent()
     {
-        var seed = new Random().Next(1,100);
-        if(chance > seed)
+        if(_diceRoller.D100(chance,0))
         {
-            var distance = new Random().Next(50000, 1500000);
+            var distance = _random.Next(50000, 1500000);
             var asteroid = new Location("Scanned Asteroid",distance,new List<Location>(), SatteliteType.Asteroid);
             CaptainLocator.Captain.Ship.CurrentLocation.Sattelites.Add(asteroid);
             Locations.Destinations.Add(asteroid);
