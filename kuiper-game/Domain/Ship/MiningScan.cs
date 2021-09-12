@@ -27,7 +27,7 @@ class MiningScan : IShipEvent
 
     public string GetPrompt()
     {
-        return $"{Ship.Name} will finish scanning at {GameTime.Now().Add(TaskDuration)}";
+        return $"{Ship.Name} will finish scanning at {GameTime.Now().Add(TaskDuration)} ";
 
     }
 }
