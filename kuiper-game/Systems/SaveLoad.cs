@@ -12,12 +12,12 @@ namespace Kuiper.Systems
     {
         private static string savePath = Directory.CreateDirectory(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "saves")).FullName;
         private static JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, PreserveReferencesHandling = PreserveReferencesHandling.Objects};
-        public static void SaveGame(Captain captain) 
+        public static void SaveGame(SolarSystem system) 
         {
-            var captainJson = JsonConvert.SerializeObject(captain, settings);
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(savePath, captain.Name +".save")))
+            var json = JsonConvert.SerializeObject(system, settings);
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(savePath, system.Captain.Name +".save")))
             {
-                    outputFile.WriteLine(captainJson);
+                    outputFile.WriteLine(json);
             }
         }
 
@@ -33,11 +33,11 @@ namespace Kuiper.Systems
             return files; 
         }
 
-        public static Captain Load(string saveGame)
+        public static SolarSystem Load(string saveGame)
         {
             var save = System.IO.File.ReadAllText(Path.Combine(savePath,saveGame));
-            var captain = JsonConvert.DeserializeObject<Captain>(save, settings);
-            return captain;
+            var system = JsonConvert.DeserializeObject<SolarSystem>(save, settings);
+            return system;
         }
     }
 }

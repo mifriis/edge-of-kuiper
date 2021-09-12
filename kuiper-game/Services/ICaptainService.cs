@@ -2,9 +2,9 @@ using Kuiper.Domain;
 
 namespace Kuiper.Services
 {
-    public interface ICaptainService
+    public interface ISolarSystemService
     {
-        Captain GetCaptain();
-        Captain SetupCaptain();
+        SolarSystem GetSolarSystem();
+        SolarSystem SetupGame();
     }
 }

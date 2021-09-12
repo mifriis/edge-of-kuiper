@@ -10,7 +10,7 @@ namespace Kuiper
         public MainRegistry()
         {
             this.AddHostedService<MainLoopWorker>();
-            this.AddSingleton<ICaptainService, CaptainService>();
+            this.AddSingleton<ISolarSystemService, SolarSystemService>();
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
         }
     }

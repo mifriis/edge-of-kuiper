@@ -7,13 +7,13 @@ namespace Kuiper.Systems
 {
     public class CaptainsConsole : ICaptainsConsole
     {
-        private readonly ICaptainService _captainService;
+        private readonly ISolarSystemService _service;
 
-        public CaptainsConsole(ICaptainService captainService)
+        public CaptainsConsole(ISolarSystemService service)
         {
-            _captainService = captainService;
+            _service = service;
 
-            _captainService.SetupCaptain();
+            _service.SetupGame();
         }
         public void ConsoleMapper(string input)
         {
@@ -51,11 +51,30 @@ namespace Kuiper.Systems
              switch (subChoice)
             {
                 case "scan":
-                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.ScanForAsteroids());
+                    ConsoleWriter.Write(SolarSystemLocator.SolarSystem.Captain.Ship.ScanForAsteroids());
+                    break;
+                case "mine":
+                    Mine();
                     break;
                 default:
                     ConsoleWriter.Write($"{subChoice} not recognized. Try ship location, ship stats or ship description");
                     break;
+            }
+        }
+
+        private void Mine()
+        {
+            ConsoleWriter.Write($"How many hours do you wish to mine for?");
+            int hours;
+            var input = int.TryParse(Console.ReadLine(), out hours);
+            if(input) 
+            {
+                ConsoleWriter.Write(SolarSystemLocator.SolarSystem.Captain.Ship.MineAsteroid(new TimeSpan(hours,0,0)));
+            }
+            else
+            {
+                ConsoleWriter.Write($"Must be a numerical value like '5'");
+                Mine();
             }
         }
 
@@ -64,13 +83,13 @@ namespace Kuiper.Systems
             switch (subChoice)
             {
                 case "location":
-                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.LocationDescription);
+                    ConsoleWriter.Write(SolarSystemLocator.SolarSystem.Captain.Ship.LocationDescription);
                     break;
                 case "stats":
-                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.ShipStatsDescription);
+                    ConsoleWriter.Write(SolarSystemLocator.SolarSystem.Captain.Ship.ShipStatsDescription);
                     break;
                 case "description":
-                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.Description);
+                    ConsoleWriter.Write(SolarSystemLocator.SolarSystem.Captain.Ship.Description);
                     break;
                 case "set course":
                     SetCourse();
@@ -92,7 +111,7 @@ namespace Kuiper.Systems
             var target = Locations.Destinations.First(x => x.Name == input);
             if(target != null)
             {
-                 var courseText = CaptainLocator.Captain.Ship.SetCourse(target);
+                 var courseText = SolarSystemLocator.SolarSystem.Captain.Ship.SetCourse(target);
                  ConsoleWriter.Write(courseText);
                  return;
             }
@@ -107,8 +126,8 @@ namespace Kuiper.Systems
 
         public void Save()
         {
-            CaptainLocator.Captain.LastLoggedIn = GameTime.Now();
-            SaveLoad.SaveGame(CaptainLocator.Captain);
+            SolarSystemLocator.SolarSystem.Captain.LastLoggedIn = GameTime.Now();
+            SaveLoad.SaveGame(SolarSystemLocator.SolarSystem);
             ConsoleWriter.Write($"Game saved successfully.", ConsoleColor.Red);
         }
 

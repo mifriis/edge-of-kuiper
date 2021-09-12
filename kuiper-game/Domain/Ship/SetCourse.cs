@@ -22,7 +22,7 @@ namespace Kuiper.Domain
 
         public string StartEvent()
         {
-            return $"{CaptainLocator.Captain.Ship.Name} will arrive in orbit above {CaptainLocator.Captain.Ship.TargetLocation.Name} on {CaptainLocator.Captain.Ship.ArrivalTime}";
+            return $"{SolarSystemLocator.SolarSystem.Captain.Ship.Name} will arrive in orbit above {SolarSystemLocator.SolarSystem.Captain.Ship.TargetLocation.Name} on {SolarSystemLocator.SolarSystem.Captain.Ship.ArrivalTime}";
         }
 
         public string EndEvent()

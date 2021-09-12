@@ -22,7 +22,7 @@ namespace Kuiper.Domain
 
         public string StartEvent()
         {
-            return $"{CaptainLocator.Captain.Ship.Name} will finish scanning at {GameTime.Now().Add(TaskDuration)} ";
+            return $"{SolarSystemLocator.SolarSystem.Captain.Ship.Name} will finish scanning at {GameTime.Now().Add(TaskDuration)} ";
         }
 
         public string EndEvent()
@@ -31,9 +31,9 @@ namespace Kuiper.Domain
             {
                 var distance = DiceFactory.Random().Next(50000, 1500000);
                 var asteroid = new Location("Scanned Asteroid",distance,new List<Location>(), SatteliteType.Asteroid);
-                CaptainLocator.Captain.Ship.CurrentLocation.Sattelites.Add(asteroid);
+                SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation.Sattelites.Add(asteroid);
                 Locations.Destinations.Add(asteroid);
-                return $"Asteroid scanning complete. Found a candidate {distance}km from {CaptainLocator.Captain.Ship.CurrentLocation}. Set a course to begin mining the asteroid.";
+                return $"Asteroid scanning complete. Found a candidate {distance}km from {SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation}. Set a course to begin mining the asteroid.";
             }
             return $"Asteroid scanning complete, but found no asteroids with a yield within the scanners parameters.";
 

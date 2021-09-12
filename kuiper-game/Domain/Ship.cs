@@ -98,6 +98,17 @@ namespace Kuiper.Domain
             return $"Ship must be in orbit around a stabile location to scan for asteroids";
         }
 
+        public string MineAsteroid(TimeSpan duration)
+        {
+            if(Status == ShipStatus.InOrbit && CurrentLocation.SatteliteType == SatteliteType.Asteroid)
+            {
+                var evt = new MineAsteroid(GameTime.Now(), duration);
+                Enqueue(evt);
+                return evt.StartEvent();
+            }
+            return $"Ship must be in orbit around an asteroid to begin mining";
+        }
+
         public void Enqueue(IShipEvent evt)
         {
             EventQueue.Add(evt);
@@ -123,6 +134,12 @@ namespace Kuiper.Domain
             CurrentLocation = TargetLocation;
             TargetLocation = null;
             Status = ShipStatus.InOrbit;
+            EventQueue.Remove(evt);
+            return evt.EndEvent();
+        }
+
+        private string HandleEvent(MineAsteroid evt)
+        {
             EventQueue.Remove(evt);
             return evt.EndEvent();
         }

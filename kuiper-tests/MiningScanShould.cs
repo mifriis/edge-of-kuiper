@@ -30,8 +30,11 @@ namespace Kuiper.Tests.Unit.Domain
             //Arrange
             var diceRoller = Substitute.For<IDiceRoller>();
             var randomer = Substitute.For<IRandom>();
+            var gamestart = new DateTime(1990,1,1,1,1,1);
+            var system = new SolarSystem(gamestart);
             var captain = new Captain("Testo") { Ship = new Ship("Testlo", "Testlo", 100) { CurrentLocation = Locations.Earth}};
-            CaptainLocator.SetCaptain(captain);
+            system.Captain = captain;
+            SolarSystemLocator.SetSolarSystem(system);
             DiceFactory.setDiceRollerInstance(diceRoller);
             DiceFactory.setRandomInstance(randomer);
             diceRoller.D100(default,default).ReturnsForAnyArgs(true);
