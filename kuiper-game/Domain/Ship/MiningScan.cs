@@ -34,7 +34,7 @@ class MiningScan : IShipEvent
         {
             var distance = new Random().Next(50000, 1500000);
             var asteroid = new Location("Scanned Asteroid",distance,new List<Location>(), SatteliteType.Asteroid);
-            Locations.Earth.Sattelites.Add(asteroid);
+            CaptainLocator.Captain.Ship.CurrentLocation.Sattelites.Add(asteroid);
             Locations.Destinations.Add(asteroid);
             return $"Asteroid scanning complete. Found a candidate {distance}km from {CaptainLocator.Captain.Ship.CurrentLocation}. Set a course to begin mining the asteroid.";
         }

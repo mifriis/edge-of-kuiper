@@ -11,11 +11,10 @@ namespace Kuiper.Systems
     public static class SaveLoad
     {
         private static string savePath = Directory.CreateDirectory(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "saves")).FullName;
-
+        private static JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto, PreserveReferencesHandling = PreserveReferencesHandling.Objects};
         public static void SaveGame(Captain captain) 
         {
-            var captainJson = JsonConvert.SerializeObject(captain, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto});
-            // Write the string array to a new file named "WriteLines.txt".
+            var captainJson = JsonConvert.SerializeObject(captain, settings);
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(savePath, captain.Name +".save")))
             {
                     outputFile.WriteLine(captainJson);
@@ -37,7 +36,7 @@ namespace Kuiper.Systems
         public static Captain Load(string saveGame)
         {
             var save = System.IO.File.ReadAllText(Path.Combine(savePath,saveGame));
-            var captain = JsonConvert.DeserializeObject<Captain>(save, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto});
+            var captain = JsonConvert.DeserializeObject<Captain>(save, settings);
             return captain;
         }
     }

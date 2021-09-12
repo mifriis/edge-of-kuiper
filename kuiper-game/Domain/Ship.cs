@@ -62,10 +62,10 @@ namespace Kuiper.Domain
             return $"Ship must be in orbit around a stabile location to scan for asteroids";
         }
 
-        public void Enqueue(IShipEvent @event)
+        public void Enqueue(IShipEvent evt)
         {
-            EventQueue.Add(@event);
-            Console.WriteLine(@event.StartEvent());
+            EventQueue.Add(evt);
+            Console.WriteLine(evt.StartEvent());
         }
 
         public void StatusReport() 
@@ -78,6 +78,7 @@ namespace Kuiper.Domain
 
         private string HandleEvent(MiningScan evt)
         {
+            EventQueue.Remove(evt);
             return evt.EndEvent();
         }
     }
