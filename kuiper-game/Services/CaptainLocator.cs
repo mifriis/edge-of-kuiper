@@ -4,7 +4,17 @@ namespace Kuiper.Services
 {
     public static class CaptainLocator
     {
-        public static Captain Captain { get; set; }        
+        private static Captain _captain;
+        public static Captain Captain { 
+            get {
+                return _captain;
+            }
+        }
+
+        public static void SetCaptain(Captain captain)
+        {
+            _captain = captain;
+        }
     }
     
 }

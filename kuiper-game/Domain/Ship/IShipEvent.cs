@@ -1,10 +1,12 @@
 using System;
-
-public interface IShipEvent
+namespace Kuiper.Domain
 {
-    string Name {get;}
-    DateTime StartTime {get;}
-    TimeSpan TaskDuration {get;}
-    string StartEvent();
-    string EndEvent();
+    public interface IShipEvent
+    {
+        string Name {get;}
+        DateTime StartTime {get;}
+        TimeSpan TaskDuration {get;}
+        string StartEvent();
+        string EndEvent();
+    }
 }

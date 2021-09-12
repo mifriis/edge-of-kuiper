@@ -19,7 +19,7 @@ namespace Kuiper.Services
                 {
                     _currentCaptain = SaveLoad.Load(saves.FirstOrDefault());
                     GameTime.RealStartTime = _currentCaptain.StartTime;
-                    CaptainLocator.Captain = _currentCaptain;
+                    CaptainLocator.SetCaptain(_currentCaptain);
                     ConsoleWriter.Write($"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastLoggedIn}!");    
                     _currentCaptain.Ship.StatusReport();
                     return _currentCaptain;
@@ -27,7 +27,7 @@ namespace Kuiper.Services
                 
                 _currentCaptain = new Captain(name, DateTime.Now);
                 GameTime.RealStartTime = _currentCaptain.StartTime;
-                CaptainLocator.Captain = _currentCaptain;
+                CaptainLocator.SetCaptain(_currentCaptain);
                 _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
                 _currentCaptain.Ship.CurrentLocation = Locations.Earth;
                 _currentCaptain.Ship.Status = ShipStatus.InOrbit;

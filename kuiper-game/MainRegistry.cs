@@ -12,8 +12,6 @@ namespace Kuiper
             this.AddHostedService<MainLoopWorker>();
             this.AddSingleton<ICaptainService, CaptainService>();
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
-            this.AddSingleton<IRandom, Random>();
-            this.AddSingleton<IDiceRoller, DiceRoller>();
         }
     }
 }
