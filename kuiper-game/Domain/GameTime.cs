@@ -18,6 +18,4 @@ public struct GameTime
 
         return GameStartDate.Add(elapsedGameTime);
     }
-
-    public static bool IsBefore(DateTime otherTime) => Now() < otherTime;
 }
