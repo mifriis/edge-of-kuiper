@@ -2,12 +2,10 @@ using System.Collections.Generic;
 using Kuiper.Domain.CelestialBodies;
 using System;
 using System.IO;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
-using System.Linq;
 
-[assembly:InternalsVisibleTo("kuiper-tests")]
+[assembly: InternalsVisibleTo("kuiper-tests")]
 namespace Kuiper.Repositories
 {
     public class JsonFileSolarSystemRepository : ISolarSystemRepository

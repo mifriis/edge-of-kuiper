@@ -53,6 +53,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.Equal(4, bodies.Count);
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -68,6 +70,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.IsType<Star>(bodies.SingleOrDefault());
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -83,6 +87,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.IsType<Planet>(bodies.SingleOrDefault());
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -98,6 +104,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.IsType<Moon>(bodies.SingleOrDefault());
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -113,6 +121,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.IsType<GasGiant>(bodies.SingleOrDefault());
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -128,6 +138,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.IsType<DwarfPlanet>(bodies.SingleOrDefault());
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -143,6 +155,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.Equal(42, bodies.SingleOrDefault().OrbitRadius);
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -158,6 +172,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.Equal("TestNamePleaseIgnore", bodies.SingleOrDefault().Name);
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -173,6 +189,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.Equal(67, bodies.SingleOrDefault().Velocity);
+
+            File.Delete(file);
         }
 
         [Fact]
@@ -188,6 +206,8 @@ namespace Kuiper.Tests.Unit.Repositories
 
             //Assert
             Assert.Equal(69, bodies.SingleOrDefault().OriginDegrees);
+
+            File.Delete(file);
         }
     }
 }
