@@ -39,7 +39,7 @@ namespace Kuiper.Tests.Integration.Systems
             captain.Ship = new Ship("test","test", 10);
             captain.Ship.CurrentLocation = Locations.Earth;
             captain.Ship.TargetLocation = Locations.Luna;
-            captain.Ship.CurrentLocation.Sattelites.Add(new Location("Asteroid",20000,new System.Collections.Generic.List<Location>(), SatteliteType.Asteroid));
+            captain.Ship.CurrentLocation.Satellites.Add(new Location("Asteroid",20000,new System.Collections.Generic.List<Location>(), SatelliteType.Asteroid));
             
             system.Captain = captain;
             //Act
@@ -47,10 +47,10 @@ namespace Kuiper.Tests.Integration.Systems
             var output = SaveLoad.Load($"{captName}.save");
             //Assert
             Assert.Equal(output.GameStart, system.GameStart);
-            Assert.Equal(SatteliteType.Planet, output.Captain.Ship.CurrentLocation.SatteliteType);
-            Assert.Equal(SatteliteType.Moon, output.Captain.Ship.TargetLocation.SatteliteType);
-            Assert.Equal(SatteliteType.Moon, output.Captain.Ship.CurrentLocation.Sattelites[0].SatteliteType);
-            Assert.Equal(SatteliteType.Asteroid, output.Captain.Ship.CurrentLocation.Sattelites[1].SatteliteType);
+            Assert.Equal(SatelliteType.Planet, output.Captain.Ship.CurrentLocation.SatelliteType);
+            Assert.Equal(SatelliteType.Moon, output.Captain.Ship.TargetLocation.SatelliteType);
+            Assert.Equal(SatelliteType.Moon, output.Captain.Ship.CurrentLocation.Satellites[0].SatelliteType);
+            Assert.Equal(SatelliteType.Asteroid, output.Captain.Ship.CurrentLocation.Satellites[1].SatelliteType);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Kuiper.Systems
             var input = int.TryParse(Console.ReadLine(), out hours);
             if(input) 
             {
-                ConsoleWriter.Write(SolarSystemLocator.SolarSystem.Captain.Ship.MineAsteroid(new TimeSpan(hours,0,0)));
+                ConsoleWriter.Write(SolarSystemLocator.SolarSystem.Captain.Ship.MineAsteroid(hours));
             }
             else
             {

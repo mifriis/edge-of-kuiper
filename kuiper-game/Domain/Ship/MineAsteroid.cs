@@ -6,10 +6,10 @@ namespace Kuiper.Domain
     public class MineAsteroid : IShipEvent
     {
         private const int chance = 80;
-        public MineAsteroid(DateTime startTime, TimeSpan duration)
+        public MineAsteroid(DateTime startTime, TimeSpan taskDuration)
         { 
             StartTime = startTime;
-            TaskDuration = duration;
+            TaskDuration = taskDuration;
         }
 
         public string Name => "Asteroid Mining";
@@ -22,7 +22,7 @@ namespace Kuiper.Domain
 
         public string StartEvent()
         {
-            return $"You begin mining the asteroid and hope to have a full cargohold in {TaskDuration.TotalHours} hours";
+            return $"You begin mining the asteroid and hope to have a full cargohold in {TaskDuration} hours";
         }
 
         public string EndEvent()
@@ -37,7 +37,7 @@ namespace Kuiper.Domain
                     minerals++;
                 }
             } while (time >= 0);
-            return $"After mining for {TaskDuration.TotalHours}, you have filled your cargohold with {minerals} tons of minerals";
+            return $"After mining for {TaskDuration.TotalHours} hours, you have filled your cargohold with {minerals} tons of minerals";
         }
     }
 }

@@ -6,10 +6,10 @@ namespace Kuiper.Domain
     public class CourseSet : IShipEvent
     {
         private const int chance = 80;
-        public CourseSet(DateTime startTime, TimeSpan duration)
+        public CourseSet(DateTime startTime, TimeSpan taskDurationHours)
         { 
             StartTime = startTime;
-            TaskDuration = duration;
+            TaskDuration = taskDurationHours;
         }
 
         public string Name => "Set course";

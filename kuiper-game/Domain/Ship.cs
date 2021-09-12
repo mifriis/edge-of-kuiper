@@ -65,13 +65,13 @@ namespace Kuiper.Domain
             TargetLocation = target;
             long distance = 0;
 
-            if(target.Sattelites.Contains(CurrentLocation))
+            if(target.Satellites.Contains(CurrentLocation))
             {
                 //Travel from a moon to parent
                 distance = CurrentLocation.OrbitalRadius;
                 
             }
-            if(CurrentLocation.Sattelites.Contains(target))
+            if(CurrentLocation.Satellites.Contains(target))
             {
                 //Travel from a parent to one of it's moons
                 distance = target.OrbitalRadius;
@@ -80,9 +80,9 @@ namespace Kuiper.Domain
             {
                 throw new NotImplementedException("Don't go to Mars just yet");
             }
-            var hoursToTargetLocation = TimeSpan.FromHours(distance/Speed);
-            ArrivalTime = GameTime.Now() + hoursToTargetLocation;
-            var evt = new CourseSet(GameTime.Now(), hoursToTargetLocation);
+            var hoursToTargetLocation = distance/Speed;
+            ArrivalTime = GameTime.Now() + TimeSpan.FromHours(hoursToTargetLocation);
+            var evt = new CourseSet(GameTime.Now(), TimeSpan.FromHours(hoursToTargetLocation));
             Enqueue(evt);
             return evt.StartEvent();
         }
@@ -98,11 +98,11 @@ namespace Kuiper.Domain
             return $"Ship must be in orbit around a stabile location to scan for asteroids";
         }
 
-        public string MineAsteroid(TimeSpan duration)
+        public string MineAsteroid(int durationHours)
         {
-            if(Status == ShipStatus.InOrbit && CurrentLocation.SatteliteType == SatteliteType.Asteroid)
+            if(Status == ShipStatus.InOrbit && CurrentLocation.SatelliteType == SatelliteType.Asteroid)
             {
-                var evt = new MineAsteroid(GameTime.Now(), duration);
+                var evt = new MineAsteroid(GameTime.Now(), TimeSpan.FromHours(durationHours));
                 Enqueue(evt);
                 return evt.StartEvent();
             }

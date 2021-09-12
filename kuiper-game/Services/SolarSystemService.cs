@@ -26,7 +26,7 @@ namespace Kuiper.Services
                 }
                 
                 _currentSystem = new SolarSystem(DateTime.Now);
-                _currentSystem.Captain = new Captain(name, DateTime.Now);
+                _currentSystem.Captain = new Captain(name);
                 GameTime.RealStartTime = _currentSystem.GameStart;
                 SolarSystemLocator.SetSolarSystem(_currentSystem);
                 _currentSystem.Captain.Ship = new Ship("Bullrun","Sloop", 40000);
