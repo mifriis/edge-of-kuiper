@@ -5,6 +5,6 @@ public interface IShipEvent
     string Name {get;}
     DateTime StartTime {get;}
     TimeSpan TaskDuration {get;}
-
-    string GetPrompt();
+    string StartEvent();
+    string EndEvent();
 }

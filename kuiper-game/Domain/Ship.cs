@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Kuiper.Systems;
 
@@ -20,6 +21,7 @@ namespace Kuiper.Domain
         public Location CurrentLocation { get; set; }
         public Location TargetLocation { get; set; }
         public DateTime ArrivalTime { get; set;}
+        public List<IShipEvent> EventQueue { get; set;} = new List<IShipEvent>();
 
         public ShipStatus Status { get; set; }
 
@@ -47,6 +49,36 @@ namespace Kuiper.Domain
                 }
                 return $"{Name} {ShipStatusExtensions.ToFriendlyString(Status)} {CurrentLocation.Name}";
             }
+        }
+
+        public string ScanForAsteroids()
+        {
+            if(Status == ShipStatus.InOrbit)
+            {
+                var evt = new MiningScan(GameTime.Now());
+                Enqueue(evt);
+                return evt.StartEvent();
+            }
+            return $"Ship must be in orbit around a stabile location to scan for asteroids";
+        }
+
+        public void Enqueue(IShipEvent @event)
+        {
+            EventQueue.Add(@event);
+            Console.WriteLine(@event.StartEvent());
+        }
+
+        public void StatusReport() 
+        {
+            foreach (var evt in EventQueue.Where(x => x.StartTime.Add(x.TaskDuration) < GameTime.Now()))
+            {
+                ConsoleWriter.Write(HandleEvent((dynamic)evt));
+            }
+        }
+
+        private string HandleEvent(MiningScan evt)
+        {
+            return evt.EndEvent();
         }
     }
 }

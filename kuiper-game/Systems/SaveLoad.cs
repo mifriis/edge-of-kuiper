@@ -14,7 +14,7 @@ namespace Kuiper.Systems
 
         public static void SaveGame(Captain captain) 
         {
-            var captainJson = JsonConvert.SerializeObject(captain);
+            var captainJson = JsonConvert.SerializeObject(captain, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto});
             // Write the string array to a new file named "WriteLines.txt".
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(savePath, captain.Name +".save")))
             {
@@ -37,7 +37,7 @@ namespace Kuiper.Systems
         public static Captain Load(string saveGame)
         {
             var save = System.IO.File.ReadAllText(Path.Combine(savePath,saveGame));
-            var captain = JsonConvert.DeserializeObject<Captain>(save);
+            var captain = JsonConvert.DeserializeObject<Captain>(save, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto});
             return captain;
         }
     }

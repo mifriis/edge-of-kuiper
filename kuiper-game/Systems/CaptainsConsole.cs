@@ -8,16 +8,27 @@ namespace Kuiper.Systems
     public class CaptainsConsole : ICaptainsConsole
     {
         private readonly ICaptainService _captainService;
-        private readonly Captain _currentCaptain;
 
         public CaptainsConsole(ICaptainService captainService)
         {
             _captainService = captainService;
 
-            _currentCaptain = _captainService.SetupCaptain();
+            _captainService.SetupCaptain();
         }
         public void ConsoleMapper(string input)
         {
+            if(input.StartsWith("ship"))
+            {
+                    Ship(input.Substring(5));
+                    return;
+            }
+
+            if(input.StartsWith("mining"))
+            {
+                    Mining(input.Substring(7));
+                    return;
+            }
+
             switch (input)
             {
                 case "help":
@@ -29,20 +40,21 @@ namespace Kuiper.Systems
                 case "time":
                     CurrentTime();
                     break;
-                case "ship description":
-                    Ship("description");
-                    break;
-                case "ship stats":
-                    Ship("stats");
-                    break;
-                case "ship location":
-                    Ship("location");
-                    break;
-                case "ship set course":
-                    Ship("set course");
-                    break;
                 default:
                     ConsoleWriter.Write($"{input} not recognized. Try 'help' for list of commands");
+                    break;
+            }
+        }
+
+        private void Mining(string subChoice)
+        {
+             switch (subChoice)
+            {
+                case "scan":
+                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.ScanForAsteroids());
+                    break;
+                default:
+                    ConsoleWriter.Write($"{subChoice} not recognized. Try ship location, ship stats or ship description");
                     break;
             }
         }
@@ -52,13 +64,13 @@ namespace Kuiper.Systems
             switch (subChoice)
             {
                 case "location":
-                    ConsoleWriter.Write(_currentCaptain.Ship.LocationDescription);
+                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.LocationDescription);
                     break;
                 case "stats":
-                    ConsoleWriter.Write(_currentCaptain.Ship.ShipStatsDescription);
+                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.ShipStatsDescription);
                     break;
                 case "description":
-                    ConsoleWriter.Write(_currentCaptain.Ship.Description);
+                    ConsoleWriter.Write(CaptainLocator.Captain.Ship.Description);
                     break;
                 case "set course":
                     SetCourse();
@@ -95,8 +107,8 @@ namespace Kuiper.Systems
 
         public void Save()
         {
-            _currentCaptain.LastLoggedIn = GameTime.Now();
-            SaveLoad.SaveGame(_currentCaptain);
+            CaptainLocator.Captain.LastLoggedIn = GameTime.Now();
+            SaveLoad.SaveGame(CaptainLocator.Captain);
             ConsoleWriter.Write($"Game saved successfully.", ConsoleColor.Red);
         }
 
