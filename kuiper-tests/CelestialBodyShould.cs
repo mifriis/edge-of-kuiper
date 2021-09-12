@@ -1,6 +1,6 @@
 using Xunit;
 using Kuiper.Systems;
-using kuiper.Domain.CelestialBodies;
+using Kuiper.Domain.CelestialBodies;
 using System;
 using System.Numerics;
 

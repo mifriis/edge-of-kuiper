@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace kuiper.Domain.CelestialBodies
+namespace Kuiper.Domain.CelestialBodies
 {
     public abstract class CelestialBody
     {

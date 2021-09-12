@@ -4,6 +4,7 @@
     "distance": 0,
     "velocity": 0,
     "originDegrees": 0,
+    "type": "Star",
     "satellites": [
         {
             "position": 1,
@@ -11,6 +12,7 @@
             "distance": 0.387,
             "velocity": 47.4,
             "originDegrees": 30,
+            "type": "Planet",
             "satellites": []
         },
         {
@@ -19,6 +21,7 @@
             "distance": 0.723,
             "velocity": 35.0,
             "originDegrees": 170,
+            "type": "Planet",
             "satellites": []
         },
         {
@@ -27,13 +30,15 @@
             "distance": 1,
             "velocity": 29.8,
             "originDegrees": 170,
+            "type": "Planet",
             "satellites": [
                 {
                     "position": 1,
                     "name": "Luna",
                     "distance": 0.00257356604,
                     "velocity": 1.022,
-                    "originDegrees": 125
+                    "originDegrees": 125,
+                    "type": "Moon"
                 }
             ]
         },
@@ -43,6 +48,7 @@
             "distance": 1.523,
             "velocity": 24.1,
             "originDegrees": 95,
+            "type": "Planet",
             "satellites": []
         },
         {
@@ -51,6 +57,7 @@
             "distance": 5.205,
             "velocity": 13.1,
             "originDegrees": 45,
+            "type": "GasGiant",
             "satellites": []
         },
         {
@@ -59,6 +66,7 @@
             "distance": 9.582,
             "velocity": 9.7,
             "originDegrees": 345,
+            "type": "GasGiant",
             "satellites": []
         },
         {
@@ -67,6 +75,7 @@
             "distance": 19.2,
             "velocity": 6.81,
             "originDegrees": 340,
+            "type": "Planet",
             "satellites": []
         },
         {
@@ -75,6 +84,7 @@
             "distance": 30.05,
             "velocity": 5.43,
             "originDegrees": 135,
+            "type": "Planet",
             "satellites": []
         },
         {
@@ -83,6 +93,7 @@
             "distance": 39.48,
             "velocity": 4.74,
             "originDegrees": 260,
+            "type": "DwarfPlanet",
             "satellites": []
         }
     ]
