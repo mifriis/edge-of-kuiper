@@ -1,5 +1,4 @@
 using Xunit;
-using Kuiper.Systems;
 using Kuiper.Domain.CelestialBodies;
 using System;
 using System.Numerics;
