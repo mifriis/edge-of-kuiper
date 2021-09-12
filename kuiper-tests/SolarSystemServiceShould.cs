@@ -1,33 +1,47 @@
 using Xunit;
-using Kuiper.Systems;
+using Moq;
 using Kuiper.Services;
 using Kuiper.Repositories;
 using Kuiper.Domain.CelestialBodies;
-using System;
-using System.Numerics;
-using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Kuiper.Tests.Unit.Services
 {
     public class SolarSystemServiceShould
     {
+        private List<CelestialBody> createTestData() {
+            var sun = CelestialBody.Create("Sun", 0,0,0,null,CelestialBodyType.Star);
+            var mercury = CelestialBody.Create("Mercury", 0.387, 47.4, 30, sun, CelestialBodyType.Planet);
+            var venus = CelestialBody.Create("Venus", 0.723, 35.4, 170, sun, CelestialBodyType.Planet);
+            var earth = CelestialBody.Create("Earth", 1, 29.8, 170, sun, CelestialBodyType.Planet);
+            var moon = CelestialBody.Create("Luna", 0.00257356604, 1.022, 125, earth, CelestialBodyType.Moon);
+            var mars = CelestialBody.Create("Mars", 1.523, 24.1, 95, sun, CelestialBodyType.Planet);
+            var jupiter = CelestialBody.Create("Jupiter", 5.205, 13.1, 45, sun, CelestialBodyType.GasGiant);
+            var saturn = CelestialBody.Create("Saturn", 9.582, 9.7, 345, sun, CelestialBodyType.Planet);
+
+            var testData = new List<CelestialBody>(){
+                sun, mercury, venus, earth, moon, mars, jupiter, saturn
+            };
+
+            return testData;
+        }
+
         [Fact]
         public void ReturnBodyBasedOnName()
         {
             //Arrange
-            var jsonFile = new FileInfo(Path.GetRandomFileName());
-            var repo = new JsonFileSolarSystemRepository(jsonFile);
-            var service = new SolarSystemService(repo);
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            var jsonString = "{'position':1,'name':'Sol','distance':0,'velocity':0,'originDegrees':0,'type':'Star','satellites':[{'position':1,'name':'Mercury','distance':0.387,'velocity':47.4,'originDegrees':30,'type':'Planet','satellites':[]},{'position':3,'name':'Earth','distance':1,'velocity':29.8,'originDegrees':170,'type':'Planet','satellites':[{'position':1,'name':'Luna','distance':0.00257356604,'velocity':1.022,'originDegrees':125,'type':'Moon'}]}]}";
-            repo.GetBodiesFromJson(jsonString);
+            var solarSystemService = new SolarSystemService(repository.Object);
 
             //Act
+            var body = solarSystemService.GetBody("Saturn");
 
             //Assert
-            
-
-            File.Delete(jsonFile.FullName);
+            Assert.Equal(testData.SingleOrDefault(b => b.Name == "Saturn"), body);
         }
     }
 }
