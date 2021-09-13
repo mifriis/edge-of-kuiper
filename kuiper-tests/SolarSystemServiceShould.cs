@@ -43,5 +43,25 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.Equal(testData.SingleOrDefault(b => b.Name == "Saturn"), body);
         }
+
+        [Fact]
+        public void ReturnCorrectAuDistanceBetweenBodies()
+        {
+            //Arrange
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object);
+
+            //Act
+            var origin = solarSystemService.GetBody("Earth");
+            var destination = solarSystemService.GetBody("Mars");
+
+            var distance = solarSystemService.GetDistanceInAu(origin, destination);
+
+            //Assert
+            Assert.Equal(42, distance);
+        }
     }
 }
