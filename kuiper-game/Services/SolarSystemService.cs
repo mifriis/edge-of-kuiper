@@ -2,11 +2,15 @@ using System.Collections.Generic;
 using Kuiper.Domain.CelestialBodies;
 using Kuiper.Repositories;
 using System.Linq;
+using System.Numerics;
+using System;
 
 namespace Kuiper.Services
 {
     public class SolarSystemService : ISolarSystemService
     {
+        private const int AUINKM =  149597871; // 1 AU in KM. Maybe this belongs somewhere else?
+
         public IEnumerable<CelestialBody> GetBodies(CelestialBodyType type)
         {
             throw new System.NotImplementedException();
@@ -19,12 +23,16 @@ namespace Kuiper.Services
 
         public double GetDistanceInAu(CelestialBody origin, CelestialBody destination)
         {
-            throw new System.NotImplementedException();
+
+            var originPosition = origin.GetPosition(GameTime.ElapsedGameTime);
+            var destinationPosition = destination.GetPosition(GameTime.ElapsedGameTime);
+
+            return Vector2.Distance(originPosition, destinationPosition);
         }
 
         public long GetDistanceInKm(CelestialBody origin, CelestialBody destination)
         {
-            throw new System.NotImplementedException();
+            return Convert.ToInt64(GetDistanceInAu(origin, destination) * AUINKM);
         }
 
         public IEnumerable<CelestialBody> GetNearestBodies(int count)

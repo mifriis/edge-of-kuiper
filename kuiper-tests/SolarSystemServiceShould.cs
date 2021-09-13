@@ -5,6 +5,7 @@ using Kuiper.Repositories;
 using Kuiper.Domain.CelestialBodies;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace Kuiper.Tests.Unit.Services
 {
@@ -52,6 +53,8 @@ namespace Kuiper.Tests.Unit.Services
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
+            GameTime.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
+
             var solarSystemService = new SolarSystemService(repository.Object);
 
             //Act
@@ -61,7 +64,29 @@ namespace Kuiper.Tests.Unit.Services
             var distance = solarSystemService.GetDistanceInAu(origin, destination);
 
             //Assert
-            Assert.Equal(42, distance);
+            Assert.Equal(1.6427351236343384, distance);
+        }
+
+        [Fact]
+        public void ReturnCorrectKmDistanceBetweenBodies()
+        {
+            //Arrange
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            GameTime.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
+
+            var solarSystemService = new SolarSystemService(repository.Object);
+
+            //Act
+            var origin = solarSystemService.GetBody("Earth");
+            var destination = solarSystemService.GetBody("Mars");
+
+            var distance = solarSystemService.GetDistanceInKm(origin, destination);
+
+            //Assert
+            Assert.Equal(245749677, distance);
         }
     }
 }
