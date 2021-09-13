@@ -64,7 +64,7 @@ namespace Kuiper.Tests.Unit.Services
             var distance = solarSystemService.GetDistanceInAu(origin, destination);
 
             //Assert
-            Assert.Equal(1.6427351236343384, distance);
+            Assert.Equal(1.6427351236343384, distance, 6);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Kuiper.Tests.Unit.Services
             var distance = solarSystemService.GetDistanceInKm(origin, destination);
 
             //Assert
-            Assert.Equal(245749677, distance);
+            Assert.InRange(distance, 245749650, 245749685);
         }
     }
 }
