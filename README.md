@@ -1,5 +1,25 @@
 # Edge of Kuiper
 
+```
+ ┌────────────────────────────────────┐
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │   Combat  │     │  Missions │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │  Mining   │     │ Exploring │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │  Trading  │     │ Investing │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │           Edge-of-Kuiper           │
+ │      A Real-Time SpaceSim RPG      │
+ └────────────────────────────────────┘
+```
+
 This game puts you into the captains chair of your very own spaceship in the Sol system. Your purpose is to make money and retire.
 
 * Trade
@@ -25,8 +45,26 @@ Kuiper belt contains untold riches in ice-water, iron, gold and rare elements.
 
 The perfect time for someone to make a fortune.
 
-## Build and run
+## Getting started
 
-* Open in VS Code 
-* F5
-* See the terminal 
+### Prerequisites 
+
+* [.NET 5](https://dotnet.microsoft.com/download)
+* [JetBrains Rider](https://www.jetbrains.com/rider/)
+* [Visual Studio (Code)](https://visualstudio.microsoft.com/)
+
+Recommended plugins:
+* [C# Omnisharp](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+* [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
+* [Coverage Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
+
+### Build and run
+
+CLI:
+* dotnet restore
+* dotnet run --project kuiper-game/kuiper-game.csproj
+* dotnet test
+
+IDE: 
+* Press the F5 button
+* Observe the Terminal output

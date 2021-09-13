@@ -95,14 +95,14 @@ namespace Kuiper.Systems
 
         public void Save()
         {
-            _currentCaptain.MarkLastSeen();
+            _currentCaptain.LastLoggedIn = GameTime.Now();
             SaveLoad.SaveGame(_currentCaptain);
             ConsoleWriter.Write($"Game saved successfully.", ConsoleColor.Red);
         }
 
         public void CurrentTime()
         {
-            var currentGameTime = TimeDilation.CalculateTime(_currentCaptain.GameLastSeen, _currentCaptain.RealLastSeen, DateTime.Now);
+            var currentGameTime = GameTime.Now();
             ConsoleWriter.Write($"The time is currently: {currentGameTime}");
         }
     }
