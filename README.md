@@ -66,5 +66,5 @@ CLI:
 * dotnet test
 
 IDE: 
-* Pres the F5 button
+* Press the F5 button
 * Observe the Terminal output
