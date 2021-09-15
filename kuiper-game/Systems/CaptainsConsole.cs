@@ -44,7 +44,7 @@ namespace Kuiper.Systems
                     Ship("set course");
                     break;
                 case "account balance":
-                    ConsoleWriter.Write($"Your current account balance is ${_currentCaptain.Account.Balance.ToString("N1")}");
+                    _currentCaptain.Account.DisplayBalance();
                     break;
                 case "account history":
                     _currentCaptain.Account.DisplayTransactionHistory();
