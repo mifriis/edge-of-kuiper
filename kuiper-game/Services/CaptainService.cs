@@ -18,15 +18,16 @@ namespace Kuiper.Services
                 if(saves.Count() > 0)
                 {
                     _currentCaptain = SaveLoad.Load(saves.FirstOrDefault());
-                    ConsoleWriter.Write($"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.GameLastSeen}!");    
+                    ConsoleWriter.Write($"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastLoggedIn}!");    
                     return _currentCaptain;
                 }
                 
-                _currentCaptain = new Captain(name, TimeDilation.GameStartDate, DateTime.Now, new Account(100M));
+                _currentCaptain = new Captain(name, DateTime.Now, new Account(100M));
+                GameTime.RealStartTime = _currentCaptain.StartTime;
                 _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
                 _currentCaptain.Ship.CurrentLocation = Locations.Earth;
                 _currentCaptain.Ship.Status = ShipStatus.InOrbit;
-                ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {_currentCaptain.GameLastSeen}");
+                ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {GameTime.Now()}");
                 return _currentCaptain;
             }
             return _currentCaptain;
@@ -62,8 +63,17 @@ namespace Kuiper.Services
                 throw new NotImplementedException("Don't go to Mars just yet");
             }
             var hoursToTargetLocation = TimeSpan.FromHours(distance/ship.Speed);
-            ship.ArrivalTime = TimeDilation.CalculateTime(_currentCaptain.GameLastSeen, _currentCaptain.RealLastSeen, DateTime.Now).Add(hoursToTargetLocation);
+            ship.ArrivalTime = GameTime.Now().Add(hoursToTargetLocation);
             return $"{ship.Name} will arrive in orbit above {targetLocation.Name} on {ship.ArrivalTime}";
+        }
+
+        public Captain GetCaptain()
+        {
+            if(_currentCaptain != null)
+            {
+                return _currentCaptain;
+            }
+            throw new NullReferenceException("Captain is not yet setup or loaded");
         }
     }
 }
