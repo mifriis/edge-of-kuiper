@@ -7,6 +7,7 @@ namespace Kuiper.Domain
 {
     public class Account
     {
+        [JsonProperty("balance")]
         private decimal _balance;
         [JsonProperty("transactions")]
         private IList<Transaction> _transactions;
@@ -23,8 +24,6 @@ namespace Kuiper.Domain
             _balance = balance;
             _transactions = transactions;
         }
-        
-        public decimal Balance { get { return _balance; } }
 
         public decimal Deposit(decimal amount) {
             _balance += amount;
@@ -37,6 +36,10 @@ namespace Kuiper.Domain
             _balance -= amount;
             _transactions.Add(new Transaction(GameTime.Now(), TransactionType.Withdrawal, amount));
             return _balance;
+        }
+
+        public void DisplayBalance() {
+            ConsoleWriter.Write($"Your current account balance is ${_balance.ToString("N1")}");
         }
 
         public void DisplayTransactionHistory() {
