@@ -44,10 +44,10 @@ namespace Kuiper.Systems
                     Ship("set course");
                     break;
                 case "account balance":
-                    ConsoleWriter.Write($"Your current account balance is ${_currentCaptain.Account.Balance}");
+                    ConsoleWriter.Write($"Your current account balance is ${_currentCaptain.Account.Balance.ToString("N1")}");
                     break;
                 case "account history":
-                    ConsoleWriter.Write(_currentCaptain.Account.DisplayTransActionHistory());
+                    _currentCaptain.Account.DisplayTransactionHistory();
                     break;
                 case "test solarsystem":
                     var earth = _solarSystemService.GetBody("Earth");

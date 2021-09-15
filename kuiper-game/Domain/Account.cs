@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kuiper.Systems;
 using Newtonsoft.Json;
 
 namespace Kuiper.Domain
@@ -33,17 +34,31 @@ namespace Kuiper.Domain
         public decimal Withdraw(decimal amount)
         {
             _balance -= amount;
-            _transactions.Add(new Transaction(GameTime.Now(), TransactionType.Deposit, amount));
+            _transactions.Add(new Transaction(GameTime.Now(), TransactionType.Withdrawal, amount));
             return _balance;
         }
 
-        public string DisplayTransActionHistory() {
-            return _transactions.ToString();
+        public void DisplayTransactionHistory() {
+            if(_transactions.Count == 0) {
+                ConsoleWriter.Write("No transaction history available....");
+                return;
+            }
+
+            ConsoleWriter.Write("Printing transaction history");
+            ConsoleWriter.Write("--------------------------------------------------------------");
+            ConsoleWriter.Write("Date                             |  Action      |  Amount");
+            ConsoleWriter.Write("--------------------------------------------------------------");
+
+            foreach (var transaction in _transactions)
+            {
+                ConsoleWriter.Write(transaction.ToString());
+            }
+            
+            ConsoleWriter.Write("--------------------------------------------------------------");
         }
     }
 
     public class Transaction {
-
         public Transaction(DateTime timestampGametime, TransactionType action, decimal amount) {
             TimestampGametime = timestampGametime;
             Action = action;
@@ -53,6 +68,12 @@ namespace Kuiper.Domain
         public DateTime TimestampGametime { get; }
         public TransactionType Action { get; }
         public decimal Amount { get; }
+
+        public override string ToString()
+        {
+            var format = @"{0:dddd, dd MMMM yyyy HH:mm:ss}  |  {1,-10}  |  ${2,-10:N1}";
+            return String.Format(format, TimestampGametime, Action, Amount);
+        }
     }
 
     public enum TransactionType {
