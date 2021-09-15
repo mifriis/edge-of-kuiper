@@ -49,6 +49,9 @@ namespace Kuiper.Systems
         public void Help()
         {
             ConsoleWriter.Write("Available Commands:");
+            ConsoleWriter.Write("help");
+            ConsoleWriter.Write("save");
+            ConsoleWriter.Write("time");
             foreach (var command in commands)
             {
                 foreach (var subCommand in command.Value)
@@ -89,6 +92,7 @@ namespace Kuiper.Systems
                 }
             }
         }
+
         private void RunCommand(string consoleInput)
         {
             try
