@@ -7,13 +7,14 @@ namespace Kuiper.Systems
 {
     public class CaptainsConsole : ICaptainsConsole
     {
-        private readonly ISolarSystemService _service;
+        private readonly Captain _currentCaptain;
+        private readonly ISolarSystemService _solarSystemService;
 
-        public CaptainsConsole(ISolarSystemService service)
+        public CaptainsConsole(ISolarSystemService solarSystemService)
         {
-            _service = service;
+            _solarSystemService = solarSystemService;
 
-            _service.SetupGame();
+            _solarSystemService.SetupGame();
         }
         public void ConsoleMapper(string input)
         {
@@ -55,6 +56,13 @@ namespace Kuiper.Systems
                     break;
                 case "mine":
                     Mine();
+                    break;
+                case "test solarsystem":
+                    var earth = _solarSystemService.GetBody("Earth");
+                    var mercury = _solarSystemService.GetBody("Mercury");
+
+                    var dist = _solarSystemService.GetDistanceInAu(earth, mercury);
+                    ConsoleWriter.Write($"Distance is {dist} AU.");
                     break;
                 default:
                     ConsoleWriter.Write($"{subChoice} not recognized. Try ship location, ship stats or ship description");
