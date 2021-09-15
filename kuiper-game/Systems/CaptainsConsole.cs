@@ -73,14 +73,11 @@ namespace Kuiper.Systems
                 var commandName = ((CommandAttribute)type.GetCustomAttribute(typeof(CommandAttribute))).Name;
                 foreach (var method in command.GetType().GetMethods())
                 {
-                    var choiceName = method.Name.ToLower();
                     var attributes = method.GetCustomAttributes(typeof(CommandAttribute), false);
                     foreach (CommandAttribute attribute in attributes)
                     {
-                        if (attribute.Name != string.Empty)
-                        {
-                            choiceName = attribute.Name.ToLower();
-                        }
+                        var choiceName = attribute.Name.ToLower();
+
                         if (!this.commands.ContainsKey(commandName))
                         {
                             this.commands[commandName] = new Dictionary<string, Action>();
