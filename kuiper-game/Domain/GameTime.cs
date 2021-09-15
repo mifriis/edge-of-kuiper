@@ -33,6 +33,9 @@ namespace Kuiper.Domain
 
         public static GameTime Now()
         {
+            if (RealTimeEpoch == 0L)
+                throw new Exception("GameTime not initialized");
+            
             var elapsed = DateTime.UtcNow.Ticks - RealTimeEpoch;
             return new GameTime(RealTimeEpoch, elapsed * TickAccelerationConstant);
         }

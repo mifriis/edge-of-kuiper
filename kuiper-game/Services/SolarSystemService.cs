@@ -4,6 +4,7 @@ using Kuiper.Repositories;
 using System.Linq;
 using System.Numerics;
 using System;
+using Kuiper.Domain;
 
 namespace Kuiper.Services
 {
@@ -24,8 +25,8 @@ namespace Kuiper.Services
         public double GetDistanceInAu(CelestialBody origin, CelestialBody destination)
         {
 
-            var originPosition = origin.GetPosition(GameTime.ElapsedGameTime);
-            var destinationPosition = destination.GetPosition(GameTime.ElapsedGameTime);
+            var originPosition = origin.GetPosition(TimeSpan.FromTicks(GameTime.Now().Ticks));
+            var destinationPosition = destination.GetPosition(TimeSpan.FromTicks(GameTime.Now().Ticks));
 
             return Vector2.Distance(originPosition, destinationPosition);
         }

@@ -6,6 +6,7 @@ using Kuiper.Domain.CelestialBodies;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using Kuiper.Domain;
 
 namespace Kuiper.Tests.Unit.Services
 {
@@ -53,7 +54,7 @@ namespace Kuiper.Tests.Unit.Services
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            GameTime.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
+            var gameTime = new GameTime(DateTime.Now.Subtract(TimeSpan.FromHours(24)).Ticks);
 
             var solarSystemService = new SolarSystemService(repository.Object);
 
@@ -75,7 +76,7 @@ namespace Kuiper.Tests.Unit.Services
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            GameTime.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
+            var gameTime = new GameTime(DateTime.Now.Subtract(TimeSpan.FromHours(24)).Ticks);
 
             var solarSystemService = new SolarSystemService(repository.Object);
 
