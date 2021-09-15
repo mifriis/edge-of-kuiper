@@ -8,6 +8,7 @@ namespace Kuiper.Domain
     public class Account
     {
         private decimal _balance;
+        [JsonProperty("transactions")]
         private IList<Transaction> _transactions;
 
         [JsonConstructor]
@@ -22,7 +23,7 @@ namespace Kuiper.Domain
             _balance = balance;
             _transactions = transactions;
         }
-
+        
         public decimal Balance { get { return _balance; } }
 
         public decimal Deposit(decimal amount) {
