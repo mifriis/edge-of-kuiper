@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kuiper.Domain.CelestialBodies;
+using Kuiper.Services;
 using Kuiper.Systems;
 
 namespace Kuiper.Domain
@@ -18,8 +20,8 @@ namespace Kuiper.Domain
 
         public string ShipClass { get; }
         public int Speed { get; }
-        public Location CurrentLocation { get; set; }
-        public Location TargetLocation { get; set; }
+        public CelestialBody CurrentLocation { get; set; }
+        public CelestialBody TargetLocation { get; set; }
         public DateTime ArrivalTime { get; set;}
         public List<IShipEvent> EventQueue { get; set;} = new List<IShipEvent>();
 
@@ -51,7 +53,7 @@ namespace Kuiper.Domain
             }
         }
 
-        public string SetCourse(Location target)
+        public string SetCourse(CelestialBody target)
         {
             if(target == CurrentLocation)
             {
@@ -63,23 +65,8 @@ namespace Kuiper.Domain
             }
             Status = ShipStatus.Enroute;
             TargetLocation = target;
-            long distance = 0;
+            long distance = SolarSystemLocator.SolarSystem.SolarSystemService.GetDistanceInKm(CurrentLocation, TargetLocation);
 
-            if(target.Satellites.Contains(CurrentLocation))
-            {
-                //Travel from a moon to parent
-                distance = CurrentLocation.OrbitalRadius;
-                
-            }
-            if(CurrentLocation.Satellites.Contains(target))
-            {
-                //Travel from a parent to one of it's moons
-                distance = target.OrbitalRadius;
-            }
-            if(distance == 0)
-            {
-                throw new NotImplementedException("Don't go to Mars just yet");
-            }
             var hoursToTargetLocation = distance/Speed;
             ArrivalTime = GameTime.Now() + TimeSpan.FromHours(hoursToTargetLocation);
             var evt = new CourseSet(GameTime.Now(), TimeSpan.FromHours(hoursToTargetLocation));

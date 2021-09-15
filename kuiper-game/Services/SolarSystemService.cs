@@ -12,6 +12,16 @@ namespace Kuiper.Services
     public class SolarSystemService : ISolarSystemService
     {
         private SolarSystem _currentSystem;
+        private List<CelestialBody> SolarSystem;
+        public SolarSystemService(ISolarSystemRepository repository)
+        {
+            SolarSystem = new List<CelestialBody>();
+            SolarSystem = CreateSolarSystem(repository).ToList();
+        }
+
+        private IEnumerable<CelestialBody> CreateSolarSystem(ISolarSystemRepository repository) {
+            return repository.GetSolarSystem();
+        }
         public SolarSystem SetupGame()
         {
             if(_currentSystem == null) 
@@ -34,7 +44,7 @@ namespace Kuiper.Services
                 GameTime.RealStartTime = _currentSystem.GameStart;
                 SolarSystemLocator.SetSolarSystem(_currentSystem);
                 _currentSystem.Captain.Ship = new Ship("Bullrun","Sloop", 40000);
-                _currentSystem.Captain.Ship.CurrentLocation = Locations.Earth;
+                _currentSystem.Captain.Ship.CurrentLocation = GetBody("Earth");
                 _currentSystem.Captain.Ship.Status = ShipStatus.InOrbit;
                 ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {GameTime.Now()}");
                 return _currentSystem;
@@ -83,17 +93,6 @@ namespace Kuiper.Services
         public IEnumerable<CelestialBody> GetSatellites(CelestialBody parent)
         {
             throw new System.NotImplementedException();
-        }
-
-        private List<CelestialBody> SolarSystem;
-        public SolarSystemService(ISolarSystemRepository repository)
-        {
-            SolarSystem = new List<CelestialBody>();
-            SolarSystem = CreateSolarSystem(repository).ToList();
-        }
-
-        private IEnumerable<CelestialBody> CreateSolarSystem(ISolarSystemRepository repository) {
-            return repository.GetSolarSystem();
         }
     }
 }

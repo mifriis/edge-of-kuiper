@@ -116,6 +116,9 @@ namespace Kuiper.Domain.CelestialBodies
                 case CelestialBodyType.DwarfPlanet:
                     body = create<DwarfPlanet>(name, orbitRadius, velocity, originDegrees, parent);
                     break;
+                case CelestialBodyType.Asteroid:
+                    body = create<Asteroid>(name, orbitRadius, velocity, originDegrees, parent);
+                    break;
             }
 
             if (body.parent != null)

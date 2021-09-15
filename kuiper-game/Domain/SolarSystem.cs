@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kuiper.Services;
 
 namespace Kuiper.Domain
 {
@@ -13,7 +14,7 @@ namespace Kuiper.Domain
         
         public Captain Captain { get; set;}
 
-        public List<Location> Locations { get; set;} = new List<Location>();
+        public SolarSystemService SolarSystemService { get; set;}
         
         
     }

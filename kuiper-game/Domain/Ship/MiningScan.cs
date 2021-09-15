@@ -30,6 +30,7 @@ namespace Kuiper.Domain
             if(DiceFactory.Roller().D100(chance,0))
             {
                 var distance = DiceFactory.Random().Next(50000, 1500000);
+                var asteroid = CelestialBodies.Asteroid.Create("Scanned Asteroid",3.2, CelestialBodies. ) 
                 var asteroid = new Location("Scanned Asteroid",distance,new List<Location>(), SatelliteType.Asteroid);
                 SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation.Satellites.Add(asteroid);
                 Locations.Destinations.Add(asteroid);
