@@ -66,6 +66,11 @@ namespace Kuiper.Services
             throw new System.NotImplementedException();
         }
 
+        public IEnumerable<CelestialBody> GetBodies()
+        {
+            return SolarSystem;
+        }
+
         public CelestialBody GetBody(string name)
         {
             return SolarSystem.Where(b => string.Equals(name, b.Name, System.StringComparison.OrdinalIgnoreCase)).SingleOrDefault();

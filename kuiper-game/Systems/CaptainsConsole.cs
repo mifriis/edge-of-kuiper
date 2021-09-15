@@ -111,12 +111,13 @@ namespace Kuiper.Systems
         private void SetCourse()
         {
             ConsoleWriter.Write($"What location should the ship set a course for?");
-            foreach (var location in Locations.Destinations) //A change for github
+            var bodies = SolarSystemLocator.SolarSystem.SolarSystemService.GetBodies();
+            foreach (var body in bodies)   
             {
-                ConsoleWriter.Write($"* {location.Name}");
+                ConsoleWriter.Write($"* {body.Name}");
             }
             var input = Console.ReadLine();
-            var target = Locations.Destinations.First(x => x.Name == input);
+            var target = SolarSystemLocator.SolarSystem.SolarSystemService.GetBody(input);
             if(target != null)
             {
                  var courseText = SolarSystemLocator.SolarSystem.Captain.Ship.SetCourse(target);

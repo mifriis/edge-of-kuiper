@@ -29,11 +29,11 @@ namespace Kuiper.Domain
         {
             if(DiceFactory.Roller().D100(chance,0))
             {
-                var distance = DiceFactory.Random().Next(50000, 1500000);
-                var asteroid = CelestialBodies.Asteroid.Create("Scanned Asteroid",3.2, CelestialBodies. ) 
-                var asteroid = new Location("Scanned Asteroid",distance,new List<Location>(), SatelliteType.Asteroid);
-                SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation.Satellites.Add(asteroid);
-                Locations.Destinations.Add(asteroid);
+                var asteroid = CelestialBodies.Asteroid.Create("Scanned Asteroid",3.2, SolarSystemLocator.SolarSystem.SolarSystemService.GetBody("Sun"),CelestialBodies.CelestialBodyType.Asteroid );
+                var distance = SolarSystemLocator.SolarSystem.SolarSystemService.GetDistanceInAu(
+                    SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation,
+                    asteroid
+                );
                 return $"Asteroid scanning complete. Found a candidate {distance}km from {SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation}. Set a course to begin mining the asteroid.";
             }
             return $"Asteroid scanning complete, but found no asteroids with a yield within the scanners parameters.";
