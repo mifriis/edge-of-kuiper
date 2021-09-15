@@ -1,6 +1,6 @@
 namespace Kuiper.Domain.CelestialBodies
 {
-    public class Planet :CelestialBody
+    public class Asteroid :CelestialBody
     {
         
     }

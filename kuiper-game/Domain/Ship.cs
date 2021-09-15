@@ -87,7 +87,7 @@ namespace Kuiper.Domain
 
         public string MineAsteroid(int durationHours)
         {
-            if(Status == ShipStatus.InOrbit && CurrentLocation.SatelliteType == SatelliteType.Asteroid)
+            if(Status == ShipStatus.InOrbit && CurrentLocation is Asteroid)
             {
                 var evt = new MineAsteroid(GameTime.Now(), TimeSpan.FromHours(durationHours));
                 Enqueue(evt);
