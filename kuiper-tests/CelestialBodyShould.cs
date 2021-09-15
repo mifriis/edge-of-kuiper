@@ -186,5 +186,33 @@ namespace Kuiper.Tests.Unit.Domain
             // Assert
             Assert.Equal(currentPoint, results);
         }
+
+        [Fact]
+        public void CreateBodyWithVelocity() 
+        {
+            // Arrange
+            var currentPoint = new Vector2(-0.9917729f, 0.14527623f);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+        
+            //Act
+            var earth = CelestialBody.Create("Earth", 1.0f, 170, star, CelestialBodyType.Planet);
+
+            // Assert
+            Assert.NotNull(earth.Velocity);
+        }
+
+        [Fact]
+        public void CreateBodyWithOriginDegrees() 
+        {
+            // Arrange
+            var currentPoint = new Vector2(-0.9917729f, 0.14527623f);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+        
+            //Act
+            var earth = CelestialBody.Create("Earth", 1.0f, star, CelestialBodyType.Planet);
+
+            // Assert
+            Assert.NotNull(earth.OriginDegrees);
+        }
     }
 }

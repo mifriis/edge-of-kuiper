@@ -76,7 +76,26 @@ namespace Kuiper.Domain.CelestialBodies
         private CelestialBody parent;
         private List<CelestialBody> satellites;
 
-        public static CelestialBody Create(string name, double orbitRadius, double velocity, double originDegrees, CelestialBody parent, CelestialBodyType bodyType)
+        public static CelestialBody Create(string name, double orbitRadius, 
+            CelestialBody parent, CelestialBodyType bodyType) 
+        {
+            Random rnd = new Random();
+
+            var originDegrees = rnd.NextDouble() * 360;
+            return Create(name, orbitRadius, originDegrees, parent, bodyType);
+        }
+
+        public static CelestialBody Create(string name, double orbitRadius, double originDegrees, 
+            CelestialBody parent, CelestialBodyType bodyType) 
+        {
+            const double VELOCITYCONSTANT = 29.8;
+            var velocity = VELOCITYCONSTANT / (orbitRadius / Math.Sqrt(orbitRadius));
+
+            return Create(name, orbitRadius, velocity, originDegrees, parent, bodyType);
+        }
+
+        public static CelestialBody Create(string name, double orbitRadius, double velocity, 
+            double originDegrees, CelestialBody parent, CelestialBodyType bodyType)
         {
             CelestialBody body = null;
 
