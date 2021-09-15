@@ -9,10 +9,12 @@ namespace Kuiper.Systems
     {
         private readonly ICaptainService _captainService;
         private readonly Captain _currentCaptain;
+        private readonly ISolarSystemService _solarSystemService;
 
-        public CaptainsConsole(ICaptainService captainService)
+        public CaptainsConsole(ICaptainService captainService, ISolarSystemService solarSystemService)
         {
             _captainService = captainService;
+            _solarSystemService = solarSystemService;
 
             _currentCaptain = _captainService.SetupCaptain();
         }
@@ -40,6 +42,13 @@ namespace Kuiper.Systems
                     break;
                 case "ship set course":
                     Ship("set course");
+                    break;
+                case "test solarsystem":
+                    var earth = _solarSystemService.GetBody("Earth");
+                    var mercury = _solarSystemService.GetBody("Mercury");
+
+                    var dist = _solarSystemService.GetDistanceInAu(earth, mercury);
+                    ConsoleWriter.Write($"Distance is {dist} AU.");
                     break;
                 default:
                     ConsoleWriter.Write($"{input} not recognized. Try 'help' for list of commands");
@@ -95,14 +104,14 @@ namespace Kuiper.Systems
 
         public void Save()
         {
-            _currentCaptain.MarkLastSeen();
+            _currentCaptain.LastLoggedIn = GameTime.Now();
             SaveLoad.SaveGame(_currentCaptain);
             ConsoleWriter.Write($"Game saved successfully.", ConsoleColor.Red);
         }
 
         public void CurrentTime()
         {
-            var currentGameTime = TimeDilation.CalculateTime(_currentCaptain.GameLastSeen, _currentCaptain.RealLastSeen, DateTime.Now);
+            var currentGameTime = GameTime.Now();
             ConsoleWriter.Write($"The time is currently: {currentGameTime}");
         }
     }
