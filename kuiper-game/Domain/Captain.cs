@@ -6,9 +6,10 @@ namespace Kuiper.Domain
     public class Captain
     {
         [JsonConstructor]
-        public Captain(string name)
+        public Captain(string name, Account account)
         {
             Name = name;
+            Account = account;
         }
 
         public Captain(string name, DateTime startTime, Account account)
