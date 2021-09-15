@@ -34,6 +34,7 @@ namespace Kuiper.Services
                     _currentSystem = SaveLoad.Load(saves.FirstOrDefault());
                     GameTime.RealStartTime = _currentSystem.GameStart;
                     SolarSystemLocator.SetSolarSystem(_currentSystem);
+                    SolarSystemLocator.SolarSystem.SolarSystemService = this;
                     ConsoleWriter.Write($"Welcome back Captain {_currentSystem.Captain.Name}, you were last seen on {_currentSystem.Captain.LastLoggedIn}!");    
                     _currentSystem.Captain.Ship.StatusReport();
                     return _currentSystem;
@@ -43,6 +44,7 @@ namespace Kuiper.Services
                 _currentSystem.Captain = new Captain(name);
                 GameTime.RealStartTime = _currentSystem.GameStart;
                 SolarSystemLocator.SetSolarSystem(_currentSystem);
+                SolarSystemLocator.SolarSystem.SolarSystemService = this;
                 _currentSystem.Captain.Ship = new Ship("Bullrun","Sloop", 40000);
                 _currentSystem.Captain.Ship.CurrentLocation = GetBody("Earth");
                 _currentSystem.Captain.Ship.Status = ShipStatus.InOrbit;
