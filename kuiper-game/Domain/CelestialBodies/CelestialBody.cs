@@ -148,5 +148,10 @@ namespace Kuiper.Domain.CelestialBodies
 
             return body;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

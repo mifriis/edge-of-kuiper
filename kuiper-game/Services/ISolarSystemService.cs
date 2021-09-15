@@ -16,5 +16,6 @@ namespace Kuiper.Services
         IEnumerable<CelestialBody> GetSatellites(CelestialBody parent);
         IEnumerable<CelestialBody> GetNearestBodies(int count);
         CelestialBody GetBody(string name);
+        IEnumerable<CelestialBody> GetBodies();
     }
 }

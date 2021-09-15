@@ -3,6 +3,7 @@ using Xunit;
 using Kuiper.Domain;
 using NSubstitute;
 using Kuiper.Services;
+using Kuiper.Domain.CelestialBodies;
 
 namespace Kuiper.Tests.Unit.Domain
 {
@@ -34,9 +35,14 @@ namespace Kuiper.Tests.Unit.Domain
             DiceFactory.setDiceRollerInstance(null);
             var diceRoller = Substitute.For<IDiceRoller>();
             var randomer = Substitute.For<IRandom>();
+            var service = Substitute.For<ISolarSystemService>();
             var gamestart = new DateTime(1990,1,1,1,1,1);
             var system = new SolarSystem(gamestart);
-            var captain = new Captain("Testo") { Ship = new Ship("Testlo", "Testlo", 100) { CurrentLocation = Locations.Earth}};
+            var earth = CelestialBody.Create("Earth",1,null,CelestialBodyType.Planet);
+            system.SolarSystemService = service;
+            service.GetBody(default).ReturnsForAnyArgs(earth);
+            service.GetDistanceInAu(default,default).ReturnsForAnyArgs(100);
+            var captain = new Captain("Testo") { Ship = new Ship("Testlo", "Testlo", 100) { CurrentLocation = earth}};
             system.Captain = captain;
             SolarSystemLocator.SetSolarSystem(system);
             DiceFactory.setDiceRollerInstance(diceRoller);

@@ -14,7 +14,7 @@ namespace Kuiper.Domain
         
         public Captain Captain { get; set;}
 
-        public SolarSystemService SolarSystemService { get; set;}
+        public ISolarSystemService SolarSystemService { get; set;}
         
         
     }
