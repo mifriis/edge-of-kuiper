@@ -1,5 +1,6 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 using Kuiper.Domain;
 using Kuiper.Services;
 
@@ -9,13 +10,17 @@ namespace Kuiper.Systems
     {
         private readonly ICaptainService _captainService;
         private readonly Captain _currentCaptain;
+        private Dictionary<string, Dictionary<string, Action>> commands = new Dictionary<string, Dictionary<string, Action>>();
 
-        public CaptainsConsole(ICaptainService captainService)
+        public CaptainsConsole(ICaptainService captainService, IEnumerable<IConsoleCommand> commands)
         {
             _captainService = captainService;
 
             _currentCaptain = _captainService.SetupCaptain();
+
+            FindCommands(commands);
         }
+
         public void ConsoleMapper(string input)
         {
             switch (input)
@@ -29,68 +34,28 @@ namespace Kuiper.Systems
                 case "time":
                     CurrentTime();
                     break;
-                case "ship description":
-                    Ship("description");
-                    break;
-                case "ship stats":
-                    Ship("stats");
-                    break;
-                case "ship location":
-                    Ship("location");
-                    break;
-                case "ship set course":
-                    Ship("set course");
-                    break;
                 default:
-                    ConsoleWriter.Write($"{input} not recognized. Try 'help' for list of commands");
+                    RunCommand(input);
                     break;
             }
         }
 
-        private void Ship(string subChoice)
+        public void CurrentTime()
         {
-            switch (subChoice)
-            {
-                case "location":
-                    ConsoleWriter.Write(_currentCaptain.Ship.LocationDescription);
-                    break;
-                case "stats":
-                    ConsoleWriter.Write(_currentCaptain.Ship.ShipStatsDescription);
-                    break;
-                case "description":
-                    ConsoleWriter.Write(_currentCaptain.Ship.Description);
-                    break;
-                case "set course":
-                    SetCourse();
-                    break;
-                default:
-                    ConsoleWriter.Write($"{subChoice} not recognized. Try ship location, ship stats or ship description");
-                    break;
-            }
-        }
-
-        private void SetCourse()
-        {
-            ConsoleWriter.Write($"What location should the ship set a course for?");
-            foreach (var location in Locations.Destinations)
-            {
-                ConsoleWriter.Write($"* {location.Name}");
-            }
-            var input = Console.ReadLine();
-            var target = Locations.Destinations.First(x => x.Name == input);
-            if(target != null)
-            {
-                 var courseText = _captainService.SetCourse(target);
-                 ConsoleWriter.Write(courseText);
-                 return;
-            }
-            ConsoleWriter.Write($"No location found with the name {target}");
+            var currentGameTime = GameTime.Now();
+            ConsoleWriter.Write($"The time is currently: {currentGameTime}");
         }
 
         public void Help()
         {
-            ConsoleWriter.Write($"No help availiable.");
-
+            ConsoleWriter.Write("Available Commands:");
+            foreach (var command in commands)
+            {
+                foreach (var subCommand in command.Value)
+                {
+                    ConsoleWriter.Write($"{command.Key} {subCommand.Key}");
+                }
+            }
         }
 
         public void Save()
@@ -100,10 +65,44 @@ namespace Kuiper.Systems
             ConsoleWriter.Write($"Game saved successfully.", ConsoleColor.Red);
         }
 
-        public void CurrentTime()
+        private void FindCommands(IEnumerable<IConsoleCommand> commands)
         {
-            var currentGameTime = GameTime.Now();
-            ConsoleWriter.Write($"The time is currently: {currentGameTime}");
+            foreach (var command in commands)
+            {
+                var type = command.GetType();
+                var commandName = ((CommandAttribute)type.GetCustomAttribute(typeof(CommandAttribute))).Name;
+                foreach (var method in command.GetType().GetMethods())
+                {
+                    var choiceName = method.Name.ToLower();
+                    var attributes = method.GetCustomAttributes(typeof(CommandAttribute), false);
+                    foreach (CommandAttribute attribute in attributes)
+                    {
+                        if (attribute.Name != string.Empty)
+                        {
+                            choiceName = attribute.Name.ToLower();
+                        }
+                        if (!this.commands.ContainsKey(commandName))
+                        {
+                            this.commands[commandName] = new Dictionary<string, Action>();
+                        }
+
+                        Action act = () => method.Invoke(command, null);
+                        this.commands[commandName][choiceName] = act;
+                    }
+                }
+            }
+        }
+        private void RunCommand(string consoleInput)
+        {
+            try
+            {
+                var input = consoleInput.Split(" ");
+                commands[input[0]][input[1]].Invoke();
+            }
+            catch (Exception ex)
+            {
+                ConsoleWriter.Write($"{consoleInput} not recognized. Try 'help' for list of commands");
+            }
         }
     }
 }
