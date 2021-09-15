@@ -111,7 +111,7 @@ namespace Kuiper.Systems
         private void SetCourse()
         {
             ConsoleWriter.Write($"What location should the ship set a course for?");
-            foreach (var location in Locations.Destinations)
+            foreach (var location in Locations.Destinations) //A change for github
             {
                 ConsoleWriter.Write($"* {location.Name}");
             }
