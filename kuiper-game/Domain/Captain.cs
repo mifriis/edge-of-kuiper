@@ -12,15 +12,15 @@ namespace Kuiper.Domain
             Name = name;
         }
 
-        public Captain(string name, DateTime startTime)
+        public Captain(string name, GameTime startTime)
         {
             Name = name;
             StartTime = startTime;
         }
 
         public string Name { get; }
-        public DateTime StartTime { get; set; }
-        public DateTime LastLoggedIn { get; set;}
+        public GameTime StartTime { get; set; }
+        public GameTime LastLoggedIn { get; set;}
 
         public Ship Ship { get; set;}
     }

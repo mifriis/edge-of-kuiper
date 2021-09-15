@@ -1,21 +1,40 @@
 using System;
+using Microsoft.VisualBasic;
 
-public struct GameTime
+namespace Kuiper.Domain
 {
-    private static readonly DateTime GameStartDate = new DateTime(2078, 1, 1);
-    private const long tickAccelerationConstant = 7; //1 real day, is 7 game days
-    public static DateTime RealStartTime {get; set;}
-
-    public static DateTime Now()
+    public readonly struct GameTime
     {
-        if(RealStartTime == DateTime.MinValue)
+        private static readonly long GameTimeEpoch = new DateTime(2078, 1, 8).Ticks;
+        private const long TickAccelerationConstant = 7; //1 real day is 7 game days
+        public static long RealTimeEpoch { get; private set; }
+        public long Ticks { get; }
+
+        /// <summary>
+        /// Initialize a game time from a real time
+        /// </summary>
+        /// <param name="realTimeEpoch">The starting timestamp in real time UTC. This is equal to gametime GT 2078-01-01</param>
+        /// <param name="ticks">Additional ticks</param>
+        public GameTime(long realTimeEpoch, long ticks = 0)
         {
-            throw new ArgumentOutOfRangeException("RealStartTime has never been set, it's required to be so either during load or captain setup");
+            RealTimeEpoch = realTimeEpoch;
+            Ticks = ticks;
         }
-        var elapsedRealTime = DateTime.Now.Subtract(RealStartTime);
 
-        var elapsedGameTime = new TimeSpan(elapsedRealTime.Ticks * tickAccelerationConstant);
+        public GameTime Add(long ticks)
+        {
+            return new(RealTimeEpoch, ticks);
+        }
 
-        return GameStartDate.Add(elapsedGameTime);
+        public DateTime ConvertToGameDateTime()
+        {
+            return new DateTime(GameTimeEpoch + Ticks);
+        }
+
+        public static GameTime Now()
+        {
+            var elapsed = DateTime.UtcNow.Ticks - RealTimeEpoch;
+            return new GameTime(RealTimeEpoch, elapsed * TickAccelerationConstant);
+        }
     }
 }
