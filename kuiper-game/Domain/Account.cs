@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Kuiper.Systems;
 using Newtonsoft.Json;
 
 namespace Kuiper.Domain
 {
     public class Account
     {
-        [JsonProperty("balance")]
         private decimal _balance;
-        [JsonProperty("transactions")]
         private IList<Transaction> _transactions;
 
         [JsonConstructor]
@@ -25,6 +22,18 @@ namespace Kuiper.Domain
             _transactions = transactions;
         }
 
+        public decimal Balance {
+            get {
+                return _balance;
+            }
+        }
+
+        public IEnumerable<Transaction> Transactions {
+            get {
+                return _transactions;
+            }
+        }
+
         public decimal Deposit(decimal amount) {
             _balance += amount;
             _transactions.Add(new Transaction(GameTime.Now(), TransactionType.Deposit, amount));
@@ -36,29 +45,6 @@ namespace Kuiper.Domain
             _balance -= amount;
             _transactions.Add(new Transaction(GameTime.Now(), TransactionType.Withdrawal, amount));
             return _balance;
-        }
-
-        public void DisplayBalance() {
-            ConsoleWriter.Write($"Your current account balance is ${_balance.ToString("N1")}");
-        }
-
-        public void DisplayTransactionHistory() {
-            if(_transactions.Count == 0) {
-                ConsoleWriter.Write("No transaction history available....");
-                return;
-            }
-
-            ConsoleWriter.Write("Printing transaction history");
-            ConsoleWriter.Write("--------------------------------------------------------------");
-            ConsoleWriter.Write("Date                             |  Action      |  Amount");
-            ConsoleWriter.Write("--------------------------------------------------------------");
-
-            foreach (var transaction in _transactions)
-            {
-                ConsoleWriter.Write(transaction.ToString());
-            }
-            
-            ConsoleWriter.Write("--------------------------------------------------------------");
         }
     }
 
