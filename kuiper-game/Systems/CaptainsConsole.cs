@@ -44,10 +44,10 @@ namespace Kuiper.Systems
                     Ship("set course");
                     break;
                 case "account balance":
-                    _currentCaptain.Account.DisplayBalance();
+                    DisplayAccountBalance();
                     break;
                 case "account history":
-                    _currentCaptain.Account.DisplayTransactionHistory();
+                    DisplayAccountTransactionHistory();
                     break;
                 case "test solarsystem":
                     var earth = _solarSystemService.GetBody("Earth");
@@ -100,6 +100,29 @@ namespace Kuiper.Systems
                  return;
             }
             ConsoleWriter.Write($"No location found with the name {target}");
+        }
+
+        private void DisplayAccountBalance() {
+            ConsoleWriter.Write($"Your current account balance is ${_currentCaptain.Account.Balance.ToString("N1")}");
+        }
+
+        private void DisplayAccountTransactionHistory() {
+            if(!_currentCaptain.Account.Transactions.Any()) {
+                ConsoleWriter.Write("No transaction history available....");
+                return;
+            }
+
+            ConsoleWriter.Write("Printing transaction history");
+            ConsoleWriter.Write("--------------------------------------------------------------");
+            ConsoleWriter.Write("Date                             |  Action      |  Amount");
+            ConsoleWriter.Write("--------------------------------------------------------------");
+
+            foreach (var transaction in _currentCaptain.Account.Transactions)
+            {
+                ConsoleWriter.Write(transaction.ToString());
+            }
+            
+            ConsoleWriter.Write("--------------------------------------------------------------");
         }
 
         public void Help()
