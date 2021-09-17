@@ -1,5 +1,4 @@
 using System;
-using Microsoft.VisualBasic;
 
 namespace Kuiper.Domain
 {
