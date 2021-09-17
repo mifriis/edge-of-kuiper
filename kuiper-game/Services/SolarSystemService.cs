@@ -31,6 +31,7 @@ namespace Kuiper.Services
                 var saves = SaveLoad.LookForSaves(name);
                 if(saves.Count() > 0)
                 {
+                    //We are now loading
                     _currentSystem = SaveLoad.Load(saves.FirstOrDefault());
                     GameTime.RealStartTime = _currentSystem.GameStart;
                     SolarSystemLocator.SetSolarSystem(_currentSystem);
@@ -39,12 +40,13 @@ namespace Kuiper.Services
                     _currentSystem.Captain.Ship.StatusReport();
                     return _currentSystem;
                 }
-                
+                //We are now starting a new game
                 _currentSystem = new SolarSystem(DateTime.Now);
                 _currentSystem.Captain = new Captain(name);
                 GameTime.RealStartTime = _currentSystem.GameStart;
                 SolarSystemLocator.SetSolarSystem(_currentSystem);
                 SolarSystemLocator.SolarSystem.SolarSystemService = this;
+                SolarSystemLocator.SolarSystem.CelestialBodies = SolarSystemLocator.SolarSystem.SolarSystemService.GetBodies().ToList();
                 _currentSystem.Captain.Ship = new Ship("Bullrun","Sloop", 40000);
                 _currentSystem.Captain.Ship.CurrentLocation = GetBody("Earth");
                 _currentSystem.Captain.Ship.Status = ShipStatus.InOrbit;

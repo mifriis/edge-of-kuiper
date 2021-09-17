@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kuiper.Domain.CelestialBodies;
 using Kuiper.Services;
 
 namespace Kuiper.Domain
@@ -11,6 +12,8 @@ namespace Kuiper.Domain
             GameStart = now;
         }
         public DateTime GameStart { get; set;}
+
+        public List<CelestialBody> CelestialBodies { get; set;}
         
         public Captain Captain { get; set;}
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Kuiper.Domain.CelestialBodies
 {
@@ -53,6 +54,7 @@ namespace Kuiper.Domain.CelestialBodies
             return new Vector2((float)x, (float)y);
         }
 
+        [JsonIgnore]
         public CelestialBody Parent
         {
             get
