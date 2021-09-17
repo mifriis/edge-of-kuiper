@@ -2,7 +2,7 @@
   {
     "position": 1,
     "name": "Sol",
-    "distance": 0,
+    "orbitRadius": 0,
     "velocity": 0,
     "originDegrees": 0,
     "type": "Star",
@@ -11,7 +11,7 @@
   {
     "position": 1,
     "name": "Mercury",
-    "distance": 0.387,
+    "orbitRadius": 0.387,
     "velocity": 47.4,
     "originDegrees": 30,
     "type": "Planet",
@@ -20,7 +20,7 @@
   {
     "position": 2,
     "name": "Venus",
-    "distance": 0.723,
+    "orbitRadius": 0.723,
     "velocity": 35.0,
     "originDegrees": 170,
     "type": "Planet",
@@ -29,7 +29,7 @@
   {
     "position": 3,
     "name": "Earth",
-    "distance": 1,
+    "orbitRadius": 1,
     "velocity": 29.8,
     "originDegrees": 170,
     "type": "Planet",
@@ -38,7 +38,7 @@
   {
     "position": 1,
     "name": "Luna",
-    "distance": 0.00257356604,
+    "orbitRadius": 0.00257356604,
     "velocity": 1.022,
     "originDegrees": 125,
     "type": "Moon",
@@ -47,7 +47,7 @@
   {
     "position": 4,
     "name": "Mars",
-    "distance": 1.523,
+    "orbitRadius": 1.523,
     "velocity": 24.1,
     "originDegrees": 95,
     "type": "Planet",
@@ -56,7 +56,7 @@
   {
     "position": 5,
     "name": "Jupiter",
-    "distance": 5.205,
+    "orbitRadius": 5.205,
     "velocity": 13.1,
     "originDegrees": 45,
     "type": "GasGiant",
@@ -65,7 +65,7 @@
   {
     "position": 6,
     "name": "Saturn",
-    "distance": 9.582,
+    "orbitRadius": 9.582,
     "velocity": 9.7,
     "originDegrees": 345,
     "type": "GasGiant",
@@ -74,7 +74,7 @@
   {
     "position": 7,
     "name": "Uranus",
-    "distance": 19.2,
+    "orbitRadius": 19.2,
     "velocity": 6.81,
     "originDegrees": 340,
     "type": "Planet",
@@ -83,7 +83,7 @@
   {
     "position": 8,
     "name": "Neptune",
-    "distance": 30.05,
+    "orbitRadius": 30.05,
     "velocity": 5.43,
     "originDegrees": 135,
     "type": "Planet",
@@ -92,7 +92,7 @@
   {
     "position": 9,
     "name": "Pluto",
-    "distance": 39.48,
+    "orbitRadius": 39.48,
     "velocity": 4.74,
     "originDegrees": 260,
     "type": "DwarfPlanet",
