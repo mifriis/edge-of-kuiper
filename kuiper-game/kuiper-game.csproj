@@ -5,6 +5,7 @@
     <RootNamespace>Kuiper</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Dawn.Guard" Version="1.12.0" />
     <PackageReference Include="Lamar" Version="6.0.0" />
     <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />

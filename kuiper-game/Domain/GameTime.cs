@@ -1,42 +1,53 @@
 using System;
+using System.Globalization;
+using Dawn;
+using Kuiper.Services;
 
 namespace Kuiper.Domain
 {
     public readonly struct GameTime
     {
-        private static readonly long GameTimeEpoch = new DateTime(2078, 1, 8).Ticks;
-        private const long TickAccelerationConstant = 7; //1 real day is 7 game days
-        public static long RealTimeEpoch { get; private set; }
-        public long Ticks { get; }
+        public DateTimeOffset Value { get; }
 
         /// <summary>
-        /// Initialize a game time from a real time
+        /// The game time after genesis GT 2078-1-8
         /// </summary>
-        /// <param name="realTimeEpoch">The starting timestamp in real time UTC. This is equal to gametime GT 2078-01-01</param>
-        /// <param name="ticks">Additional ticks</param>
-        public GameTime(long realTimeEpoch, long ticks = 0)
+        /// <param name="value">The time in GameTime</param>
+        public GameTime(DateTimeOffset value)
         {
-            RealTimeEpoch = realTimeEpoch;
-            Ticks = ticks;
+            Guard.Argument(value, nameof(value)).Min(new DateTimeOffset(new DateTime(2078, 1, 8)));
+
+            Value = value;
         }
 
-        public GameTime Add(long ticks)
+        public GameTime Add(TimeSpan time)
         {
-            return new GameTime(RealTimeEpoch, ticks);
+            return new GameTime(Value.Add(time));
         }
 
-        public DateTime ConvertToGameDateTime()
+        public override string ToString()
         {
-            return new DateTime(GameTimeEpoch + Ticks);
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
+        public static bool operator < (GameTime left, GameTime right)
+        {
+            return left.Value < right.Value;
+        }
+
+        public static bool operator >(GameTime left, GameTime right)
+        {
+            return left.Value > right.Value;
+        }
+
+        /// <summary>
+        /// Shorthand to get Elapsed game time based on real time played
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete("Use ITimeService.Now() instead")]
         public static GameTime Now()
         {
-            if (RealTimeEpoch == 0L)
-                throw new Exception("GameTime not initialized");
-            
-            var elapsed = DateTime.UtcNow.Ticks - RealTimeEpoch;
-            return new GameTime(RealTimeEpoch, elapsed * TickAccelerationConstant);
+            return TimeService.Now();
         }
     }
 }

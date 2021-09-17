@@ -23,15 +23,17 @@ namespace Kuiper.Services
                     $"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastLoggedIn}!");
                 return _currentCaptain;
             }
+            
+            TimeService.Init(DateTimeOffset.Now);
 
-            _currentCaptain = new Captain(name, new GameTime(DateTime.Now.Ticks))
+            _currentCaptain = new Captain(name, GameTime.Now())
             {
                 Ship = new Ship("Bullrun", "Sloop", 40000)
                 {
                     CurrentLocation = Locations.Earth, Status = ShipStatus.InOrbit
                 }
             };
-            ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {GameTime.Now().ConvertToGameDateTime()}");
+            ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {GameTime.Now()}");
             return _currentCaptain;
         }
 
@@ -69,7 +71,7 @@ namespace Kuiper.Services
             }
 
             var hoursToTargetLocation = TimeSpan.FromHours(distance / ship.Speed);
-            ship.ArrivalTime = GameTime.Now().Add(hoursToTargetLocation.Ticks);
+            ship.ArrivalTime = GameTime.Now().Add(hoursToTargetLocation);
             return $"{ship.Name} will arrive in orbit above {targetLocation.Name} on {ship.ArrivalTime}";
         }
 
