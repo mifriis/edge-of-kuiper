@@ -1,151 +1,76 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using LamarCodeGeneration.Util;
 
 namespace Kuiper.Domain.CelestialBodies
 {
     public abstract class CelestialBody
     {
-        private const int AUINKM =  149597871; // 1 AU in KM. Maybe this belongs somewhere else?
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-        }
+        private const int AUINKM = 149597871; // 1 AU in KM. Maybe this belongs somewhere else?
+        public string Name { get; private set; }
 
-        public double OrbitRadius
-        {
-            get
-            {
-                return orbitRadius;
-            }
-        }
+        public double OrbitRadius { get; private set; }
 
-        public double Velocity
-        {
-            get
-            {
-                return velocity;
-            }
-        }
+        public double Velocity { get; private set; }
 
-        public double OriginDegrees
-        {
-            get
-            {
-                return originDegrees;
-            }
-        }
+        public double OriginDegrees { get; private set; }
 
+        public CelestialBody Parent { get; private set; }
+
+        protected CelestialBody(string name, double orbitRadius, double velocity, double originDegrees, CelestialBody parent)
+        {
+            Name = name;
+            OrbitRadius = orbitRadius;
+            Velocity = velocity;
+            OriginDegrees = originDegrees;
+            Parent = parent;
+        }
+        
         public Vector2 GetPosition(TimeSpan gametimePassed)
         {
-            if (parent == null) return new Vector2(0,0);
-            var velocityInRadiansPerSecond = 
-                velocity / (OrbitRadius * AUINKM);
-            var positionInRadians = originDegrees * (Math.PI/180);
+            if (Parent == null) return new Vector2(0, 0);
+            var velocityInRadiansPerSecond =
+                Velocity / (OrbitRadius * AUINKM);
+            var positionInRadians = OriginDegrees * (Math.PI / 180);
             positionInRadians += (velocityInRadiansPerSecond * gametimePassed.TotalSeconds);
 
-            var x = parent.GetPosition(gametimePassed).X + Math.Cos(positionInRadians) * OrbitRadius;
-            var y = parent.GetPosition(gametimePassed).Y + Math.Sin(positionInRadians) * OrbitRadius;
+            var x = Parent.GetPosition(gametimePassed).X + Math.Cos(positionInRadians) * OrbitRadius;
+            var y = Parent.GetPosition(gametimePassed).Y + Math.Sin(positionInRadians) * OrbitRadius;
 
-            return new Vector2((float)x, (float)y);
+            return new Vector2((float) x, (float) y);
         }
 
-        public CelestialBody Parent
-        {
-            get
-            {
-                return parent;
-            }
-        }
-
-        public IEnumerable<CelestialBody> Satellites
-        {
-            get
-            {
-                return satellites;
-            }
-        }
-
-        private string name;
-        private double orbitRadius;
-        private double velocity;
-        private double originDegrees;
-        private CelestialBody parent;
-        private List<CelestialBody> satellites;
-
-        public static CelestialBody Create(string name, double orbitRadius, 
-            CelestialBody parent, CelestialBodyType bodyType) 
+        public static T Create<T>(string name, double orbitRadius, CelestialBody parent)
+            where T : CelestialBody
         {
             Random rnd = new Random();
 
             var originDegrees = rnd.NextDouble() * 360;
-            return Create(name, orbitRadius, originDegrees, parent, bodyType);
+            return Create<T>(name, orbitRadius, originDegrees, parent);
         }
 
-        public static CelestialBody Create(string name, double orbitRadius, double originDegrees, 
-            CelestialBody parent, CelestialBodyType bodyType) 
+        public static T Create<T>(string name, double orbitRadius, double originDegrees, CelestialBody parent)
+            where T : CelestialBody
         {
             const double VELOCITYCONSTANT = 29.8;
             var velocity = VELOCITYCONSTANT / (orbitRadius / Math.Sqrt(orbitRadius));
 
-            return Create(name, orbitRadius, velocity, originDegrees, parent, bodyType);
+            return Create<T>(name, orbitRadius, velocity, originDegrees, parent);
         }
 
-        public static CelestialBody Create(string name, double orbitRadius, double velocity, 
-            double originDegrees, CelestialBody parent, CelestialBodyType bodyType)
+        public static T Create<T>(string name, double orbitRadius, double velocity, double originDegrees, CelestialBody parent)
+            where T : CelestialBody
         {
-            CelestialBody body = null;
-
-            switch (bodyType)
-            {
-                case CelestialBodyType.Star:
-                    body = create<Star>(name, orbitRadius, velocity, originDegrees, null);
-                    break;
-                case CelestialBodyType.Planet:
-                    body = create<Planet>(name, orbitRadius, velocity, originDegrees, parent);
-                    break;
-                case CelestialBodyType.Moon:
-                    body = create<Moon>(name, orbitRadius, velocity, originDegrees, parent);
-                    break;
-                case CelestialBodyType.GasGiant:
-                    body = create<GasGiant>(name, orbitRadius, velocity, originDegrees, parent);
-                    break;
-                case CelestialBodyType.DwarfPlanet:
-                    body = create<DwarfPlanet>(name, orbitRadius, velocity, originDegrees, parent);
-                    break;
-                case CelestialBodyType.Asteroid:
-                    body = create<Asteroid>(name, orbitRadius, velocity, originDegrees, parent);
-                    break;
-            }
-
-            if (body.parent != null)
-            {
-                parent.AddSatellite(body);
-            }
-            return body;
+            return (T)Create(typeof(T), name, orbitRadius, velocity, originDegrees, parent);
         }
-
-        public void AddSatellite(CelestialBody satellite)
+        
+        public static CelestialBody Create(Type celestialType, string name, double orbitRadius, double velocity, double originDegrees, CelestialBody parent)
         {
-            satellites.Add(satellite);
-        }
 
-        private static CelestialBody create<T>(string name, double orbitRadius, double velocity,
-            double originDegrees, CelestialBody parent) where T : CelestialBody, new()
-        {
-            var body = new T()
-            {
-                name = name,
-                orbitRadius = orbitRadius,
-                velocity = velocity,
-                originDegrees = originDegrees,
-                satellites = new List<CelestialBody>(),
-                parent = parent
-            };
-
+            var body = (CelestialBody)Activator.CreateInstance(celestialType,
+                name, orbitRadius, velocity, originDegrees, parent);
+            
             return body;
         }
 

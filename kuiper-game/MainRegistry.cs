@@ -1,3 +1,4 @@
+using System;
 using Kuiper.Services;
 using Kuiper.Systems;
 using Kuiper.Repositories;
@@ -12,7 +13,7 @@ namespace Kuiper
         public MainRegistry()
         {
             this.AddHostedService<MainLoopWorker>();
-            this.AddSingleton<ISolarSystemRepository>(x => new JsonFileSolarSystemRepository(new FileInfo("Data\\Sol.solarsystem")));
+            this.AddSingleton<ISolarSystemRepository>(x => new JsonFileSolarSystemRepository(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Sol.solarsystem.json")));
             this.AddSingleton<ISolarSystemService, SolarSystemService>();
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
         }

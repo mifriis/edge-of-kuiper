@@ -7,11 +7,15 @@ using System;
 using System.Numerics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Kuiper.Tests.Unit.Repositories
 {
     public class JsonFileSolarSystemRepositoryShould
     {
+        private readonly string _testDataFilePath =
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData", "Sol.solarsystem.json");
+        
         [Fact]
         public void FailIfJsonFileDoesNotExist()
         {
@@ -24,7 +28,7 @@ namespace Kuiper.Tests.Unit.Repositories
             //Act
 
             //Assert
-            Assert.Throws<FileNotFoundException>(() => new JsonFileSolarSystemRepository(new FileInfo(file)));
+            Assert.Throws<FileNotFoundException>(() => new JsonFileSolarSystemRepository(file));
         }
 
         [Fact]
@@ -33,7 +37,7 @@ namespace Kuiper.Tests.Unit.Repositories
             //Arrange
             var file = Path.GetTempFileName();
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Assert
             Assert.NotNull(repo);
@@ -44,170 +48,130 @@ namespace Kuiper.Tests.Unit.Repositories
         public void CreateCorrectAmountOfBodiesFromJson()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'Sol','distance':0,'velocity':0,'originDegrees':0,'type':'Star','satellites':[{'position':1,'name':'Mercury','distance':0.387,'velocity':47.4,'originDegrees':30,'type':'Planet','satellites':[]},{'position':3,'name':'Earth','distance':1,'velocity':29.8,'originDegrees':170,'type':'Planet','satellites':[{'position':1,'name':'Luna','distance':0.00257356604,'velocity':1.022,'originDegrees':125,'type':'Moon'}]}]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.Equal(4, bodies.Count);
-
-            File.Delete(file);
+            Assert.Equal(11, bodies.Count());
         }
 
         [Fact]
         public void CreateStarBodyTypeFromJson()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'Sol','distance':0,'velocity':0,'originDegrees':0,'type':'Star','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.IsType<Star>(bodies.SingleOrDefault());
-
-            File.Delete(file);
+            Assert.True(bodies.OfType<Star>().Count() == 1);
         }
 
         [Fact]
         public void CreatePlanetBodyTypeFromJson()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'Sol','distance':0,'velocity':0,'originDegrees':0,'type':'Planet','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.IsType<Planet>(bodies.SingleOrDefault());
-
-            File.Delete(file);
+            Assert.True(bodies.OfType<Planet>().Count() == 6);
         }
 
         [Fact]
         public void CreateMoonBodyTypeFromJson()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'Sol','distance':0,'velocity':0,'originDegrees':0,'type':'Moon','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.IsType<Moon>(bodies.SingleOrDefault());
-
-            File.Delete(file);
+            Assert.True(bodies.OfType<Moon>().Count() == 1);
         }
 
         [Fact]
         public void CreateGasGiantBodyTypeFromJson()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'Sol','distance':0,'velocity':0,'originDegrees':0,'type':'GasGiant','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.IsType<GasGiant>(bodies.SingleOrDefault());
-
-            File.Delete(file);
+            Assert.True(bodies.OfType<GasGiant>().Count() == 2);
         }
 
         [Fact]
         public void CreateDwarfPlanetBodyTypeFromJson()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'Sol','distance':0,'velocity':0,'originDegrees':0,'type':'DwarfPlanet','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.IsType<DwarfPlanet>(bodies.SingleOrDefault());
-
-            File.Delete(file);
+            Assert.True(bodies.OfType<DwarfPlanet>().Count() == 1);
         }
 
         [Fact]
         public void SetCorrectOrbitRadius()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'Sol','distance':42,'velocity':0,'originDegrees':0,'type':'DwarfPlanet','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.Equal(42, bodies.SingleOrDefault().OrbitRadius);
-
-            File.Delete(file);
+            //Assert.True(bodies.Single(x => x.Name == "Earth").OrbitRadius);
         }
 
         [Fact]
         public void SetCorrectName()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'TestNamePleaseIgnore','distance':42,'velocity':0,'originDegrees':0,'type':'DwarfPlanet','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.Equal("TestNamePleaseIgnore", bodies.SingleOrDefault().Name);
-
-            File.Delete(file);
+            Assert.True(bodies.First().Name == "Sol");
         }
 
         [Fact]
         public void SetCorrectOrbitVelocity()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'TestNamePleaseIgnore','distance':42,'velocity':67,'originDegrees':0,'type':'DwarfPlanet','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.Equal(67, bodies.SingleOrDefault().Velocity);
-
-            File.Delete(file);
+            Assert.True(bodies.Single(x => x.Name == "Earth").Velocity == 29.8);
         }
 
         [Fact]
         public void SetCorrectOriginDegrees()
         {
             //Arrange
-            var file = Path.GetTempFileName();
-            var jsonString = "{'position':1,'name':'TestNamePleaseIgnore','distance':42,'velocity':67,'originDegrees':69,'type':'DwarfPlanet','satellites':[]}";
+            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
 
             //Act
-            var repo = new JsonFileSolarSystemRepository(new FileInfo(file));
-            var bodies = repo.GetBodiesFromJson(jsonString);
+            var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.Equal(69, bodies.SingleOrDefault().OriginDegrees);
-
-            File.Delete(file);
+            Assert.True(bodies.Single(x => x.Name == "Earth").OriginDegrees == 170);
         }
     }
 }

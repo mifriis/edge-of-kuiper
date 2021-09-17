@@ -12,7 +12,6 @@ namespace Kuiper.Services
         SolarSystem SetupGame();
         double GetDistanceInAu(CelestialBody origin, CelestialBody destination);
         long GetDistanceInKm(CelestialBody origin, CelestialBody destination);
-        IEnumerable<CelestialBody> GetBodies(CelestialBodyType type);
         IEnumerable<CelestialBody> GetSatellites(CelestialBody parent);
         IEnumerable<CelestialBody> GetNearestBodies(int count);
         CelestialBody GetBody(string name);

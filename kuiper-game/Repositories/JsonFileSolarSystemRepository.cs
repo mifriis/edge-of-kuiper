@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Kuiper.Domain.CelestialBodies;
 using System;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 
@@ -10,63 +11,71 @@ namespace Kuiper.Repositories
 {
     public class JsonFileSolarSystemRepository : ISolarSystemRepository
     {
-        private List<CelestialBody> solarSystem;
-        private FileInfo jsonFile;
+        private readonly string _filePath;
+
+        private static readonly Dictionary<string, Type> _typeMap = new()
+        {
+            {"Planet", typeof(Planet)},
+            {"Star", typeof(Star)},
+            {"DwarfPlanet", typeof(DwarfPlanet)},
+            {"GasGiant", typeof(GasGiant)},
+            {"Moon", typeof(Moon)},
+            {"Asteroid", typeof(Asteroid)},
+        };
+
+        private IEnumerable<CelestialBody> _solarSystem;
+        private IEnumerable<CelestialBody> SolarSystem
+        {
+            get { return _solarSystem ??= LoadFromDisk(); }
+        }
         public IEnumerable<CelestialBody> GetSolarSystem()
         {
-            if (solarSystem.Count == 0) {
-                solarSystem = GetAllBodies(jsonFile);
-            }
-            return solarSystem;
+            return SolarSystem;
         }
 
-        public JsonFileSolarSystemRepository(FileInfo jsonFile)
+        public JsonFileSolarSystemRepository(string filePath)
         {
-            if (!jsonFile.Exists) throw new FileNotFoundException($"Could not find {jsonFile.FullName}");
-            this.jsonFile = jsonFile;
-
-            solarSystem = new List<CelestialBody>();
+            if (!File.Exists(filePath)) throw new FileNotFoundException($"Could not find {Path.GetFileName(filePath)}");
+            _filePath = filePath;
         }
 
-        private List<CelestialBody> GetAllBodies(FileInfo jsonFile) 
+        private IEnumerable<CelestialBody> LoadFromDisk()
         {
-            var json = ReadJsonFromFile(jsonFile);
-            var list = GetBodiesFromJson(json);
-
-            return list;
-        }
-
-        private string ReadJsonFromFile(FileInfo jsonFile)
-        {
-            return File.ReadAllText(jsonFile.FullName);
-        }
-
-        internal List<CelestialBody> GetBodiesFromJson(string json) 
-        {
-            var solarSystem = new List<CelestialBody>();
-            var data = JObject.Parse(json);
+            var json = File.ReadAllText(_filePath);
             
-            CreateBody(data, null, solarSystem);
+            var rawSystem = JArray.Parse(json);
+            var bodies = new List<CelestialBody>();
 
-            return solarSystem;
+            while (rawSystem.Count > 0)
+            {
+                var candidates = rawSystem
+                    .Where(x => !x["parent"].HasValues || 
+                                !bodies.Any(b => b.Name == x["parent"].Value<string>()))
+                    .ToList();
+                
+                foreach (var token in candidates)
+                {
+                    bodies.Add(CreateInstance(token, bodies));
+                    rawSystem.Remove(token);
+                }
+            }
+
+            return bodies;
         }
 
-        private void CreateBody(JObject element, CelestialBody parent, List<CelestialBody> outputList) 
+        private CelestialBody CreateInstance(JToken token, IEnumerable<CelestialBody> system)
         {
-            Enum.TryParse((string)element["type"], out CelestialBodyType bodyType);
+            var type = _typeMap[token.Value<string>("type")];
 
-            var body = CelestialBody.Create((string)element["name"], (double)element["distance"], 
-                (double)element["velocity"], (double)element["originDegrees"], parent,
-                bodyType);
-            outputList.Add(body);
+            var parentCandidate = system.SingleOrDefault(x => x.Name == token.Value<string>("parent"));
 
-            var satellites = (JArray)element["satellites"];
-            if (satellites == null) return;
-
-            foreach (var sat in satellites)
-            {
-                CreateBody((JObject)sat, body, outputList);
-            }
-        } 
+            return CelestialBody.Create(
+                type, 
+                token.Value<string>("name"), 
+                token.Value<double>("orbitRadius"),
+                token.Value<double>("velocity"),
+                token.Value<double>("originDegrees"),
+                parentCandidate);
+        }
     }
 }
