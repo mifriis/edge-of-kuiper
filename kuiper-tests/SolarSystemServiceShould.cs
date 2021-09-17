@@ -6,12 +6,16 @@ using Kuiper.Domain.CelestialBodies;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using Kuiper.Domain;
 
 namespace Kuiper.Tests.Unit.Services
 {
     public class SolarSystemServiceShould
     {
+        private readonly IFixture _fixture = new Fixture().Customize(new AutoMoqCustomization());
+        
         private List<CelestialBody> createTestData() {
             var sun = CelestialBody.Create("Sun", 0,0,0,null,CelestialBodyType.Star);
             var mercury = CelestialBody.Create("Mercury", 0.387, 47.4, 30, sun, CelestialBodyType.Planet);
@@ -34,13 +38,13 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var testData = createTestData();
-            var repository = new Mock<ISolarSystemRepository>();
+            var repository = _fixture.Freeze<Mock<ISolarSystemRepository>>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var sut = _fixture.Create<SolarSystemService>();
 
             //Act
-            var body = solarSystemService.GetBody("Saturn");
+            var body = sut.GetBody("Saturn");
 
             //Assert
             Assert.Equal(testData.SingleOrDefault(b => b.Name == "Saturn"), body);
@@ -51,21 +55,21 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var testData = createTestData();
-            var repository = new Mock<ISolarSystemRepository>();
+            var repository = _fixture.Freeze<Mock<ISolarSystemRepository>>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+            
+            TimeService.Init(DateTimeOffset.Now - TimeSpan.FromHours(24));
 
-            var gameTime = new GameTime(DateTime.Now.Subtract(TimeSpan.FromHours(24)).Ticks);
-
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var sut = _fixture.Create<SolarSystemService>();
 
             //Act
-            var origin = solarSystemService.GetBody("Earth");
-            var destination = solarSystemService.GetBody("Mars");
+            var origin = sut.GetBody("Earth");
+            var destination = sut.GetBody("Mars");
 
-            var distance = solarSystemService.GetDistanceInAu(origin, destination);
+            var distance = sut.GetDistanceInAu(origin, destination);
 
             //Assert
-            Assert.Equal(1.6427351236343384, distance, 6);
+            Assert.Equal(1.5909639596939087, distance, 6);
         }
 
         [Fact]
@@ -73,21 +77,21 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var testData = createTestData();
-            var repository = new Mock<ISolarSystemRepository>();
+            var repository = _fixture.Freeze<Mock<ISolarSystemRepository>>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            var gameTime = new GameTime(DateTime.Now.Subtract(TimeSpan.FromHours(24)).Ticks);
+            TimeService.Init(DateTimeOffset.Now - TimeSpan.FromHours(24));
 
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var sut = _fixture.Create<SolarSystemService>();
 
             //Act
-            var origin = solarSystemService.GetBody("Earth");
-            var destination = solarSystemService.GetBody("Mars");
+            var origin = sut.GetBody("Earth");
+            var destination = sut.GetBody("Mars");
 
-            var distance = solarSystemService.GetDistanceInKm(origin, destination);
+            var distance = sut.GetDistanceInKm(origin, destination);
 
             //Assert
-            Assert.InRange(distance, 245749650, 245749685);
+            Assert.InRange(distance, 235049650, 2457249685);
         }
     }
 }
