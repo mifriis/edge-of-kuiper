@@ -57,10 +57,7 @@ namespace Kuiper.Domain.CelestialBodies
         [JsonIgnore]
         public CelestialBody Parent
         {
-            get
-            {
-                return parent;
-            }
+            get; set;
         }
 
         public IEnumerable<CelestialBody> Satellites

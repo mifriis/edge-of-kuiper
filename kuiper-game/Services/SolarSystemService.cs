@@ -16,10 +16,13 @@ namespace Kuiper.Services
         public SolarSystemService(ISolarSystemRepository repository)
         {
             SolarSystem = new List<CelestialBody>();
-            SolarSystem = CreateSolarSystem(repository).ToList();
+            
+            if(repository != null)
+                SolarSystem = CreateSolarSystem(repository).ToList();
         }
 
         private IEnumerable<CelestialBody> CreateSolarSystem(ISolarSystemRepository repository) {
+            
             return repository.GetSolarSystem();
         }
         public SolarSystem SetupGame()

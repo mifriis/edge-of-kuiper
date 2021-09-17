@@ -32,6 +32,8 @@ namespace Kuiper.Repositories
 
         private void CreateBody(JObject element, CelestialBody parent, List<CelestialBody> outputList) 
         {
+            
+
             Enum.TryParse((string)element["type"], out CelestialBodyType bodyType);
 
             var body = CelestialBody.Create((string)element["name"], (double)element["distance"], 
