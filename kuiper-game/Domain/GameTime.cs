@@ -22,7 +22,7 @@ namespace Kuiper.Domain
 
         public GameTime Add(long ticks)
         {
-            return new(RealTimeEpoch, ticks);
+            return new GameTime(RealTimeEpoch, ticks);
         }
 
         public DateTime ConvertToGameDateTime()
