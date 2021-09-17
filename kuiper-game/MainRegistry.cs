@@ -12,7 +12,8 @@ namespace Kuiper
         public MainRegistry()
         {
             this.AddHostedService<MainLoopWorker>();
-            this.AddSingleton<ISolarSystemRepository>(x => new JsonFileSolarSystemRepository(new FileInfo("Data\\Sol.solarsystem")));
+            this.AddSingleton<ISolarSystemJsonStructureRepository>(x => new JsonFileSolarSystemRepository(new FileInfo("Data\\Sol.solarsystem")));
+            this.AddSingleton<ISolarSystemRepository, JsonStringSolarSystemRepository>();
             this.AddSingleton<ISolarSystemService, SolarSystemService>();
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
         }
