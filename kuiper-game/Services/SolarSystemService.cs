@@ -4,13 +4,15 @@ using Kuiper.Repositories;
 using System.Linq;
 using System.Numerics;
 using System;
+using Kuiper.Domain;
 
 namespace Kuiper.Services
 {
     public class SolarSystemService : ISolarSystemService
     {
+        private readonly ITimeService _timeService;
         private const int AUINKM =  149597871; // 1 AU in KM. Maybe this belongs somewhere else?
-
+        
         public IEnumerable<CelestialBody> GetBodies(CelestialBodyType type)
         {
             throw new System.NotImplementedException();
@@ -24,8 +26,8 @@ namespace Kuiper.Services
         public double GetDistanceInAu(CelestialBody origin, CelestialBody destination)
         {
 
-            var originPosition = origin.GetPosition(GameTime.ElapsedGameTime);
-            var destinationPosition = destination.GetPosition(GameTime.ElapsedGameTime);
+            var originPosition = origin.GetPosition(_timeService.GetElapsedGameTime());
+            var destinationPosition = destination.GetPosition(_timeService.GetElapsedGameTime());
 
             return Vector2.Distance(originPosition, destinationPosition);
         }
@@ -46,8 +48,9 @@ namespace Kuiper.Services
         }
 
         private List<CelestialBody> SolarSystem;
-        public SolarSystemService(ISolarSystemRepository repository)
+        public SolarSystemService(ISolarSystemRepository repository, ITimeService timeService)
         {
+            _timeService = timeService;
             SolarSystem = new List<CelestialBody>();
             SolarSystem = CreateSolarSystem(repository).ToList();
         }

@@ -19,7 +19,7 @@ namespace Kuiper.Domain
         public int Speed { get; }
         public Location CurrentLocation { get; set; }
         public Location TargetLocation { get; set; }
-        public DateTime ArrivalTime { get; set;}
+        public GameTime ArrivalTime { get; set;}
 
         public ShipStatus Status { get; set; }
 

@@ -1,35 +1,53 @@
 using System;
+using System.Globalization;
+using Dawn;
+using Kuiper.Services;
 
-public struct GameTime
+namespace Kuiper.Domain
 {
-    private static readonly DateTime gameStartDate = new DateTime(2078, 1, 1);
-    private const long tickAccelerationConstant = 7; //1 real day, is 7 game days
-    public static DateTime RealStartTime {get; set;}
-
-    public static DateTime GameStartDate {
-        get
-        {
-            return gameStartDate;
-        }
-    }
-
-    public static TimeSpan ElapsedGameTime {
-        get 
-        {
-            var elapsedRealTime = DateTime.Now.Subtract(RealStartTime);
-            var elapsedGameTime = new TimeSpan(elapsedRealTime.Ticks * tickAccelerationConstant);
-
-            return elapsedGameTime;
-        }
-    }
-
-    public static DateTime Now()
+    public readonly struct GameTime
     {
-        if(RealStartTime == DateTime.MinValue)
+        public DateTimeOffset Value { get; }
+
+        /// <summary>
+        /// The game time after genesis GT 2078-1-8
+        /// </summary>
+        /// <param name="value">The time in GameTime</param>
+        public GameTime(DateTimeOffset value)
         {
-            throw new ArgumentOutOfRangeException("RealStartTime has never been set, it's required to be so either during load or captain setup");
+            Guard.Argument(value, nameof(value)).Min(new DateTimeOffset(new DateTime(2078, 1, 8)));
+
+            Value = value;
         }
 
-        return gameStartDate.Add(ElapsedGameTime);
+        public GameTime Add(TimeSpan time)
+        {
+            return new GameTime(Value.Add(time));
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static bool operator < (GameTime left, GameTime right)
+        {
+            return left.Value < right.Value;
+        }
+
+        public static bool operator >(GameTime left, GameTime right)
+        {
+            return left.Value > right.Value;
+        }
+
+        /// <summary>
+        /// Shorthand to get Elapsed game time based on real time played
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete("Use ITimeService.Now() instead")]
+        public static GameTime Now()
+        {
+            return TimeService.Now();
+        }
     }
 }
