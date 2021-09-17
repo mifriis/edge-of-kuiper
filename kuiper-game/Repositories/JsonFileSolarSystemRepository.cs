@@ -49,8 +49,9 @@ namespace Kuiper.Repositories
             while (rawSystem.Count > 0)
             {
                 var candidates = rawSystem
-                    .Where(x => !x["parent"].HasValues || 
-                                !bodies.Any(b => b.Name == x["parent"].Value<string>()))
+                    .Where(x => 
+                        !string.IsNullOrEmpty(x.Value<string>("parent")) || 
+                        !bodies.Any(b => b.Name == x.Value<string>("parent")))
                     .ToList();
                 
                 foreach (var token in candidates)
