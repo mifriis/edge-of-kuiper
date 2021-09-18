@@ -69,7 +69,7 @@ namespace Kuiper.Services
 
         public CelestialBody GetBody(string name)
         {
-            return SolarSystem.Where(b => string.Equals(name, b.Name, System.StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+            return SolarSystem.SingleOrDefault(b => string.Equals(name, b.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         public double GetDistanceInAu(CelestialBody origin, CelestialBody destination)
@@ -93,7 +93,7 @@ namespace Kuiper.Services
 
         public IEnumerable<CelestialBody> GetSatellites(CelestialBody parent)
         {
-            throw new System.NotImplementedException();
+            return SolarSystem.Where(b => string.Equals(parent.Name, b.Parent?.Name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

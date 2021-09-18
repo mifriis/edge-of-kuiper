@@ -28,17 +28,15 @@ namespace Kuiper.Domain
 
         public string EndEvent()
         {
-            // if(DiceFactory.Roller().D100(chance,0))
-            // {
-            //     var asteroid = CelestialBodies.Asteroid.Create<Asteroid>("Scanned Asteroid",3.2, SolarSystemLocator.SolarSystem.SolarSystemService.GetBody("Sun"),CelestialBodies.CelestialBodyType.Asteroid );
-            //     var distance = SolarSystemLocator.SolarSystem.SolarSystemService.GetDistanceInAu(
-            //         SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation,
-            //         asteroid
-            //     );
-            //     return $"Asteroid scanning complete. Found a candidate {distance}km from {SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation}. Set a course to begin mining the asteroid.";
-            // }
-            // return $"Asteroid scanning complete, but found no asteroids with a yield within the scanners parameters.";
-            return "";
+            if (!DiceFactory.Roller().D100(chance, 0))
+                return $"Asteroid scanning complete, but found no asteroids with a yield within the scanners parameters.";
+            
+            var asteroid = CelestialBody.Create<Asteroid>("Scanned Asteroid",3.2, SolarSystemLocator.SolarSystem.SolarSystemService.GetBody("Sun"));
+            var distance = SolarSystemLocator.SolarSystem.SolarSystemService.GetDistanceInAu(
+                SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation,
+                asteroid
+            );
+            return $"Asteroid scanning complete. Found a candidate {distance}km from {SolarSystemLocator.SolarSystem.Captain.Ship.CurrentLocation}. Set a course to begin mining the asteroid.";
         }
     }
 }
