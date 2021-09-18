@@ -2,7 +2,7 @@
 {
     public class TimeCommand : ConsoleCommandBase
     {
-        public override string CommandName => "time";
+        public override string Name => "time";
 
         public override void Execute(string[] args)
         {

@@ -12,7 +12,7 @@ namespace Kuiper.Systems
         {
         }
 
-        public override string CommandName => "set course";
+        public override string Name => "set-course";
 
         public override void Execute(string[] args)
         {

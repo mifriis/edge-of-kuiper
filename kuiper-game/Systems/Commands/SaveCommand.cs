@@ -10,7 +10,7 @@ namespace Kuiper.Systems
         {
             _captainService = captainService;
         }
-        public override string CommandName => "Save";
+        public override string Name => "save";
 
         public override void Execute(string[] args)
         {
