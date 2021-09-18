@@ -5,7 +5,6 @@
     <RootNamespace>Kuiper</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Lamar" Version="6.0.0" />
     <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />

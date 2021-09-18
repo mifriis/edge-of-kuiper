@@ -2,6 +2,8 @@ using Kuiper.Services;
 using Kuiper.Systems;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 
 namespace Kuiper
 {
@@ -12,7 +14,11 @@ namespace Kuiper
             this.AddHostedService<MainLoopWorker>();
             this.AddSingleton<ICaptainService, CaptainService>();
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
-            this.AddSingleton<IConsoleCommand, ShipConsoleCommand>();
+            Scan((_) =>
+            {
+                _.AssemblyContainingType<ICustomConsoleCommand>();
+                _.AddAllTypesOf<ICustomConsoleCommand>(ServiceLifetime.Singleton);
+            });
         }
     }
 }
