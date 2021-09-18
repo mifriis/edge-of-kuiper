@@ -2,8 +2,6 @@ using Kuiper.Services;
 using Kuiper.Systems;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 
 namespace Kuiper
 {
@@ -16,8 +14,8 @@ namespace Kuiper
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
             Scan((_) =>
             {
-                _.AssemblyContainingType<ICustomConsoleCommand>();
-                _.AddAllTypesOf<ICustomConsoleCommand>(ServiceLifetime.Singleton);
+                _.AssemblyContainingType<IConsoleCommand>();
+                _.AddAllTypesOf<IConsoleCommand>(ServiceLifetime.Singleton);
             });
         }
     }
