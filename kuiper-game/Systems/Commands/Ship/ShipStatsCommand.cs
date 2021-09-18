@@ -8,7 +8,7 @@ namespace Kuiper.Systems
         {
         }
 
-        public override string CommandName => "stats";
+        public override string Name => "stats";
 
         public override void Execute(string[] args)
         {
