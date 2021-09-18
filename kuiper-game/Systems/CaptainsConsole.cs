@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Kuiper.Domain;
 using Kuiper.Services;
 
@@ -13,7 +11,7 @@ namespace Kuiper.Systems
         private readonly Captain _currentCaptain;
         private Dictionary<string,Action<string[]>> commands = new Dictionary<string,Action<string[]>>();
 
-        public CaptainsConsole(ICaptainService captainService, IEnumerable<ICustomConsoleCommand> commands)
+        public CaptainsConsole(ICaptainService captainService, IEnumerable<IConsoleCommand> commands)
         {
             _captainService = captainService;
 
