@@ -11,9 +11,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\*.solarsystem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Data\Sol.solarsystem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
