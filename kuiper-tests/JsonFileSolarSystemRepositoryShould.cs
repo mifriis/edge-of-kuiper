@@ -1,13 +1,9 @@
 using Xunit;
-using Kuiper.Systems;
-using Kuiper.Services;
 using Kuiper.Domain.CelestialBodies;
 using Kuiper.Repositories;
 using System;
-using System.Numerics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Kuiper.Tests.Unit.Repositories
 {
@@ -58,7 +54,7 @@ namespace Kuiper.Tests.Unit.Repositories
         }
 
         [Fact]
-        public void CreateStarBodyTypeFromJson()
+        public void CreateCorretBodiesFromJson()
         {
             //Arrange
             var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
@@ -67,11 +63,15 @@ namespace Kuiper.Tests.Unit.Repositories
             var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.True(bodies.OfType<Star>().Count() == 1);
+            Assert.True(bodies.OfType<Star>().Count() == 1, "Incorrect amount of stars.");
+            Assert.True(bodies.OfType<Planet>().Count() == 6, "Incorrect amount of planets.");
+            Assert.True(bodies.OfType<Moon>().Count() == 1, "Incorrect amount of moons.");
+            Assert.True(bodies.OfType<GasGiant>().Count() == 2, "Incorrect amount of GasGiants.");
+            Assert.True(bodies.OfType<DwarfPlanet>().Count() == 1, "Incorrect amount of DwarfPlanets.");
         }
 
         [Fact]
-        public void CreatePlanetBodyTypeFromJson()
+        public void SetCorrectBodyProperties()
         {
             //Arrange
             var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
@@ -80,98 +80,10 @@ namespace Kuiper.Tests.Unit.Repositories
             var bodies = repo.GetSolarSystem();
 
             //Assert
-            Assert.True(bodies.OfType<Planet>().Count() == 6);
-        }
-
-        [Fact]
-        public void CreateMoonBodyTypeFromJson()
-        {
-            //Arrange
-            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
-
-            //Act
-            var bodies = repo.GetSolarSystem();
-
-            //Assert
-            Assert.True(bodies.OfType<Moon>().Count() == 1);
-        }
-
-        [Fact]
-        public void CreateGasGiantBodyTypeFromJson()
-        {
-            //Arrange
-            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
-
-            //Act
-            var bodies = repo.GetSolarSystem();
-
-            //Assert
-            Assert.True(bodies.OfType<GasGiant>().Count() == 2);
-        }
-
-        [Fact]
-        public void CreateDwarfPlanetBodyTypeFromJson()
-        {
-            //Arrange
-            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
-
-            //Act
-            var bodies = repo.GetSolarSystem();
-
-            //Assert
-            Assert.True(bodies.OfType<DwarfPlanet>().Count() == 1);
-        }
-
-        [Fact]
-        public void SetCorrectOrbitRadius()
-        {
-            //Arrange
-            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
-
-            //Act
-            var bodies = repo.GetSolarSystem();
-
-            //Assert
-            //Assert.True(bodies.Single(x => x.Name == "Earth").OrbitRadius);
-        }
-
-        [Fact]
-        public void SetCorrectName()
-        {
-            //Arrange
-            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
-
-            //Act
-            var bodies = repo.GetSolarSystem();
-
-            //Assert
-            Assert.True(bodies.First().Name == "Sol");
-        }
-
-        [Fact]
-        public void SetCorrectOrbitVelocity()
-        {
-            //Arrange
-            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
-
-            //Act
-            var bodies = repo.GetSolarSystem();
-
-            //Assert
-            Assert.True(bodies.Single(x => x.Name == "Earth").Velocity == 29.8);
-        }
-
-        [Fact]
-        public void SetCorrectOriginDegrees()
-        {
-            //Arrange
-            var repo = new JsonFileSolarSystemRepository(_testDataFilePath);
-
-            //Act
-            var bodies = repo.GetSolarSystem();
-
-            //Assert
-            Assert.True(bodies.Single(x => x.Name == "Earth").OriginDegrees == 170);
+            Assert.True(bodies.Single(x => x.Name == "Earth").OrbitRadius == 1, "OrbitRadius not correct.");
+            Assert.True(bodies.First().Name == "Sol", "Name not correct.");
+            Assert.True(bodies.Single(x => x.Name == "Earth").Velocity == 29.8, "Velocity not correct.");
+            Assert.True(bodies.Single(x => x.Name == "Earth").OriginDegrees == 170, "OriginDegrees not correct.");
         }
     }
 }
