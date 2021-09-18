@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Kuiper.Systems;
 
 namespace Kuiper.Domain
 {

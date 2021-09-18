@@ -2,6 +2,8 @@
 {
     public interface IConsoleCommand
     {
-        // Marker interface
+        public string Group { get; }
+        public string CommandName { get;  }
+        public void Execute(string[] args);
     }
 }

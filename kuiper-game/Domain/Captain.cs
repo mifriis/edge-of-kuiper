@@ -1,5 +1,4 @@
 using System;
-using Kuiper.Systems;
 using Newtonsoft.Json;
 
 namespace Kuiper.Domain
