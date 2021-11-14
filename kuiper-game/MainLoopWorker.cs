@@ -18,6 +18,7 @@ namespace Kuiper
         {            
             do 
             {
+                GameTime.RealStartTime = DateTime.Now;
                 while (! Console.KeyAvailable) 
                 {
                     _console.ConsoleMapper(Console.ReadLine());                          

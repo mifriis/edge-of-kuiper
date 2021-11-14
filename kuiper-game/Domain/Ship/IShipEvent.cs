@@ -1,10 +1,10 @@
-using System;
+// using System;
 
-public interface IShipEvent
-{
-    string Name {get;}
-    DateTime StartTime {get;}
-    TimeSpan TaskDuration {get;}
+// public interface IShipEvent
+// {
+//     string Name {get;}
+//     DateTime StartTime {get;}
+//     TimeSpan TaskDuration {get;}
 
-    string GetPrompt();
-}
+//     string GetPrompt();
+// }
