@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/kuiper-game/bin/Debug/net5.0/kuiper-game.dll",
+            "program": "${workspaceFolder}/kuiper-game/bin/Debug/net6/kuiper-game.dll",
             "args": [],
             "cwd": "${workspaceFolder}/kuiper-game",
             "stopAtEntry": false,
