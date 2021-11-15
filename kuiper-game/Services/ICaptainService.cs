@@ -6,5 +6,6 @@ namespace Kuiper.Services
     {
         Captain GetCaptain();
         Captain SetupCaptain();
+        void SaveGame();
     }
 }

@@ -39,6 +39,13 @@ namespace Kuiper.Services
             }
         }
 
+        public void FinalizeJourney()
+        {
+            Ship.CurrentLocation = Ship.TargetLocation;
+            Ship.TargetLocation = null;
+            Ship.Status = Domain.ShipStatus.InOrbit;
+        }
+
         public Ship Ship { get; set; }
     }
 }

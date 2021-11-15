@@ -9,5 +9,6 @@ namespace Kuiper.Services
         Ship Ship { get; set; }
         IEnumerable<CelestialBody> GetPossibleDestinations();
         void SetCourse(string destination);
+        void FinalizeJourney();
     }
 }

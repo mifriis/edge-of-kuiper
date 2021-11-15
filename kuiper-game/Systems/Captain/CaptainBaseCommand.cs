@@ -1,14 +1,16 @@
 
 
+using Kuiper.Services;
+
 namespace Kuiper.Systems
 {
     public abstract class CaptainBaseCommand : ConsoleCommandBase
     {
-        // internal readonly ICaptainService captainService;
+        internal readonly ICaptainService _captainService;
 
-        public CaptainBaseCommand()//ICaptainService captainService)
+        public CaptainBaseCommand(ICaptainService captainService)
         {
-            // this.captainService = captainService;
+            _captainService = captainService;
         }
 
         public override string Group => "captain";

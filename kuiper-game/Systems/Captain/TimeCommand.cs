@@ -1,10 +1,12 @@
 
 
+using Kuiper.Services;
+
 namespace Kuiper.Systems
 {
     public class TimeCommand : CaptainBaseCommand
     {
-        public TimeCommand()// : base(captainService)
+        public TimeCommand(ICaptainService captainService) : base(captainService)
         {
         }
 

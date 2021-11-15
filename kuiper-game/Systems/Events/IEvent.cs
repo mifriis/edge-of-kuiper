@@ -1,6 +1,6 @@
 using System;
 
-namespace Kuiper.Systems
+namespace Kuiper.Systems.Events
 {   
     public interface IEvent
     {

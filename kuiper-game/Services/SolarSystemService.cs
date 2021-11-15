@@ -10,6 +10,9 @@ namespace Kuiper.Services
     public class SolarSystemService : ISolarSystemService
     {
         private const int AUINKM =  149597871; // 1 AU in KM. Maybe this belongs somewhere else?
+        public List<CelestialBody> SolarSystem { get; set; }
+
+        private ISolarSystemRepository _repository;
 
         public IEnumerable<CelestialBody> GetBodies(CelestialBodyType type)
         {
@@ -51,15 +54,16 @@ namespace Kuiper.Services
             return parent.Satellites;
         }
 
-        private List<CelestialBody> SolarSystem;
-        public SolarSystemService(ISolarSystemRepository repository)
+        public void LoadFromRepository()
         {
-            SolarSystem = new List<CelestialBody>();
-            SolarSystem = CreateSolarSystem(repository).ToList();
+            SolarSystem = _repository.GetSolarSystem().ToList();
         }
 
-        private IEnumerable<CelestialBody> CreateSolarSystem(ISolarSystemRepository repository) {
-            return repository.GetSolarSystem();
+        
+        public SolarSystemService(ISolarSystemRepository repository)
+        {
+            _repository = repository;
         }
+
     }
 }

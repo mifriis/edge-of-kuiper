@@ -5,6 +5,7 @@ using Kuiper.Systems.CommandInfrastructure;
 using Kuiper.Systems;
 using Kuiper.Repositories;
 using Kuiper.Services;
+using Kuiper.Systems.Events;
 
 namespace Kuiper
 {
@@ -30,6 +31,7 @@ namespace Kuiper
                 _.AddAllTypesOf<IEvent>(ServiceLifetime.Singleton);
             });
             this.AddSingleton<IEventService, EventService>();
+            this.AddSingleton<ISaveService, SaveService>();
         }
     }
 }

@@ -12,5 +12,7 @@ namespace Kuiper.Services
         IEnumerable<CelestialBody> GetSatellites(CelestialBody parent);
         IEnumerable<CelestialBody> GetNearestBodies(int count);
         CelestialBody GetBody(string name);
+        List<CelestialBody> SolarSystem { get; set; }
+        void LoadFromRepository();
     }
 }

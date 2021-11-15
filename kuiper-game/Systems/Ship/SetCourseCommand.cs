@@ -6,7 +6,7 @@ namespace Kuiper.Systems
 {
     public class SetCourseCommand : ShipBaseCommand
     {
-        public SetCourseCommand(IShipService shipService) : base(shipService)
+        public SetCourseCommand(IShipService shipService, IEventService eventService) : base(shipService, eventService)
         {
         }
 
