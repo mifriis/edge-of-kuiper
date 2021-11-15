@@ -17,5 +17,6 @@ namespace Kuiper.Domain
         public int Speed { get; }
         public CelestialBody CurrentLocation { get; set; }
         public CelestialBody TargetLocation { get; set; }
+        public ShipStatus Status { get; set; }
     }
 }

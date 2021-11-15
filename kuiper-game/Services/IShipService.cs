@@ -6,8 +6,8 @@ namespace Kuiper.Services
 {
     public interface IShipService
     {
+        Ship Ship { get; set; }
         IEnumerable<CelestialBody> GetPossibleDestinations();
-        Ship GetShip();
-        void SetShip(Ship ship);
+        void SetCourse(string destination);
     }
 }

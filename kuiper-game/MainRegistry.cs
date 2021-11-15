@@ -24,6 +24,12 @@ namespace Kuiper
             this.AddSingleton<IShipService, ShipService>();
             this.AddSingleton<ICaptainService, CaptainService>();
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
+            Scan((_) =>
+            {
+                _.AssemblyContainingType<IEvent>();
+                _.AddAllTypesOf<IEvent>(ServiceLifetime.Singleton);
+            });
+            this.AddSingleton<IEventService, EventService>();
         }
     }
 }

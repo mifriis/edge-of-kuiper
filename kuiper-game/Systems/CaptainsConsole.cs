@@ -18,7 +18,7 @@ namespace Kuiper.Systems
             _captainService = captainService;
             this.shipService = shipService;
             _captainService.SetupCaptain();
-            this.shipService.SetShip(_captainService.GetCaptain().Ship);
+            this.shipService.Ship = _captainService.GetCaptain().Ship;
         }
        
         public void ConsoleMapper(string input)

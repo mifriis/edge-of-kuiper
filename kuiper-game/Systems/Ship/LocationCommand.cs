@@ -4,7 +4,7 @@ namespace Kuiper.Systems
 {
     public class LocationCommand : ShipBaseCommand
     {
-        public LocationCommand(IShipService shipService) : base(shipService)
+        public LocationCommand(IShipService shipService, IEventService eventService) : base(shipService, eventService)
         {
         }
 
@@ -13,7 +13,7 @@ namespace Kuiper.Systems
         public override void Execute(string[] args)
         {
             
-            ConsoleWriter.Write("Your ship is currently at " + _shipService.GetShip().CurrentLocation.Name);
+            ConsoleWriter.Write("Your ship is currently at " + _shipService.Ship.CurrentLocation.Name);
         }
     }
 } 

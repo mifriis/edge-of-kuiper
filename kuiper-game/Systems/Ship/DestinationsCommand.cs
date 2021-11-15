@@ -4,7 +4,7 @@ namespace Kuiper.Systems
 {
     public class DestinationsCommand : ShipBaseCommand
     {
-        public DestinationsCommand(IShipService shipService) : base(shipService)
+        public DestinationsCommand(IShipService shipService, IEventService eventService) : base(shipService, eventService)
         {
         }
 
