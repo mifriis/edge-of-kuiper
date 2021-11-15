@@ -21,7 +21,6 @@ namespace Kuiper.Systems
             ship.TargetLocation = null;
             ship.Status = Domain.ShipStatus.InOrbit;
             ConsoleWriter.Write(EventTime.ToUniversalTime() +  " " + ship.Name + " has arrived in orbit around " + ship.CurrentLocation.Name);
-
         }
     }
 } 
