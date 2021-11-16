@@ -17,7 +17,8 @@ namespace Kuiper.Services
             var json = JsonConvert.SerializeObject(saveFile, Formatting.Indented, 
                 new JsonSerializerSettings 
                 { 
-                        PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                        TypeNameHandling = TypeNameHandling.Auto
 
                 });
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(savePath, saveFile.Captain.Name +".save")))
@@ -41,7 +42,12 @@ namespace Kuiper.Services
         public SaveFile Load(string captainName)
         {
             var save = System.IO.File.ReadAllText(Path.Combine(savePath,captainName));
-            var saveFile = JsonConvert.DeserializeObject<SaveFile>(save);
+            var saveFile = JsonConvert.DeserializeObject<SaveFile>(save, 
+            new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                TypeNameHandling = TypeNameHandling.Auto
+            });
             return saveFile;
         }
     }

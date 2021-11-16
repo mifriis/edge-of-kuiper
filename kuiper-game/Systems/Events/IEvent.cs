@@ -4,8 +4,8 @@ namespace Kuiper.Systems.Events
 {   
     public interface IEvent
     {
-        DateTime EventTime { get; set; }
-        string EventName { get; set; }
+        DateTime EventTime { get; }
+        string EventName { get; }
 
         void Execute(string[] args);
 

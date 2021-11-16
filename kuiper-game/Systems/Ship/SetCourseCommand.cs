@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Kuiper.Services;
+using Kuiper.Systems.Events;
 
 namespace Kuiper.Systems
 {
@@ -30,6 +31,7 @@ namespace Kuiper.Systems
             }
             var chosenDestination = destinations[numericalDestination-1];
             _shipService.SetCourse(chosenDestination.Name);
+            _eventService.AddEvent(new SetCourseEvent(_shipService) { EventTime = GameTime.Now(), EventName = "Travel Event" });
             ConsoleWriter.Write(_shipService.Ship.Name + " is " + _shipService.Ship.Status + " " + _shipService.Ship.TargetLocation.Name);
             
         }

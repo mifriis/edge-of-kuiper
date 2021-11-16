@@ -21,7 +21,7 @@ namespace Kuiper.Services
 
         public IEnumerable<CelestialBody> GetBodies()
         {
-            var star = SolarSystem.SingleOrDefault(b => b is Star);
+            var star = SolarSystem.SingleOrDefault(b => b.CelestialBodyType == CelestialBodyType.Star);
             return star.Satellites;
         } 
 

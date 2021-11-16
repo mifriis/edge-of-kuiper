@@ -11,6 +11,10 @@ namespace Kuiper.Services
 
         public void AddEvent(IEvent gameEvent)
         {
+            if(GameEvents == null)
+            { 
+                GameEvents = new List<IEvent>();
+            }
             GameEvents.Add(gameEvent);
         }
 
@@ -28,7 +32,10 @@ namespace Kuiper.Services
 
         public void RemoveEvent(IEvent gameEvent)
         {
-            GameEvents.Remove(gameEvent);
+            if(GameEvents != null)
+            { 
+                GameEvents.Remove(gameEvent);    
+            }
         }
     }
 }
