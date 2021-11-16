@@ -49,7 +49,7 @@ The perfect time for someone to make a fortune.
 
 ### Prerequisites 
 
-* [.NET 5](https://dotnet.microsoft.com/download)
+* [.NET 6](https://dotnet.microsoft.com/download)
 * [JetBrains Rider](https://www.jetbrains.com/rider/)
 * [Visual Studio (Code)](https://visualstudio.microsoft.com/)
 
