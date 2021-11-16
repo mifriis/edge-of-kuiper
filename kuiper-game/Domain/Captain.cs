@@ -6,15 +6,17 @@ namespace Kuiper.Domain
     public class Captain
     {
         [JsonConstructor]
-        public Captain(string name)
+        public Captain(string name, Account account)
         {
             Name = name;
+            Account = account;
         }
 
-        public Captain(string name, DateTime startTime)
+        public Captain(string name, DateTime startTime, Account account)
         {
             Name = name;
             StartTime = startTime;
+            Account = account;
         }
 
         public string Name { get; }
@@ -22,5 +24,6 @@ namespace Kuiper.Domain
         public DateTime LastLoggedIn { get; set;}
 
         public Ship Ship { get; set;}
+        public Account Account { get; }
     }
 }

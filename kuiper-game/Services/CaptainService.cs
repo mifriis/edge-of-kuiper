@@ -22,8 +22,13 @@ namespace Kuiper.Services
                     return _currentCaptain;
                 }
                 
-                _currentCaptain = new Captain(name, DateTime.Now);
-                GameTime.RealStartTime = _currentCaptain.StartTime;
+                _currentCaptain = new Captain(name, DateTime.Now, new Account(100M));
+                GameTime.RealStartTime = _currentCaptain.StartTime;              
+                
+                _currentCaptain.Account.Deposit(239048M);
+                _currentCaptain.Account.Deposit(23M);
+                _currentCaptain.Account.Withdraw(123M);
+                
                 _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
                 _currentCaptain.Ship.CurrentLocation = Locations.Earth;
                 _currentCaptain.Ship.Status = ShipStatus.InOrbit;
