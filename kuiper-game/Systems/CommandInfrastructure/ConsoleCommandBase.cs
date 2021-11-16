@@ -1,4 +1,4 @@
-namespace Kuiper.Systems
+﻿namespace Kuiper.Systems
 {
     public abstract class ConsoleCommandBase : IConsoleCommand
     {
@@ -8,4 +8,4 @@ namespace Kuiper.Systems
 
         public abstract void Execute(string[] args);
     }
-} 
+}

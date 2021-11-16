@@ -1,4 +1,4 @@
-namespace Kuiper.Systems
+﻿namespace Kuiper.Systems
 {
     public interface IConsoleCommand
     {
@@ -6,4 +6,4 @@ namespace Kuiper.Systems
         string Name { get;  }
         void Execute(string[] args);
     }
-} 
+}

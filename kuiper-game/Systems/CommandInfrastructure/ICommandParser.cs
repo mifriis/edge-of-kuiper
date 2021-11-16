@@ -1,5 +1,4 @@
 using System;
-
 namespace Kuiper.Systems.CommandInfrastructure
 {
     public interface ICommandParser
@@ -8,4 +7,4 @@ namespace Kuiper.Systems.CommandInfrastructure
 
         void ParseAndExecute(string input);
     }
-} 
+}

@@ -1,4 +1,4 @@
-using Kuiper.Systems;
+﻿using Kuiper.Systems;
 using Kuiper.Systems.CommandInfrastructure;
 using System.Collections.Generic;
 using Xunit;
