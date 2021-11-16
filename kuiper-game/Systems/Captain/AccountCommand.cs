@@ -36,23 +36,3 @@ namespace Kuiper.Systems
         }
     }
 } 
-
-       /* private void DisplayAccountTransactionHistory() {
-            if(!_currentCaptain.Account.Transactions.Any()) {
-                ConsoleWriter.Write("No transaction history available....");
-                return;
-            }
-
-            ConsoleWriter.Write("Printing transaction history");
-            ConsoleWriter.Write("--------------------------------------------------------------");
-            ConsoleWriter.Write("Date                             |  Action      |  Amount");
-            ConsoleWriter.Write("--------------------------------------------------------------");
-
-            foreach (var transaction in _currentCaptain.Account.Transactions)
-            {
-                ConsoleWriter.Write(transaction.ToString());
-            }
-            
-            ConsoleWriter.Write("--------------------------------------------------------------");
-        }
-*/
