@@ -4,22 +4,18 @@ using Xunit;
 
 namespace Kuiper.Tests.Unit.Systems
 {
-    [Collection("Sequential")]
     public class GameTimeStaticShould
     {
         [Fact]
         public void ThrowExceptionIfRealStartTimeNeverSet()
         {
             //Arrange
+            GameTime.RealStartTime = DateTime.MinValue;
             //Act
             //Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => GameTime.Now());
         }
-    }
 
-    [Collection("Sequential")]
-    public class GameTimeShould
-    {
         [Fact]
         public void ReturnGamDateInNextWeekWhenStartingRealYesterday()
         {
