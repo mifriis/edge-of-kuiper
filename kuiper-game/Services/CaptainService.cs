@@ -35,9 +35,15 @@ namespace Kuiper.Services
                     ConsoleWriter.Write($"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastLoggedIn}!");    
                     return _currentCaptain;
                 }             
-                _currentCaptain = new Captain(name, DateTime.Now);
-                _solarSystemService.LoadFromRepository();
+                _currentCaptain = new Captain(name, DateTime.Now, new Account(100M));
                 GameTime.RealStartTime = _currentCaptain.StartTime;
+                
+                _currentCaptain.Account.Deposit(239048M);
+                _currentCaptain.Account.Deposit(23M);
+                _currentCaptain.Account.Withdraw(123M);
+
+                _solarSystemService.LoadFromRepository();
+                
                 _currentCaptain.LastLoggedIn = GameTime.Now();
                 _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
                 _currentCaptain.Ship.CurrentLocation = _solarSystemService.GetBody("Earth");

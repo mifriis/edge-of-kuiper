@@ -48,8 +48,9 @@ namespace Kuiper.Tests.Unit.Services
             var captainInput = new StringReader("LongLars");
             Console.SetIn(captainInput);
 
+            var account = new Account(0);
             var ship = new Ship("Fleggaard", "Mafia", 123);
-            var captain = new Captain("LongLars") { Ship = ship, StartTime = new DateTime(2070,2,3) };
+            var captain = new Captain("LongLars",account) { Ship = ship, StartTime = new DateTime(2070,2,3) };
 
             var save = new SaveFile() { Ship = ship, Captain = captain};
 
