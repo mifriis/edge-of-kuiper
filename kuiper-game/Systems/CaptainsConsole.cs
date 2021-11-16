@@ -1,5 +1,6 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using Kuiper.Domain;
 using Kuiper.Services;
 using Kuiper.Systems.CommandInfrastructure;
 
@@ -7,20 +8,20 @@ namespace Kuiper.Systems
 {
     public class CaptainsConsole : ICaptainsConsole
     {
-        private readonly ICommandParser _commandParser;
         private readonly ICaptainService _captainService;
-        private readonly IShipService shipService;
+        private readonly ICommandParser _commandParser;
+        private readonly Captain _currentCaptain;
+        private readonly ISolarSystemService _solarSystemService;
 
-        public CaptainsConsole(ICommandParser commandParser, ICaptainService captainService, IShipService shipService)
+        public CaptainsConsole(ICaptainService captainService, ISolarSystemService solarSystemService, ICommandParser commandParser)
         {
-
-            _commandParser = commandParser;
             _captainService = captainService;
-            this.shipService = shipService;
-            _captainService.SetupCaptain();
-            this.shipService.Ship = _captainService.GetCaptain().Ship;
+            _solarSystemService = solarSystemService;
+            _commandParser = commandParser;
+            _currentCaptain = _captainService.SetupCaptain();
+            
         }
-       
+
         public void ConsoleMapper(string input)
         {
             _commandParser.ParseAndExecute(input);
