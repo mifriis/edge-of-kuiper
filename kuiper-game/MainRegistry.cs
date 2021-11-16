@@ -1,6 +1,7 @@
 using Kuiper.Services;
 using Kuiper.Systems;
 using Kuiper.Repositories;
+using Kuiper.Systems.CommandInfrastructure;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
@@ -16,6 +17,12 @@ namespace Kuiper
             this.AddSingleton<ISolarSystemService, SolarSystemService>();
             this.AddSingleton<ICaptainService, CaptainService>();
             this.AddSingleton<ICaptainsConsole, CaptainsConsole>();
+            this.AddSingleton<ICommandParser, ConsoleCommandParser>();
+            Scan((_) =>
+            {
+                _.AssemblyContainingType<IConsoleCommand>();
+                _.AddAllTypesOf<IConsoleCommand>(ServiceLifetime.Singleton);
+            });
         }
     }
 }
