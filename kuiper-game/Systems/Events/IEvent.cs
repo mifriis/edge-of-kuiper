@@ -1,4 +1,5 @@
 using System;
+using Lamar;
 
 namespace Kuiper.Systems.Events
 {   
@@ -7,7 +8,7 @@ namespace Kuiper.Systems.Events
         DateTime EventTime { get; }
         string EventName { get; }
 
-        void Execute(string[] args);
+        void Execute(IContainer serviceLocator);
 
     }
 }
