@@ -18,7 +18,7 @@ jobs:
       
       # Build
     - name: Build
-      run: dotnet build --configuration $config --no-restore
+      run: dotnet build --no-restore
       
     - name: set pr build number (if pr)
       id: PRNUMBER
