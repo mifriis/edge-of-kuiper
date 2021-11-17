@@ -68,3 +68,10 @@ CLI:
 IDE: 
 * Press the F5 button
 * Observe the Terminal output
+
+### Test
+
+```bash
+dotnet test --collect:"XPlat Code Coverage"
+dotnet ~/.nuget/packages/reportgenerator/5.0.0/tools/net6.0/ReportGenerator.dll "-reports:**/coverage.cobertura.xml;" "-targetdir:kuiper-tests/TestResults/report" "-reporttypes:Html" -title:coveragesummary.txt
+```
