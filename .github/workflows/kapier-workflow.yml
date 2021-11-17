@@ -34,7 +34,7 @@ jobs:
       # Test
     - name: Test      
       run: |
-        dotnet test --no-restore --no-build --configuration $config --collect:"XPlat Code Coverage" --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};"
+        dotnet test --no-restore --no-build --collect:"XPlat Code Coverage" --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};"
         dotnet ~/.nuget/packages/reportgenerator/5.0.0/tools/net6.0/ReportGenerator.dll "-reports:**/coverage.cobertura.xml;" "-targetdir:${{github.workspace}}/report" "-reporttypes:Html;MarkdownSummary"
       # Upload artifacts
     - name: Upload reports
