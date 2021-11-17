@@ -93,6 +93,7 @@ namespace Kuiper.Tests.Unit.Services
             shipService.SetupGet(x => x.Ship).Returns(ship);
             
             var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object);
+            captainService.SetupCaptain();
             captainService.GetCaptain().Ship = ship;
 
             
@@ -100,8 +101,11 @@ namespace Kuiper.Tests.Unit.Services
             captainService.SaveGame();
             
             //Assert
-
-
+            saveService.Verify(x => x.Save(It.IsAny<SaveFile>()), Times.Exactly(1));
+            solarSystemService.Verify(x => x.SolarSystem, Times.Exactly(1));
+            eventService.Verify(x => x.GameEvents, Times.Exactly(1));
+            shipService.Verify(x => x.Ship, Times.Exactly(1));
+            
             
         }
 

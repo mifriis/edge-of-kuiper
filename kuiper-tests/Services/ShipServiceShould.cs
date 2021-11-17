@@ -66,6 +66,30 @@ namespace Kuiper.Tests.Unit.Services
         }
 
         [Fact]
+        public void DoNothingWhenTheDestinationIsFubar()
+        {
+            //Arrange
+            var bodies = new List<CelestialBody>() { 
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.GasGiant, Name = "Jupiter" }
+            };
+            var moons = new List<CelestialBody>() { 
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.Moon, Name = "Luna" }
+            };
+            var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
+            var solarSystemService = new Mock<ISolarSystemService>();
+            solarSystemService.Setup(x => x.GetBody("Sovereign")).Returns((CelestialBody)null);
+            var shipService = new ShipService(solarSystemService.Object);
+            shipService.Ship = new Ship("The Wichman","HeavySoul",4) { CurrentLocation = currentLocation, Status = ShipStatus.InOrbit};
+
+            //Act
+            shipService.SetCourse("Sovereign");
+
+            //Assert
+            Assert.Equal(shipService.Ship.TargetLocation, null);
+            Assert.Equal(shipService.Ship.Status, ShipStatus.InOrbit);
+        }
+
+        [Fact]
         public void UpdateShipStatusWhenDestinationReached()
         {
             //Arrange

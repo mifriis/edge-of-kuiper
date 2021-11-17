@@ -14,11 +14,6 @@ namespace Kuiper.Services
 
         private ISolarSystemRepository _repository;
 
-        public IEnumerable<CelestialBody> GetBodies(CelestialBodyType type)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<CelestialBody> GetBodies()
         {
             var star = SolarSystem.SingleOrDefault(b => b.CelestialBodyType == CelestialBodyType.Star);
@@ -42,11 +37,6 @@ namespace Kuiper.Services
         public long GetDistanceInKm(CelestialBody origin, CelestialBody destination)
         {
             return Convert.ToInt64(GetDistanceInAu(origin, destination) * AUINKM);
-        }
-
-        public IEnumerable<CelestialBody> GetNearestBodies(int count)
-        {
-            throw new System.NotImplementedException();
         }
 
         public IEnumerable<CelestialBody> GetSatellites(CelestialBody parent)

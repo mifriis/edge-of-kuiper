@@ -28,13 +28,19 @@ namespace Kuiper.Services
 
         public void ExecuteEvents(DateTime eventsBefore)
         {
-
+            var executedEvents = new List<IEvent>();
             foreach(var gameEvent in GameEvents)
             {
                 if(gameEvent.EventTime <= eventsBefore)
                 {
+                    executedEvents.Add(gameEvent);
                     gameEvent.Execute(_serviceLocator);
+
                 }
+            }
+            foreach (var gameEvent in executedEvents)
+            {
+                RemoveEvent(gameEvent);
             }
         }
 

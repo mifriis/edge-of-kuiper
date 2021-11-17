@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Kuiper.Domain;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 
 namespace Kuiper.Services
 {
+    [ExcludeFromCodeCoverage] //Heavily using statics for IO stuff.
     public class SaveService: ISaveService
     {
         private readonly string savePath = Directory.CreateDirectory(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "saves")).FullName;
