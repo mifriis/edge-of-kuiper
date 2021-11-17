@@ -5,16 +5,69 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: self-hosted
-
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
+    - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: '6.0.x'
+      
+      # Restore  
     - name: Install dependencies
       run: dotnet restore
+      
+      # Build
     - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build
+      run: dotnet build --configuration $config --no-restore
+      
+    - name: set pr build number (if pr)
+      id: PRNUMBER
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: kkak10/pr-number-action@v1.3
+      
+      # Set variables
+    - name: Setup Variables
+      run: |
+        echo "title=Test- and Coverage-report - PR #${{steps.PRNUMBER.outputs.pr}}" >> $GITHUB_ENV
+        echo "file_name=TestReport.${{steps.PRNUMBER.outputs.pr}}.md" >> $GITHUB_ENV
+      
+      # Test
+    - name: Test      
+      run: |
+        dotnet test --no-restore --no-build --configuration $config --collect:"XPlat Code Coverage" --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};"
+        dotnet ~/.nuget/packages/reportgenerator/5.0.0/tools/net6.0/ReportGenerator.dll "-reports:**/coverage.cobertura.xml;" "-targetdir:${{github.workspace}}/report" "-reporttypes:Html;MarkdownSummary"
+      # Upload artifacts
+    - name: Upload reports
+      uses: actions/upload-artifact@v2
+      if: ${{always()}}
+      with:
+        name: 'Test Run'
+        path: |
+          ${{github.workspace}}/${{env.file_name}}
+          ${{github.workspace}}/report
+      # Report
+    - name: Create combined report for the PR conversation
+      if: ${{always()}}
+      run: |
+        OUTPUT=$(cat << EOF
+        $(cat ${{github.workspace}}/${{env.file_name}})
+        ## Code Coverage
+        $(cat ${{github.workspace}}/report/Summary.md)
+        EOF
+        )
+        OUTPUT="${OUTPUT//'%'/'%25'}"
+        OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+        OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+        echo $OUTPUT
+        echo "::set-output name=report::$OUTPUT"
+      id: report
+    
+    - name: comment PR with the Report
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: ${{ github.event_name == 'pull_request'  && always()}}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        header: Coverage Report
+        recreate: true
+        message: ${{ steps.report.outputs.report }}
