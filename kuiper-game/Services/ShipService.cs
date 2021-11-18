@@ -1,5 +1,6 @@
 using Kuiper.Domain;
 using Kuiper.Domain.CelestialBodies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +8,7 @@ namespace Kuiper.Services
 {
     public class ShipService : IShipService
     {
- 
+        public Ship Ship { get; set; }
         private readonly ISolarSystemService _solarSystemService;
 
         public ShipService(ISolarSystemService solarSystemService)
@@ -46,6 +47,14 @@ namespace Kuiper.Services
             Ship.Status = Domain.ShipStatus.InOrbit;
         }
 
-        public Ship Ship { get; set; }
+        public TimeSpan CalculateTravelTime(CelestialBody destination)
+        {
+            var distance = _solarSystemService.GetDistanceInKm(Ship.CurrentLocation, destination);
+            var hours = distance / Ship.Speed;
+            var timespan = TimeSpan.FromHours(hours);
+            return timespan;
+        }
+
+        
     }
 }

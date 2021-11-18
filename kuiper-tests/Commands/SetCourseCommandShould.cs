@@ -20,16 +20,19 @@ namespace Kuiper.Tests.Unit.Services
         public void SetCourseAndAddEventOnExecute()
         {
             //Arrange
+            var now = DateTime.Now;
             Console.Clear(); //There might be remnants in the console from other tests that will impact when many tests are run
             var destinations = new List<CelestialBody>() { new CelestialBody() { Name = "Mars" }, new CelestialBody() { Name = "Sovereign" } };
             var eventService = new Mock<IEventService>();
             var shipService = new Mock<IShipService>();
             var gameTimeService = new Mock<IGameTimeService>();
+            var travelTime = TimeSpan.FromDays(255);
             var command = new SetCourseCommand(shipService.Object, eventService.Object, gameTimeService.Object);
             var ship = new Ship("LongLars","JazzBaron",2) { TargetLocation = destinations[0], Status = ShipStatus.Enroute};
             shipService.Setup(x => x.GetPossibleDestinations()).Returns(destinations);
             shipService.SetupGet(x => x.Ship).Returns(ship);
-            gameTimeService.Setup(u => u.Now()).Returns(DateTime.Now);
+            shipService.Setup(u => u.CalculateTravelTime(destinations[0])).Returns(travelTime);
+            gameTimeService.Setup(u => u.Now()).Returns(now);
             
             var output = new StringWriter();
             Console.SetOut(output);
@@ -41,51 +44,8 @@ namespace Kuiper.Tests.Unit.Services
             command.Execute(Array.Empty<string>());
             
             //Assert
-            eventService.Verify(x => x.AddEvent(It.IsAny<IEvent>()), Times.Exactly(1));
-            shipService.Verify(x => x.SetCourse(It.IsAny<string>()), Times.Exactly(1));
-            
-        }
-
-        [Fact]
-        public void RemoveEventFromEventList()
-        {
-            //Arrange
-            var gameEvent = new SetCourseEvent() { EventName = "Headed for Soverign", EventTime=DateTime.MinValue };
-            var gameEvents = new List<IEvent>() { gameEvent };
-            var serviceLocator = new Mock<IContainer>();
-            var eventService = new EventService(serviceLocator.Object);
-            eventService.GameEvents = gameEvents;
-            //Act
-            eventService.RemoveEvent(gameEvent);
-
-            //Assert
-            Assert.Equal(eventService.GameEvents.Count(), 0);
-            Assert.False(eventService.GameEvents.Contains(gameEvent));
-        }
-
-        [Fact]
-        public void ExecuteAllEventsThatHappenedBeforeNow()
-        {
-            //Arrange
-            var gameEventEarlier = new Mock<IEvent>();
-            gameEventEarlier.SetupGet(x => x.EventName).Returns("Headed for Sovereign");
-            gameEventEarlier.SetupGet(x => x.EventTime).Returns(DateTime.MinValue);
-            var gameEventLater = new Mock<IEvent>();
-            gameEventLater.SetupGet(x => x.EventName).Returns("Crashlanded on Sovereign");
-            gameEventLater.SetupGet(x => x.EventTime).Returns(DateTime.MaxValue);
-            var gameEvents = new List<IEvent>() { gameEventEarlier.Object, gameEventLater.Object };
-            var serviceLocator = new Mock<IContainer>();
-            var eventService = new EventService(serviceLocator.Object);
-            eventService.GameEvents = gameEvents;
-            //Act
-            eventService.ExecuteEvents(DateTime.Now);
-
-            //Assert
-            Assert.Equal(eventService.GameEvents.Count(), 1);
-            Assert.False(eventService.GameEvents.Contains(gameEventEarlier.Object));
-            Assert.True(eventService.GameEvents.Contains(gameEventLater.Object));
-            gameEventEarlier.Verify(x => x.Execute(serviceLocator.Object), Times.Exactly(1));
-            gameEventLater.Verify(x => x.Execute(serviceLocator.Object), Times.Exactly(0));
+            eventService.Verify(x => x.AddEvent(It.Is((SetCourseEvent e) => e.EventTime == now + travelTime)), Times.Exactly(1));
+            shipService.Verify(x => x.SetCourse(It.IsAny<string>()), Times.Exactly(1));        
         }
     }
 }

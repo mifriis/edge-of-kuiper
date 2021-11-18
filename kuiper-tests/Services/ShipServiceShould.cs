@@ -107,5 +107,26 @@ namespace Kuiper.Tests.Unit.Services
             Assert.Equal(shipService.Ship.TargetLocation, null);
             Assert.Equal(shipService.Ship.Status, ShipStatus.InOrbit);
         }
+
+        [Fact]
+        public void CalculateHoursToTarget()
+        {
+            //Arrange
+            var distance = 245749658; //As calculated by the solarSystemService
+            var origin = new CelestialBody() { Name = "Earth" };
+            var destination = new CelestialBody() { Name = "Mars" };
+            var ship = new Ship("The Boolean","Lamaro", 40000) { CurrentLocation = origin };
+            var solarSystemService = new Mock<ISolarSystemService>();
+            var service = new ShipService(solarSystemService.Object);
+            service.Ship = ship;
+
+            solarSystemService.Setup(u => u.GetDistanceInKm(origin,destination)).Returns(distance);
+            
+            //Act
+            var travelTime = service.CalculateTravelTime(destination);
+
+            //Assert
+            Assert.Equal(travelTime, TimeSpan.FromHours(6143));
+        }
     }
 }
