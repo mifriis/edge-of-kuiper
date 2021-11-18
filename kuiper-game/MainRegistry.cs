@@ -32,6 +32,8 @@ namespace Kuiper
             });
             this.AddSingleton<IEventService, EventService>();
             this.AddSingleton<ISaveService, SaveService>();
+            this.AddSingleton<IGameTimeService, GameTimeService>();
+            this.AddSingleton<IAccountService, AccountService>();
         }
     }
 }

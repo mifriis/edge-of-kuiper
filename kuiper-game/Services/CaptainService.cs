@@ -11,13 +11,17 @@ namespace Kuiper.Services
         private readonly IEventService _eventService;
         private readonly IShipService _shipService;
         private readonly ISaveService _saveService;
+        private readonly IGameTimeService _gameTimeService;
+        private readonly IAccountService _accountService;
 
-        public CaptainService(ISolarSystemService solarSystemService, IShipService shipService, IEventService eventService, ISaveService saveService)
+        public CaptainService(ISolarSystemService solarSystemService, IShipService shipService, IEventService eventService, ISaveService saveService, IGameTimeService gameTimeService, IAccountService accountService)
         {
             _solarSystemService = solarSystemService;
             _eventService = eventService;
             _shipService = shipService;
             _saveService = saveService;
+            _gameTimeService = gameTimeService;
+            _accountService = accountService;
         }
         private Captain _currentCaptain;
         
@@ -36,18 +40,19 @@ namespace Kuiper.Services
                     return _currentCaptain;
                 }             
                 _currentCaptain = new Captain(name, DateTime.Now, new Account(100M));
-                GameTime.RealStartTime = _currentCaptain.StartTime;
+                _gameTimeService.RealStartTime = _currentCaptain.StartTime;
+                _accountService.Account = _currentCaptain.Account;
                 
-                _currentCaptain.Account.Deposit(239048M);
-                _currentCaptain.Account.Deposit(23M);
-                _currentCaptain.Account.Withdraw(123M);
+                _accountService.Deposit(239048M);
+                _accountService.Deposit(23M);
+                _accountService.Withdraw(123M);
 
                 _solarSystemService.LoadFromRepository();
                 
-                _currentCaptain.LastLoggedIn = GameTime.Now();
+                _currentCaptain.LastLoggedIn = _gameTimeService.Now();
                 _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
                 _currentCaptain.Ship.CurrentLocation = _solarSystemService.GetBody("Earth");
-                ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {GameTime.Now()}");
+                ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {_gameTimeService.Now()}");
                 return _currentCaptain;
             }
             return _currentCaptain;
@@ -68,7 +73,7 @@ namespace Kuiper.Services
             saveFile.SolarSystem = _solarSystemService.SolarSystem;
             saveFile.GameEvents = _eventService.GameEvents;                        
             saveFile.Ship = _shipService.Ship;
-            _currentCaptain.LastLoggedIn = GameTime.Now();
+            _currentCaptain.LastLoggedIn = _gameTimeService.Now();
             saveFile.Captain = _currentCaptain;
             _saveService.Save(saveFile);
         }
@@ -80,8 +85,8 @@ namespace Kuiper.Services
             _currentCaptain = saveFile.Captain;
             _shipService.Ship = saveFile.Ship;
             _eventService.GameEvents = saveFile.GameEvents;
-            GameTime.RealStartTime = _currentCaptain.StartTime;
-            _eventService.ExecuteEvents(GameTime.Now());
+            _gameTimeService.RealStartTime = _currentCaptain.StartTime;
+            _eventService.ExecuteEvents(_gameTimeService.Now());
         }
     }
 }

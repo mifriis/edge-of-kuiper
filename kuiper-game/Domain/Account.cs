@@ -34,16 +34,16 @@ namespace Kuiper.Domain
             }
         }
 
-        public decimal Deposit(decimal amount) {
+        public decimal Deposit(decimal amount, DateTime depositTime) {
             _balance += amount;
-            _transactions.Add(new Transaction(GameTime.Now(), TransactionType.Deposit, amount));
+            _transactions.Add(new Transaction(depositTime, TransactionType.Deposit, amount));
             return _balance;
         }
 
-        public decimal Withdraw(decimal amount)
+        public decimal Withdraw(decimal amount, DateTime withdrawTime)
         {
             _balance -= amount;
-            _transactions.Add(new Transaction(GameTime.Now(), TransactionType.Withdrawal, amount));
+            _transactions.Add(new Transaction(withdrawTime, TransactionType.Withdrawal, amount));
             return _balance;
         }
     }

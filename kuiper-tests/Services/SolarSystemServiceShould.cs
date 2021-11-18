@@ -32,11 +32,13 @@ namespace Kuiper.Tests.Unit.Services
         public void ReturnBodyBasedOnName()
         {
             //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+
             var testData = createTestData();
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
             solarSystemService.LoadFromRepository();
 
             //Act
@@ -50,11 +52,13 @@ namespace Kuiper.Tests.Unit.Services
         public void ReturnAllBodiesUnderAStar()
         {
             //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+
             var testData = createTestData();
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
             solarSystemService.LoadFromRepository();
 
             //Act
@@ -70,11 +74,13 @@ namespace Kuiper.Tests.Unit.Services
         public void ReturnSattelitesAroundABody()
         {
             //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+
             var testData = createTestData();
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
             solarSystemService.LoadFromRepository();
 
             var earth = testData.FirstOrDefault(x => x.Name == "Earth");
@@ -91,13 +97,14 @@ namespace Kuiper.Tests.Unit.Services
         public void ReturnCorrectAuDistanceBetweenBodies()
         {
             //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
             var testData = createTestData();
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            GameTime.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
-
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
             solarSystemService.LoadFromRepository();
 
             //Act
@@ -114,15 +121,15 @@ namespace Kuiper.Tests.Unit.Services
         public void ReturnCorrectKmDistanceBetweenBodies()
         {
             //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
             var testData = createTestData();
             var repository = new Mock<ISolarSystemRepository>();
             repository.Setup(x => x.GetSolarSystem()).Returns(testData);
 
-            GameTime.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
-
-            var solarSystemService = new SolarSystemService(repository.Object);
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
             solarSystemService.LoadFromRepository();
-
             //Act
             var origin = solarSystemService.GetBody("Earth");
             var destination = solarSystemService.GetBody("Mars");
@@ -130,7 +137,7 @@ namespace Kuiper.Tests.Unit.Services
             var distance = solarSystemService.GetDistanceInKm(origin, destination);
 
             //Assert
-            Assert.InRange(distance, 245749650, 245749685);
+            Assert.InRange(distance, 245749658, 245749660);
         }
     }
 }

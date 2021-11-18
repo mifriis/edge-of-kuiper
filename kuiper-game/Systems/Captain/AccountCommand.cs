@@ -7,7 +7,7 @@ namespace Kuiper.Systems
 {
     public class AccountCommand : CaptainBaseCommand
     {
-        public AccountCommand(ICaptainService captainService) : base(captainService)
+        public AccountCommand(ICaptainService captainService, IGameTimeService gameTimeService) : base(captainService, gameTimeService)
         {
         }
 

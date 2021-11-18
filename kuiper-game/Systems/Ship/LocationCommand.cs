@@ -4,7 +4,7 @@ namespace Kuiper.Systems
 {
     public class LocationCommand : ShipBaseCommand
     {
-        public LocationCommand(IShipService shipService, IEventService eventService) : base(shipService, eventService)
+        public LocationCommand(IShipService shipService, IEventService eventService, IGameTimeService gameTimeService) : base(shipService, eventService, gameTimeService)
         {
         }
 

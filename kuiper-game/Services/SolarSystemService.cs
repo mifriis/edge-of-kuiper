@@ -13,6 +13,7 @@ namespace Kuiper.Services
         public List<CelestialBody> SolarSystem { get; set; }
 
         private ISolarSystemRepository _repository;
+        private readonly IGameTimeService _gameTimeService;
 
         public IEnumerable<CelestialBody> GetBodies()
         {
@@ -28,8 +29,8 @@ namespace Kuiper.Services
         public double GetDistanceInAu(CelestialBody origin, CelestialBody destination)
         {
 
-            var originPosition = origin.GetPosition(GameTime.ElapsedGameTime);
-            var destinationPosition = destination.GetPosition(GameTime.ElapsedGameTime);
+            var originPosition = origin.GetPosition(_gameTimeService.ElapsedGameTime);
+            var destinationPosition = destination.GetPosition(_gameTimeService.ElapsedGameTime);
 
             return Vector2.Distance(originPosition, destinationPosition);
         }
@@ -50,9 +51,10 @@ namespace Kuiper.Services
         }
 
         
-        public SolarSystemService(ISolarSystemRepository repository)
+        public SolarSystemService(ISolarSystemRepository repository, IGameTimeService gameTimeService)
         {
             _repository = repository;
+            _gameTimeService = gameTimeService;
         }
 
     }

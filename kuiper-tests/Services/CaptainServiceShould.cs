@@ -43,10 +43,13 @@ namespace Kuiper.Tests.Unit.Services
             var shipService = new Mock<IShipService>();
             var eventService = new Mock<IEventService>();
             var saveService = new Mock<ISaveService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var accountService = new Mock<IAccountService>();
 
+            gameTimeService.Setup(u => u.Now()).Returns(DateTime.Now);
             saveService.Setup(x => x.LookForSaves("LongLars")).Returns(new List<string>());
             solarSystemService.Setup(x => x.GetBody("Earth")).Returns(currentLocation);
-            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object);
+            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object, gameTimeService.Object, accountService.Object);
             var firstCaptain = captainService.SetupCaptain();
             //Act
             var captain = captainService.SetupCaptain();
@@ -64,8 +67,10 @@ namespace Kuiper.Tests.Unit.Services
             var shipService = new Mock<IShipService>();
             var eventService = new Mock<IEventService>();
             var saveService = new Mock<ISaveService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var accountService = new Mock<IAccountService>();
 
-            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object);
+            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object, gameTimeService.Object, accountService.Object);
             //Act
             //Assert
             Assert.Throws<NullReferenceException>(() => captainService.GetCaptain());
@@ -85,6 +90,8 @@ namespace Kuiper.Tests.Unit.Services
             var shipService = new Mock<IShipService>();
             var eventService = new Mock<IEventService>();
             var saveService = new Mock<ISaveService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var accountService = new Mock<IAccountService>();
 
             saveService.Setup(x => x.LookForSaves("LongLars")).Returns(new List<string>());
             solarSystemService.Setup(x => x.GetBody("Earth")).Returns(currentLocation);
@@ -92,7 +99,7 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.SetupGet(x => x.SolarSystem).Returns(createTestData());
             shipService.SetupGet(x => x.Ship).Returns(ship);
             
-            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object);
+            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object, gameTimeService.Object, accountService.Object);
             captainService.SetupCaptain();
             captainService.GetCaptain().Ship = ship;
 
@@ -121,10 +128,13 @@ namespace Kuiper.Tests.Unit.Services
             var shipService = new Mock<IShipService>();
             var eventService = new Mock<IEventService>();
             var saveService = new Mock<ISaveService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var accountService = new Mock<IAccountService>();
 
             saveService.Setup(x => x.LookForSaves("LongLars")).Returns(new List<string>());
             solarSystemService.Setup(x => x.GetBody("Earth")).Returns(currentLocation);
-            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object);
+            gameTimeService.Setup(u => u.Now()).Returns(DateTime.Now);
+            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object, gameTimeService.Object, accountService.Object);
 
             //Act
             var captain = captainService.SetupCaptain();
@@ -132,9 +142,9 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.True(captain.Ship != null);
             Assert.Equal(captainService.GetCaptain(), captain);
-            Assert.True(GameTime.Now() != DateTime.MinValue);
             Assert.True(captain.LastLoggedIn != DateTime.MinValue);
             Assert.Equal(captain.Ship.CurrentLocation, currentLocation);
+            gameTimeService.VerifySet(async x => x.RealStartTime=It.IsAny<DateTime>(), Times.Exactly(1));
         }
 
         [Fact]
@@ -154,10 +164,12 @@ namespace Kuiper.Tests.Unit.Services
             var shipService = new Mock<IShipService>();
             var eventService = new Mock<IEventService>();
             var saveService = new Mock<ISaveService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var accountService = new Mock<IAccountService>();
 
             saveService.Setup(x => x.LookForSaves("LongLars")).Returns(new List<string>() { "LongLars" });
             saveService.Setup(x => x.Load("LongLars")).Returns(save);
-            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object);
+            var captainService = new CaptainService(solarSystemService.Object, shipService.Object, eventService.Object, saveService.Object, gameTimeService.Object, accountService.Object);
 
             //Act
             var currentCaptain = captainService.SetupCaptain();
@@ -165,7 +177,7 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.Equal(captain.Ship, ship);
             Assert.Equal(captainService.GetCaptain(), captain);
-            Assert.True(GameTime.Now() != DateTime.MinValue);
+            gameTimeService.VerifySet(async x => x.RealStartTime=It.IsAny<DateTime>(), Times.Exactly(1));
             Assert.Equal(captain.StartTime, new DateTime(2070,2,3));
         }
     }

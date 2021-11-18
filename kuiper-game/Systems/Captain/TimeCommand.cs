@@ -6,7 +6,7 @@ namespace Kuiper.Systems
 {
     public class TimeCommand : CaptainBaseCommand
     {
-        public TimeCommand(ICaptainService captainService) : base(captainService)
+        public TimeCommand(ICaptainService captainService, IGameTimeService gameTimeService) : base(captainService, gameTimeService)
         {
         }
 
@@ -14,7 +14,7 @@ namespace Kuiper.Systems
 
         public override void Execute(string[] args)
         {
-            ConsoleWriter.Write("You look at your watch and see it is " + GameTime.Now());
+            ConsoleWriter.Write("You look at your watch and see it is " + _gameTimeService.Now());
         }
     }
 } 

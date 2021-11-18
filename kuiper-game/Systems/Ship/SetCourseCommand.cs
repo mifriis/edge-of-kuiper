@@ -7,7 +7,7 @@ namespace Kuiper.Systems
 {
     public class SetCourseCommand : ShipBaseCommand
     {
-        public SetCourseCommand(IShipService shipService, IEventService eventService) : base(shipService, eventService)
+        public SetCourseCommand(IShipService shipService, IEventService eventService, IGameTimeService gameTimeService) : base(shipService, eventService, gameTimeService)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Kuiper.Systems
             }
             var chosenDestination = destinations[numericalDestination-1];
             _shipService.SetCourse(chosenDestination.Name);
-            _eventService.AddEvent(new SetCourseEvent() { EventTime = GameTime.Now(), EventName = "Travel Event" });
+            _eventService.AddEvent(new SetCourseEvent() { EventTime = _gameTimeService.Now(), EventName = "Travel Event" });
             ConsoleWriter.Write(_shipService.Ship.Name + " is " + _shipService.Ship.Status + " " + _shipService.Ship.TargetLocation.Name);
             
         }
