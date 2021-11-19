@@ -33,8 +33,9 @@ namespace Kuiper.Systems
             var chosenDestination = destinations[numericalDestination-1];
             _shipService.SetCourse(chosenDestination.Name);
             var travelTime = _shipService.CalculateTravelTime(chosenDestination);
+            var deltaV = _shipService.CalculateDeltaVForJourney(chosenDestination);
             var arrivalTime = _gameTimeService.Now().Add(travelTime);
-            _eventService.AddEvent(new SetCourseEvent() { EventTime = arrivalTime, EventName = "Travel Event" });
+            _eventService.AddEvent(new SetCourseEvent() { EventTime = arrivalTime, EventName = "Travel Event", DeltaVSpent = deltaV});
             ConsoleWriter.Write(_shipService.Ship.Name + " is " + _shipService.Ship.Status + " " + _shipService.Ship.TargetLocation.Name + " and will arrive in " + TimeSpan.FromSeconds(travelTime.TotalSeconds).Humanize(2) + ", on " + arrivalTime);
         }
     }
