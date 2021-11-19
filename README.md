@@ -49,7 +49,7 @@ The perfect time for someone to make a fortune.
 
 ### Prerequisites 
 
-* [.NET 5](https://dotnet.microsoft.com/download)
+* [.NET 6](https://dotnet.microsoft.com/download)
 * [JetBrains Rider](https://www.jetbrains.com/rider/)
 * [Visual Studio (Code)](https://visualstudio.microsoft.com/)
 
@@ -68,3 +68,10 @@ CLI:
 IDE: 
 * Press the F5 button
 * Observe the Terminal output
+
+### Test
+
+```bash
+dotnet test --collect:"XPlat Code Coverage"
+dotnet ~/.nuget/packages/reportgenerator/5.0.0/tools/net6.0/ReportGenerator.dll "-reports:**/coverage.cobertura.xml;" "-targetdir:kuiper-tests/TestResults/report" "-reporttypes:Html" -title:coveragesummary.txt
+```

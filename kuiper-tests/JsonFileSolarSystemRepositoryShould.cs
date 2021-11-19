@@ -69,8 +69,7 @@ namespace Kuiper.Tests.Unit.Repositories
             var bodies = repo.GetBodiesFromJson(jsonString);
 
             //Assert
-            Assert.IsType<Star>(bodies.SingleOrDefault());
-
+            Assert.Equal(bodies.SingleOrDefault().CelestialBodyType, CelestialBodyType.Star);
             File.Delete(file);
         }
 
@@ -86,7 +85,7 @@ namespace Kuiper.Tests.Unit.Repositories
             var bodies = repo.GetBodiesFromJson(jsonString);
 
             //Assert
-            Assert.IsType<Planet>(bodies.SingleOrDefault());
+            Assert.Equal(bodies.SingleOrDefault().CelestialBodyType, CelestialBodyType.Planet);
 
             File.Delete(file);
         }
@@ -103,7 +102,7 @@ namespace Kuiper.Tests.Unit.Repositories
             var bodies = repo.GetBodiesFromJson(jsonString);
 
             //Assert
-            Assert.IsType<Moon>(bodies.SingleOrDefault());
+            Assert.Equal(bodies.SingleOrDefault().CelestialBodyType, CelestialBodyType.Moon);
 
             File.Delete(file);
         }
@@ -120,7 +119,7 @@ namespace Kuiper.Tests.Unit.Repositories
             var bodies = repo.GetBodiesFromJson(jsonString);
 
             //Assert
-            Assert.IsType<GasGiant>(bodies.SingleOrDefault());
+            Assert.Equal(bodies.SingleOrDefault().CelestialBodyType, CelestialBodyType.GasGiant);
 
             File.Delete(file);
         }
@@ -137,7 +136,7 @@ namespace Kuiper.Tests.Unit.Repositories
             var bodies = repo.GetBodiesFromJson(jsonString);
 
             //Assert
-            Assert.IsType<DwarfPlanet>(bodies.SingleOrDefault());
+            Assert.Equal(bodies.SingleOrDefault().CelestialBodyType, CelestialBodyType.DwarfPlanet);
 
             File.Delete(file);
         }

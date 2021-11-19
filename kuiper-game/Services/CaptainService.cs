@@ -7,69 +7,56 @@ namespace Kuiper.Services
 {
     public class CaptainService : ICaptainService
     {
+        private readonly ISolarSystemService _solarSystemService;
+        private readonly IEventService _eventService;
+        private readonly IShipService _shipService;
+        private readonly ISaveService _saveService;
+        private readonly IGameTimeService _gameTimeService;
+        private readonly IAccountService _accountService;
+
+        public CaptainService(ISolarSystemService solarSystemService, IShipService shipService, IEventService eventService, ISaveService saveService, IGameTimeService gameTimeService, IAccountService accountService)
+        {
+            _solarSystemService = solarSystemService;
+            _eventService = eventService;
+            _shipService = shipService;
+            _saveService = saveService;
+            _gameTimeService = gameTimeService;
+            _accountService = accountService;
+        }
         private Captain _currentCaptain;
+        
+
         public Captain SetupCaptain()
         {
             if(_currentCaptain == null) 
             {
                 ConsoleWriter.Write("Greetings captain, what is your name?");
                 var name = Console.ReadLine();
-                var saves = SaveLoad.LookForSaves(name);
+                var saves = _saveService.LookForSaves(name);
                 if(saves.Count() > 0)
                 {
-                    _currentCaptain = SaveLoad.Load(saves.FirstOrDefault());
+                    LoadGame(saves.FirstOrDefault());
                     ConsoleWriter.Write($"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastLoggedIn}!");    
                     return _currentCaptain;
-                }
-                
+                }             
                 _currentCaptain = new Captain(name, DateTime.Now, new Account(100M));
-                GameTime.RealStartTime = _currentCaptain.StartTime;              
+                _gameTimeService.RealStartTime = _currentCaptain.StartTime;
+                _accountService.Account = _currentCaptain.Account;
                 
-                _currentCaptain.Account.Deposit(239048M);
-                _currentCaptain.Account.Deposit(23M);
-                _currentCaptain.Account.Withdraw(123M);
+                _accountService.Deposit(239048M);
+                _accountService.Deposit(23M);
+                _accountService.Withdraw(123M);
+
+                _solarSystemService.LoadFromRepository();
                 
-                _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
-                _currentCaptain.Ship.CurrentLocation = Locations.Earth;
-                _currentCaptain.Ship.Status = ShipStatus.InOrbit;
-                ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {GameTime.Now()}");
+                _currentCaptain.LastLoggedIn = _gameTimeService.Now();
+                _currentCaptain.Ship = new Ship("Bullrun","Sloop", new ShipEngine(10000,3,1000000,1100000), 250) { FuelMass = 100 };
+                
+                _currentCaptain.Ship.CurrentLocation = _solarSystemService.GetBody("Earth");
+                ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {_gameTimeService.Now()}");
                 return _currentCaptain;
             }
             return _currentCaptain;
-        }
-
-        public string SetCourse(Location targetLocation)
-        {
-            var ship = _currentCaptain.Ship;
-            if(targetLocation == ship.CurrentLocation)
-            {
-                return $"{ship.Name} is already in orbit above {ship.CurrentLocation.Name}";
-            }
-            if(targetLocation == ship.TargetLocation)
-            {
-                return $"{ship.Name} is already enroute to {ship.TargetLocation.Name}";
-            }
-            ship.Status = ShipStatus.Enroute;
-            ship.TargetLocation = targetLocation;
-            long distance = 0;
-            if(targetLocation.Sattelites.Contains(ship.CurrentLocation))
-            {
-                //Travel from a moon to parent
-                distance = ship.CurrentLocation.OrbitalRadius;
-                
-            }
-            if(ship.CurrentLocation.Sattelites.Contains(targetLocation))
-            {
-                //Travel from a parent to one of it's moons
-                distance = targetLocation.OrbitalRadius;
-            }
-            if(distance == 0)
-            {
-                throw new NotImplementedException("Don't go to Mars just yet");
-            }
-            var hoursToTargetLocation = TimeSpan.FromHours(distance/ship.Speed);
-            ship.ArrivalTime = GameTime.Now().Add(hoursToTargetLocation);
-            return $"{ship.Name} will arrive in orbit above {targetLocation.Name} on {ship.ArrivalTime}";
         }
 
         public Captain GetCaptain()
@@ -79,6 +66,28 @@ namespace Kuiper.Services
                 return _currentCaptain;
             }
             throw new NullReferenceException("Captain is not yet setup or loaded");
+        }
+
+        public void SaveGame()
+        {
+            var saveFile = new SaveFile();
+            saveFile.SolarSystem = _solarSystemService.SolarSystem;
+            saveFile.GameEvents = _eventService.GameEvents;                        
+            saveFile.Ship = _shipService.Ship;
+            _currentCaptain.LastLoggedIn = _gameTimeService.Now();
+            saveFile.Captain = _currentCaptain;
+            _saveService.Save(saveFile);
+        }
+
+        public void LoadGame(string save)
+        {
+            var saveFile = _saveService.Load(save);
+            _solarSystemService.SolarSystem = saveFile.SolarSystem;
+            _currentCaptain = saveFile.Captain;
+            _shipService.Ship = saveFile.Ship;
+            _eventService.GameEvents = saveFile.GameEvents;
+            _gameTimeService.RealStartTime = _currentCaptain.StartTime;
+            _eventService.ExecuteEvents(_gameTimeService.Now());
         }
     }
 }

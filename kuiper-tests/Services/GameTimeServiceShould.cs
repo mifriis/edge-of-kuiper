@@ -1,34 +1,32 @@
+using Kuiper.Services;
 using Kuiper.Systems;
 using System;
 using Xunit;
 
 namespace Kuiper.Tests.Unit.Systems
 {
-    [Collection("Sequential")]
-    public class GameTimeStaticShould
+    public class GameTimeServiceShould
     {
         [Fact]
         public void ThrowExceptionIfRealStartTimeNeverSet()
         {
             //Arrange
+            var service = new GameTimeService();
+            service.RealStartTime = DateTime.MinValue;
             //Act
             //Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => GameTime.Now());
+            Assert.Throws<ArgumentOutOfRangeException>(() => service.Now());
         }
-    }
 
-    [Collection("Sequential")]
-    public class GameTimeShould
-    {
         [Fact]
         public void ReturnGamDateInNextWeekWhenStartingRealYesterday()
         {
             //Arrange
-            GameTime.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
-
+            var service = new GameTimeService();
+            service.RealStartTime = DateTime.Now.Subtract(TimeSpan.FromHours(24));
             //Act
 
-            var gameNow = GameTime.Now();
+            var gameNow = service.Now();
 
             //Assert
             Assert.Equal(8, gameNow.Day);

@@ -10,11 +10,16 @@ namespace Kuiper.Services
     public class SolarSystemService : ISolarSystemService
     {
         private const int AUINKM =  149597871; // 1 AU in KM. Maybe this belongs somewhere else?
+        public List<CelestialBody> SolarSystem { get; set; }
 
-        public IEnumerable<CelestialBody> GetBodies(CelestialBodyType type)
+        private ISolarSystemRepository _repository;
+        private readonly IGameTimeService _gameTimeService;
+
+        public IEnumerable<CelestialBody> GetBodies()
         {
-            throw new System.NotImplementedException();
-        }
+            var star = SolarSystem.SingleOrDefault(b => b.CelestialBodyType == CelestialBodyType.Star);
+            return star.Satellites;
+        } 
 
         public CelestialBody GetBody(string name)
         {
@@ -24,8 +29,8 @@ namespace Kuiper.Services
         public double GetDistanceInAu(CelestialBody origin, CelestialBody destination)
         {
 
-            var originPosition = origin.GetPosition(GameTime.ElapsedGameTime);
-            var destinationPosition = destination.GetPosition(GameTime.ElapsedGameTime);
+            var originPosition = origin.GetPosition(_gameTimeService.ElapsedGameTime);
+            var destinationPosition = destination.GetPosition(_gameTimeService.ElapsedGameTime);
 
             return Vector2.Distance(originPosition, destinationPosition);
         }
@@ -35,25 +40,22 @@ namespace Kuiper.Services
             return Convert.ToInt64(GetDistanceInAu(origin, destination) * AUINKM);
         }
 
-        public IEnumerable<CelestialBody> GetNearestBodies(int count)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public IEnumerable<CelestialBody> GetSatellites(CelestialBody parent)
         {
-            throw new System.NotImplementedException();
+            return parent.Satellites;
         }
 
-        private List<CelestialBody> SolarSystem;
-        public SolarSystemService(ISolarSystemRepository repository)
+        public void LoadFromRepository()
         {
-            SolarSystem = new List<CelestialBody>();
-            SolarSystem = CreateSolarSystem(repository).ToList();
+            SolarSystem = _repository.GetSolarSystem().ToList();
         }
 
-        private IEnumerable<CelestialBody> CreateSolarSystem(ISolarSystemRepository repository) {
-            return repository.GetSolarSystem();
+        
+        public SolarSystemService(ISolarSystemRepository repository, IGameTimeService gameTimeService)
+        {
+            _repository = repository;
+            _gameTimeService = gameTimeService;
         }
+
     }
 }

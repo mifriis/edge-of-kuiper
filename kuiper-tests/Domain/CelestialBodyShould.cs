@@ -16,7 +16,7 @@ namespace Kuiper.Tests.Unit.Domain
             //Act
 
             //Assert
-            Assert.IsType<Star>(star);
+            Assert.Equal(star.CelestialBodyType, CelestialBodyType.Star);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace Kuiper.Tests.Unit.Domain
             //Act
 
             //Assert
-            Assert.IsType<Planet>(planet);
+            Assert.Equal(planet.CelestialBodyType, CelestialBodyType.Planet);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Kuiper.Tests.Unit.Domain
             //Act
 
             //Assert
-            Assert.IsType<Moon>(moon);
+            Assert.Equal(moon.CelestialBodyType, CelestialBodyType.Moon);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Kuiper.Tests.Unit.Domain
             //Act
 
             //Assert
-            Assert.IsType<GasGiant>(gasGiant);
+            Assert.Equal(gasGiant.CelestialBodyType, CelestialBodyType.GasGiant);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Kuiper.Tests.Unit.Domain
             //Act
 
             //Assert
-            Assert.IsType<DwarfPlanet>(dwarfPlanet);
+            Assert.Equal(dwarfPlanet.CelestialBodyType, CelestialBodyType.DwarfPlanet);
         }
 
         [Fact]
