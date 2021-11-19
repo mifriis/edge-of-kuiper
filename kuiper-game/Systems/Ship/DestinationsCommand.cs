@@ -1,3 +1,5 @@
+using System;
+using Humanizer;
 using Kuiper.Services;
 
 namespace Kuiper.Systems
@@ -16,7 +18,18 @@ namespace Kuiper.Systems
             var destinations = _shipService.GetPossibleDestinations();
             foreach(var destination in destinations)
             {
-                ConsoleWriter.Write(destination.Name);
+                var deltaVNeeded = _shipService.CalculateDeltaVForJourney(destination);
+                var travelTime = _shipService.CalculateTravelTime(destination);
+                var shipDvBudget = _shipService.Ship.deltaV;
+                if(deltaVNeeded > shipDvBudget)
+                {
+                    ConsoleWriter.Write(destination.Name + " in " + TimeSpan.FromSeconds(travelTime.TotalSeconds).Humanize() + ", costing " + Math.Round(deltaVNeeded/1000,0) + "km/s dV", ConsoleColor.DarkYellow);
+                }
+                else
+                {
+                    ConsoleWriter.Write(destination.Name + " in " + TimeSpan.FromSeconds(travelTime.TotalSeconds).Humanize() + ", costing " + Math.Round(deltaVNeeded/1000,0) + "km/s dV");
+                }
+
             }
             
         }

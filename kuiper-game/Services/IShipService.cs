@@ -10,7 +10,8 @@ namespace Kuiper.Services
         Ship Ship { get; set; }
         IEnumerable<CelestialBody> GetPossibleDestinations();
         void SetCourse(string destination);
-        void FinalizeJourney();
+        void FinalizeJourney(double deltaVSpent);
         TimeSpan CalculateTravelTime(CelestialBody destination);
+        double CalculateDeltaVForJourney(CelestialBody destination);
     }
 }

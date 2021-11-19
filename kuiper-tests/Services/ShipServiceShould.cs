@@ -97,15 +97,17 @@ namespace Kuiper.Tests.Unit.Services
             var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
             var solarSystemService = new Mock<ISolarSystemService>();
             var shipService = new ShipService(solarSystemService.Object);
-            shipService.Ship = new Ship("The Wichman","HeavySoul",new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation, TargetLocation = destination};
+            var deltaVToSpend = 1000000;
+            shipService.Ship = new Ship("The Wichman","HeavySoul",new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation, TargetLocation = destination, FuelMass = 100};
 
             //Act
-            shipService.FinalizeJourney();
+            shipService.FinalizeJourney(deltaVToSpend);
 
             //Assert
             Assert.Equal(shipService.Ship.CurrentLocation, destination);
             Assert.Equal(shipService.Ship.TargetLocation, null);
             Assert.Equal(shipService.Ship.Status, ShipStatus.InOrbit);
+            Assert.Equal(72, shipService.Ship.FuelMass, 0);
         }
 
         [Fact]

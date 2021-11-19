@@ -23,6 +23,7 @@ namespace Kuiper.Services
             var moons = _solarSystemService.GetSatellites(Ship.CurrentLocation).ToList();
             destinations.AddRange(planets);
             destinations.AddRange(moons);
+            destinations.Remove(Ship.CurrentLocation);
             return destinations;
         }
 
@@ -40,11 +41,12 @@ namespace Kuiper.Services
             }
         }
 
-        public void FinalizeJourney()
+        public void FinalizeJourney(double deltaVSpent)
         {
             Ship.CurrentLocation = Ship.TargetLocation;
             Ship.TargetLocation = null;
             Ship.Status = Domain.ShipStatus.InOrbit;
+            Ship.SpendFuel(deltaVSpent);
         }
 
         public TimeSpan CalculateTravelTime(CelestialBody destination)

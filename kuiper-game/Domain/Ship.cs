@@ -53,5 +53,35 @@ namespace Kuiper.Domain
                 return Acceleration / EARTH_GRAVITY;
             }
         }
+
+        public double SpendFuel(double deltaVToSpend)
+        {
+            if(deltaVToSpend > deltaV)
+            {
+                throw new ArgumentOutOfRangeException("Not possible to spend more fuel than is availiable");
+            }
+            if(deltaVToSpend == deltaV) //Avoiding divideByZero
+            {
+                FuelMass = 0;
+                return 100;
+            }
+            var fraction = deltaVToSpend / deltaV;
+            var fuelSpent = FuelMass * fraction;
+            FuelMass = FuelMass - fuelSpent;
+            return fuelSpent;        
+        }
+
+        public double Refuel(double tonsRefueled)
+        {
+            var fuel = FuelMass + tonsRefueled;
+            if(fuel > 100)
+            {
+                FuelMass = 100;
+                return tonsRefueled - (fuel - 100);
+            }
+            FuelMass = fuel;
+            return tonsRefueled;
+            
+        }
     }
 }
