@@ -139,5 +139,28 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.InRange(distance, 245749658, 245749660);
         }
+
+        [Fact]
+        public void ReturnCorrectKmDistanceBetweenAMoonAndADifferentBody()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            //Act
+            var origin = solarSystemService.GetBody("Luna");
+            var destination = solarSystemService.GetBody("Mars");
+
+            var distance = solarSystemService.GetDistanceInKm(origin, destination);
+
+            //Assert
+            Assert.Equal((double)246098375, distance, 0);
+        }
     }
 }
