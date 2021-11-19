@@ -28,7 +28,7 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.Setup(x => x.GetBodies()).Returns(bodies);
             solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
             var shipService = new ShipService(solarSystemService.Object);
-            shipService.Ship = new Ship("The Wichman","HeavySoul",4) { CurrentLocation = currentLocation};
+            shipService.Ship = new Ship("The Wichman","HeavySoul",new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation};
 
             //Act
             var destinations = shipService.GetPossibleDestinations();
@@ -55,7 +55,7 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
             solarSystemService.Setup(x => x.GetBody("Mars")).Returns(destination);
             var shipService = new ShipService(solarSystemService.Object);
-            shipService.Ship = new Ship("The Wichman","HeavySoul",4) { CurrentLocation = currentLocation};
+            shipService.Ship = new Ship("The Wichman","HeavySoul",new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation};
 
             //Act
             shipService.SetCourse("Mars");
@@ -79,7 +79,7 @@ namespace Kuiper.Tests.Unit.Services
             var solarSystemService = new Mock<ISolarSystemService>();
             solarSystemService.Setup(x => x.GetBody("Sovereign")).Returns((CelestialBody)null);
             var shipService = new ShipService(solarSystemService.Object);
-            shipService.Ship = new Ship("The Wichman","HeavySoul",4) { CurrentLocation = currentLocation, Status = ShipStatus.InOrbit};
+            shipService.Ship = new Ship("The Wichman","HeavySoul",new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation, Status = ShipStatus.InOrbit};
 
             //Act
             shipService.SetCourse("Sovereign");
@@ -97,7 +97,7 @@ namespace Kuiper.Tests.Unit.Services
             var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
             var solarSystemService = new Mock<ISolarSystemService>();
             var shipService = new ShipService(solarSystemService.Object);
-            shipService.Ship = new Ship("The Wichman","HeavySoul",4) { CurrentLocation = currentLocation, TargetLocation = destination};
+            shipService.Ship = new Ship("The Wichman","HeavySoul",new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation, TargetLocation = destination};
 
             //Act
             shipService.FinalizeJourney();
@@ -116,7 +116,7 @@ namespace Kuiper.Tests.Unit.Services
             var origin = new CelestialBody() { Name = "Earth" };
             var destination = new CelestialBody() { Name = "Mars" };
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("The Boolean","Lamaro", 40000) { CurrentLocation = origin, Engine = engine, FuelMass=100, DryMass=250 };
+            var ship = new Ship("The Boolean","Lamaro", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = origin, FuelMass=100 };
             var solarSystemService = new Mock<ISolarSystemService>();
             var service = new ShipService(solarSystemService.Object);
             service.Ship = ship;

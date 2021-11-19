@@ -28,7 +28,7 @@ namespace Kuiper.Tests.Unit.Services
             var gameTimeService = new Mock<IGameTimeService>();
             var travelTime = TimeSpan.FromDays(255);
             var command = new SetCourseCommand(shipService.Object, eventService.Object, gameTimeService.Object);
-            var ship = new Ship("LongLars","JazzBaron",2) { TargetLocation = destinations[0], Status = ShipStatus.Enroute};
+            var ship = new Ship("LongLars","JazzBaron",new ShipEngine(10000,3,1000000,1100000), 250) { TargetLocation = destinations[0], Status = ShipStatus.Enroute, FuelMass = 100};
             shipService.Setup(x => x.GetPossibleDestinations()).Returns(destinations);
             shipService.SetupGet(x => x.Ship).Returns(ship);
             shipService.Setup(u => u.CalculateTravelTime(destinations[0])).Returns(travelTime);

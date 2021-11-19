@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Kuiper.Services;
 using Kuiper.Systems.Events;
+using Humanizer;
 
 namespace Kuiper.Systems
 {
@@ -32,9 +33,9 @@ namespace Kuiper.Systems
             var chosenDestination = destinations[numericalDestination-1];
             _shipService.SetCourse(chosenDestination.Name);
             var travelTime = _shipService.CalculateTravelTime(chosenDestination);
-            _eventService.AddEvent(new SetCourseEvent() { EventTime = _gameTimeService.Now().Add(travelTime), EventName = "Travel Event" });
-            ConsoleWriter.Write(_shipService.Ship.Name + " is " + _shipService.Ship.Status + " " + _shipService.Ship.TargetLocation.Name);
-            
+            var arrivalTime = _gameTimeService.Now().Add(travelTime);
+            _eventService.AddEvent(new SetCourseEvent() { EventTime = arrivalTime, EventName = "Travel Event" });
+            ConsoleWriter.Write(_shipService.Ship.Name + " is " + _shipService.Ship.Status + " " + _shipService.Ship.TargetLocation.Name + " and will arrive in " + TimeSpan.FromSeconds(travelTime.TotalSeconds).Humanize(2) + ", on " + arrivalTime);
         }
     }
 } 

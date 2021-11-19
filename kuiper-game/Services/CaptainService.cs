@@ -50,7 +50,8 @@ namespace Kuiper.Services
                 _solarSystemService.LoadFromRepository();
                 
                 _currentCaptain.LastLoggedIn = _gameTimeService.Now();
-                _currentCaptain.Ship = new Ship("Bullrun","Sloop", 40000);
+                _currentCaptain.Ship = new Ship("Bullrun","Sloop", new ShipEngine(10000,3,1000000,1100000), 250) { FuelMass = 100 };
+                
                 _currentCaptain.Ship.CurrentLocation = _solarSystemService.GetBody("Earth");
                 ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {_gameTimeService.Now()}");
                 return _currentCaptain;
