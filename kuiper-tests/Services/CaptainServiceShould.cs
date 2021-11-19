@@ -35,6 +35,7 @@ namespace Kuiper.Tests.Unit.Services
         public void ReturnCaptainIfAlreadySetup()
         {
             //Arrange
+            Console.Clear();
              var captainInput = new StringReader("LongLars");
             Console.SetIn(captainInput);
 
@@ -63,6 +64,7 @@ namespace Kuiper.Tests.Unit.Services
         public void ThrowIfCaptainIsNotSet()
         {
             //Arrange
+            Console.Clear();
             var solarSystemService = new Mock<ISolarSystemService>();
             var shipService = new Mock<IShipService>();
             var eventService = new Mock<IEventService>();
@@ -80,6 +82,7 @@ namespace Kuiper.Tests.Unit.Services
         public void SaveSuccessfully()
         {
             //Arrange
+            Console.Clear();
             var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
             var captainInput = new StringReader("LongLars");
             Console.SetIn(captainInput);
@@ -120,6 +123,7 @@ namespace Kuiper.Tests.Unit.Services
         public void SetupANewCaptainIfNoSavesFound()
         {
             //Arrange
+            Console.Clear();
             var captainInput = new StringReader("LongLars");
             Console.SetIn(captainInput);
 
@@ -151,6 +155,7 @@ namespace Kuiper.Tests.Unit.Services
         public void LoadCaptainWhenSavesFound()
         {
             //Arrange
+            Console.Clear();
             var captainInput = new StringReader("LongLars");
             Console.SetIn(captainInput);
 
