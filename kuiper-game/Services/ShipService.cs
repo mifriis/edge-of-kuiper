@@ -49,10 +49,16 @@ namespace Kuiper.Services
 
         public TimeSpan CalculateTravelTime(CelestialBody destination)
         {
-            var distance = _solarSystemService.GetDistanceInKm(Ship.CurrentLocation, destination);
-            var hours = distance / Ship.Speed;
-            var timespan = TimeSpan.FromHours(hours);
-            return timespan;
+            var distanceKm = _solarSystemService.GetDistanceInKm(Ship.CurrentLocation, destination);
+            var secondsToDestination = 2*Math.Sqrt((distanceKm * 1000) / Ship.Acceleration); //Direct Trajectory using Brachistochrone math.
+            return TimeSpan.FromSeconds(secondsToDestination);
+        }
+
+        public double CalculateDeltaVForJourney(CelestialBody destination)
+        {
+            var distanceKm = _solarSystemService.GetDistanceInKm(Ship.CurrentLocation, destination);
+            var deltaV = 2*Math.Sqrt((distanceKm * 1000) * Ship.Acceleration); //Direct Trajectory using Brachistochrone math. 
+            return deltaV;
         }
 
         

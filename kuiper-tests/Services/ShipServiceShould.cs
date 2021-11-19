@@ -109,13 +109,14 @@ namespace Kuiper.Tests.Unit.Services
         }
 
         [Fact]
-        public void CalculateHoursToTarget()
+        public void CalculatedVToTarget()
         {
             //Arrange
             var distance = 245749658; //As calculated by the solarSystemService
             var origin = new CelestialBody() { Name = "Earth" };
             var destination = new CelestialBody() { Name = "Mars" };
-            var ship = new Ship("The Boolean","Lamaro", 40000) { CurrentLocation = origin };
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("The Boolean","Lamaro", 40000) { CurrentLocation = origin, Engine = engine, FuelMass=100, DryMass=250 };
             var solarSystemService = new Mock<ISolarSystemService>();
             var service = new ShipService(solarSystemService.Object);
             service.Ship = ship;
@@ -123,10 +124,10 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.Setup(u => u.GetDistanceInKm(origin,destination)).Returns(distance);
             
             //Act
-            var travelTime = service.CalculateTravelTime(destination);
+            var dV = service.CalculateDeltaVForJourney(destination);
 
             //Assert
-            Assert.Equal(travelTime, TimeSpan.FromHours(6143));
+            Assert.Equal(1675878, dV, 0);
         }
     }
 }
