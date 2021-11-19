@@ -6,9 +6,11 @@ using Kuiper.Systems;
 using Kuiper.Repositories;
 using Kuiper.Services;
 using Kuiper.Systems.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kuiper
 {
+    [ExcludeFromCodeCoverage]//Is ServiceRegistry
     public class MainRegistry : ServiceRegistry
     {
         public MainRegistry()

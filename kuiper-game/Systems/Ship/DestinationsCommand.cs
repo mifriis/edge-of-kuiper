@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Humanizer;
 using Kuiper.Services;
 
 namespace Kuiper.Systems
 {
+    [ExcludeFromCodeCoverage]//Commands are excluded from UnitTests. They should have as little logic as possible, use the services.
     public class DestinationsCommand : ShipBaseCommand
     {
         public DestinationsCommand(IShipService shipService, IEventService eventService, IGameTimeService gameTimeService) : base(shipService, eventService, gameTimeService)

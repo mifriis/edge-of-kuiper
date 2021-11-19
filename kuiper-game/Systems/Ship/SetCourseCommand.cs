@@ -3,9 +3,11 @@ using System.Linq;
 using Kuiper.Services;
 using Kuiper.Systems.Events;
 using Humanizer;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Kuiper.Systems
 {
+    [ExcludeFromCodeCoverage]//Commands are excluded from UnitTests. They should have as little logic as possible, use the services.
     public class SetCourseCommand : ShipBaseCommand
     {
         public SetCourseCommand(IShipService shipService, IEventService eventService, IGameTimeService gameTimeService) : base(shipService, eventService, gameTimeService)
@@ -31,12 +33,9 @@ namespace Kuiper.Systems
                 ConsoleWriter.Write("Selected destination not availiable.");
             }
             var chosenDestination = destinations[numericalDestination-1];
-            _shipService.SetCourse(chosenDestination.Name);
-            var travelTime = _shipService.CalculateTravelTime(chosenDestination);
-            var deltaV = _shipService.CalculateDeltaVForJourney(chosenDestination);
-            var arrivalTime = _gameTimeService.Now().Add(travelTime);
-            _eventService.AddEvent(new SetCourseEvent() { EventTime = arrivalTime, EventName = "Travel Event", DeltaVSpent = deltaV});
-            ConsoleWriter.Write(_shipService.Ship.Name + " is " + _shipService.Ship.Status + " " + _shipService.Ship.TargetLocation.Name + " and will arrive in " + TimeSpan.FromSeconds(travelTime.TotalSeconds).Humanize(2) + ", on " + arrivalTime);
+            var gameEvent = _shipService.SetCourse(chosenDestination.Name);
+            
+            ConsoleWriter.Write(_shipService.Ship.Name + " is " + _shipService.Ship.Status + " " + _shipService.Ship.TargetLocation.Name + " and will arrive on " + gameEvent.EventTime);
         }
     }
 } 

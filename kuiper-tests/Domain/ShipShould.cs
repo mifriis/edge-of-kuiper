@@ -19,7 +19,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
 
             //Act
             var acceleration = ship.Acceleration;
@@ -33,7 +33,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
 
             //Act
             var acceleration = ship.AccelerationGs;
@@ -47,7 +47,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
 
             //Act
             var dV = ship.deltaV;
@@ -61,7 +61,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
             var deltaV = ship.deltaV;
 
             //Act
@@ -78,7 +78,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
             var deltaV = ship.deltaV * 0.25;
 
             //Act
@@ -94,7 +94,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
             var deltaV = ship.deltaV;
 
             //Act
@@ -110,7 +110,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
             var deltaV = ship.deltaV + 1;
 
             //Act
@@ -124,7 +124,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 50};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 50};
             var deltaV = ship.deltaV;
 
             //Act
@@ -140,7 +140,7 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars","Boofy", engine, 250) { FuelMass = 50};
+            var ship = new Ship("LongLars", engine, 250) { FuelMass = 50};
             var deltaV = ship.deltaV;
 
             //Act

@@ -88,7 +88,7 @@ namespace Kuiper.Tests.Unit.Services
             Console.SetIn(captainInput);
             var events = new List<IEvent>();
             var solarSystemService = new Mock<ISolarSystemService>();
-            var ship = new Ship("Slippy","Huge",new ShipEngine(10000,3,1000000,1100000), 250);
+            var ship = new Ship("Slippy",new ShipEngine(10000,3,1000000,1100000), 250);
             
             var shipService = new Mock<IShipService>();
             var eventService = new Mock<IEventService>();
@@ -160,7 +160,7 @@ namespace Kuiper.Tests.Unit.Services
             Console.SetIn(captainInput);
 
             var account = new Account(0);
-            var ship = new Ship("Fleggaard", "Mafia", new ShipEngine(10000,3,1000000,1100000), 250);
+            var ship = new Ship("Fleggaard", new ShipEngine(10000,3,1000000,1100000), 250);
             var captain = new Captain("LongLars",account) { Ship = ship, StartTime = new DateTime(2070,2,3) };
 
             var save = new SaveFile() { Ship = ship, Captain = captain};

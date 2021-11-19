@@ -33,5 +33,19 @@ namespace Kuiper.Tests.Unit.Systems
             Assert.Equal(1, gameNow.Month);
             Assert.Equal(2078, gameNow.Year);
         }
+
+        [Fact]
+        public void ReturnGameStartDate()
+        {
+            //Arrange
+            var service = new GameTimeService();
+            
+            //Act
+            var startDate = service.GameStartDate;
+
+            //Assert
+            Assert.Equal(new DateTime(2078, 1, 1), startDate);
+
+        }
     }
 }

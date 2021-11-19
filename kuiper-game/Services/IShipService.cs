@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Kuiper.Domain;
 using Kuiper.Domain.CelestialBodies;
+using Kuiper.Systems.Events;
 
 namespace Kuiper.Services
 {
@@ -9,7 +10,7 @@ namespace Kuiper.Services
     {
         Ship Ship { get; set; }
         IEnumerable<CelestialBody> GetPossibleDestinations();
-        void SetCourse(string destination);
+        SetCourseEvent SetCourse(string destination);
         void FinalizeJourney(double deltaVSpent);
         TimeSpan CalculateTravelTime(CelestialBody destination);
         double CalculateDeltaVForJourney(CelestialBody destination);
