@@ -11,8 +11,5 @@ namespace Kuiper.Services
         void RemoveEvent(IEvent gameEvent);
         void ExecuteEvents(DateTime eventsBefore);
         List<IEvent> GameEvents { get; set;}
-        
-
-        
     }
 }
