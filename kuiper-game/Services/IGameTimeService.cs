@@ -11,8 +11,5 @@ namespace Kuiper.Services
         TimeSpan ElapsedGameTime { get; }
         DateTime GameStartDate { get; }
         DateTime RealStartTime {get; set;}
-        
-
-        
     }
 }
