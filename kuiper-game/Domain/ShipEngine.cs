@@ -2,7 +2,6 @@ namespace Kuiper.Domain
 {
     public class ShipEngine : IShipEngine
     {
-        private const double EARTH_GRAVITY = 9.80665;
         public ShipEngine(double cost, double mass, double thrust, double specificImpulse)
         {
             Cost = cost;
@@ -19,7 +18,7 @@ namespace Kuiper.Domain
         {
             get
             {
-                var twr = (Thrust * 1000) / ((Mass * 1000) * EARTH_GRAVITY);
+                var twr = (Thrust * 1000) / ((Mass * 1000) * Physics.STANDARD_GRAVITY);
                 return twr;
             }
         }
@@ -28,7 +27,7 @@ namespace Kuiper.Domain
         {
             get
             {
-                var vex = SpecificImpulse * EARTH_GRAVITY;
+                var vex = SpecificImpulse * Physics.STANDARD_GRAVITY;
                 return vex;
             }
         }

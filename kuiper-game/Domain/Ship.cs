@@ -5,7 +5,6 @@ namespace Kuiper.Domain
 {
     public class Ship
     {
-        private const double EARTH_GRAVITY = 9.80665;
         public Ship(string name, IShipEngine engine, double dryMass)
         {
             Name = name;
@@ -48,7 +47,7 @@ namespace Kuiper.Domain
         {
             get
             {
-                return Acceleration / EARTH_GRAVITY;
+                return Acceleration / Physics.STANDARD_GRAVITY;
             }
         }
 
