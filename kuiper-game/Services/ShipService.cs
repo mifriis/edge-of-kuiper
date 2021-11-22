@@ -74,7 +74,5 @@ namespace Kuiper.Services
             var deltaV = 2*Math.Sqrt((distanceKm * 1000) * Ship.Acceleration); //Direct Trajectory using Brachistochrone math. 
             return deltaV;
         }
-
-        
     }
 }
