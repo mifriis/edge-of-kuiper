@@ -1,6 +1,6 @@
 namespace Kuiper.Domain
 {
-    public class ShipEngine
+    public class ShipEngine : IShipEngine
     {
         private const double EARTH_GRAVITY = 9.80665;
         public ShipEngine(double cost, double mass, double thrust, double specificImpulse)

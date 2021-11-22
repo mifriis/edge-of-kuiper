@@ -6,7 +6,7 @@ namespace Kuiper.Domain
     public class Ship
     {
         private const double EARTH_GRAVITY = 9.80665;
-        public Ship(string name, ShipEngine engine, double dryMass)
+        public Ship(string name, IShipEngine engine, double dryMass)
         {
             Name = name;
             Engine = engine;
@@ -14,7 +14,7 @@ namespace Kuiper.Domain
         }
 
         public string Name { get; }
-        public ShipEngine Engine { get; }
+        public IShipEngine Engine { get; }
         public CelestialBody CurrentLocation { get; set; }
         public CelestialBody TargetLocation { get; set; }
         public ShipStatus Status { get; set; }
