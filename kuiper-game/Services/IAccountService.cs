@@ -12,8 +12,5 @@ namespace Kuiper.Services
         decimal Deposit(decimal amount);
         decimal Withdraw(decimal amount);
         IEnumerable<Transaction> Transactions();
-        
-
-        
     }
 }
