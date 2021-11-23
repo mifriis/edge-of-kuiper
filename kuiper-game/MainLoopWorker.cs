@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Kuiper.Systems;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Kuiper
 {
+    [ExcludeFromCodeCoverage]//Startup code
     public class MainLoopWorker : IHostedService
     {
         private readonly ICaptainsConsole _console;

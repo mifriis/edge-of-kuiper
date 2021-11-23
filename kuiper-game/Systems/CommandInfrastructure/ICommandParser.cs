@@ -1,5 +1,4 @@
-﻿using System;
-
+using System;
 namespace Kuiper.Systems.CommandInfrastructure
 {
     public interface ICommandParser
