@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Kuiper.Domain.CelestialBodies;
 
-namespace Kuiper.Domain
+namespace Kuiper.Domain.Ship
 {
     public class Ship
     {
@@ -26,6 +27,8 @@ namespace Kuiper.Domain
         }
         public double FuelMass { get; set;}
         public double DryMass { get; }
+
+        public IEnumerable<IShipModule> Modules { get; set;}
 
         public double deltaV 
         {

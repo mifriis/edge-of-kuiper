@@ -9,6 +9,7 @@ using System;
 using Kuiper.Domain;
 using System.IO;
 using Kuiper.Systems.Events;
+using Kuiper.Domain.Ship;
 
 namespace Kuiper.Tests.Unit.Services
 {

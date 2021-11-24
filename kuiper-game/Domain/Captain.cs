@@ -1,5 +1,6 @@
 using System;
 using Newtonsoft.Json;
+using Kuiper.Domain.Ship;
 
 namespace Kuiper.Domain
 {
@@ -23,7 +24,7 @@ namespace Kuiper.Domain
         public DateTime StartTime { get; set; }
         public DateTime LastLoggedIn { get; set;}
 
-        public Ship Ship { get; set;}
+        public Ship.Ship Ship { get; set;}
         public Account Account { get; }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using Kuiper.Domain;
+using Kuiper.Domain.Ship;
 
 namespace Kuiper.Tests.Unit.Services
 {

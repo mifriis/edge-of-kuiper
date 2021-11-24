@@ -1,5 +1,6 @@
 using Kuiper.Domain;
 using Kuiper.Domain.CelestialBodies;
+using Kuiper.Domain.Ship;
 using Kuiper.Systems.Events;
 using System;
 using System.Collections.Generic;
