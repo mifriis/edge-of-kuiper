@@ -6,6 +6,7 @@ using Kuiper.Domain.CelestialBodies;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using Kuiper.Domain.Mining;
 
 namespace Kuiper.Tests.Unit.Services
 {
@@ -46,6 +47,29 @@ namespace Kuiper.Tests.Unit.Services
 
             //Assert
             Assert.Equal(testData.SingleOrDefault(b => b.Name == "Saturn"), body);
+        }
+        
+        [Fact]
+        public void ReturnAsteroidBasedOnName()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+
+            var asteroid = new Asteroid(2, solarSystemService.GetStar(), AsteroidType.S, AsteroidSize.Tiny, 10);
+            solarSystemService.AddCelestialBody(asteroid);
+
+            //Act
+            var body = solarSystemService.GetBody(asteroid.Name);
+
+            //Assert
+            Assert.Equal(body.OrbitRadius, asteroid.OrbitRadius);
         }
 
         [Fact]
@@ -162,5 +186,166 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.Equal((double)246098375, distance, 0);
         }
+        
+        [Fact]
+        public void AddABodyToTheSolarSystemSuccessfully()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            //Act
+
+            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            var returnBody = solarSystemService.AddCelestialBody(body);
+
+            //Assert
+            Assert.Equal(body.Name,returnBody.Name);
+            Assert.Equal(body.Velocity,returnBody.Velocity);
+        }
+        
+        [Fact]
+        public void RemoveABodyToTheSolarSystemSuccessfully()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            
+            //Act
+            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            body = solarSystemService.AddCelestialBody(body);
+            solarSystemService.RemoveCelestialBody(body);
+            var returnBody = solarSystemService.GetBody(body.Name);
+
+            //Assert
+            Assert.Null(returnBody);
+        }
+        
+        [Fact]
+        public void CanAddABodyWithSatellitesFromTheSolarSystemSuccessfully()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            
+            //Act
+            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            var sat1 = CelestialBody.Create("MyAsteroid2", 2, body, CelestialBodyType.Asteroid);
+            var sat2 = CelestialBody.Create("MyAsteroid3", 2, body, CelestialBodyType.Asteroid);
+            body = solarSystemService.AddCelestialBody(body);
+            sat1 = solarSystemService.AddCelestialBody(sat1);
+            sat2 = solarSystemService.AddCelestialBody(sat2);
+            
+            var returnBody = solarSystemService.GetBody(body.Name);
+            var returnSat2 = solarSystemService.GetBody(sat2.Name);
+
+            //Assert
+            Assert.Equal(returnBody.Satellites.Count, 2);
+            Assert.Equal(returnBody.Satellites.First().Name, sat1.Name);
+            Assert.Equal(returnSat2.Parent, returnBody);
+        }
+        
+        [Fact]
+        public void RemoveABodyThatDoesntExistToTheSolarSystemSuccessfully()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            
+            //Act
+            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            solarSystemService.RemoveCelestialBody(body);
+            var returnBody = solarSystemService.GetBody(body.Name);
+
+            //Assert
+            Assert.Null(returnBody);
+        }
+        
+        [Fact]
+        public void CanRemoveABodyWithSatellitesFromTheSolarSystemSuccessfully()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            
+            //Act
+            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            var sat1 = CelestialBody.Create("MyAsteroid2", 2, body, CelestialBodyType.Asteroid);
+            var sat2 = CelestialBody.Create("MyAsteroid3", 2, body, CelestialBodyType.Asteroid);
+            body = solarSystemService.AddCelestialBody(body);
+            sat1 = solarSystemService.AddCelestialBody(sat1);
+            sat2 = solarSystemService.AddCelestialBody(sat2);
+            
+            solarSystemService.RemoveCelestialBody(body);
+            
+            var returnBody = solarSystemService.GetBody(body.Name);
+            var returnSat1 = solarSystemService.GetBody(sat1.Name);
+            var returnSat2 = solarSystemService.GetBody(sat2.Name);
+
+            //Assert
+            Assert.Null(returnBody);
+            Assert.Null(returnSat1);
+            Assert.Null(returnSat2);
+        }
+        
+        [Fact]
+        public void ExceptionThrownIfAttemptToCreateSameNameBody()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            
+            //Act
+            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            var body2 = CelestialBody.Create("MyAsteroid", 2, body, CelestialBodyType.Asteroid);
+            body = solarSystemService.AddCelestialBody(body);
+            
+            //Assert
+            Assert.Throws<ArgumentException>(() => solarSystemService.AddCelestialBody(body2));
+        }
+        
+            
+            
     }
 }

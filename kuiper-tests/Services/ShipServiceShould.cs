@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using Kuiper.Domain;
+using Kuiper.Domain.Mining;
 using Kuiper.Domain.Ship;
 
 namespace Kuiper.Tests.Unit.Services
@@ -198,6 +199,46 @@ namespace Kuiper.Tests.Unit.Services
 
             //Assert
             Assert.Equal(TimeSpan.FromTicks(5865573468979), timespan);
+        }
+        
+        [Fact]
+        public void UpdateShipStatusWhenDestinationValidAsteroid()
+        {
+            //Arrange
+            var distance = 245749658; //As calculated by the solarSystemService
+            var now = DateTime.Now;
+            var sol = CelestialBody.Create("Sol",0,null,CelestialBodyType.Star);
+            var destination = new Asteroid(2, sol, AsteroidType.M, AsteroidSize.Small, 10);
+            var bodies = new List<CelestialBody>() {
+                sol,
+                destination,
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.GasGiant, Name = "Jupiter" }
+            };
+            var moons = new List<CelestialBody>() { 
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.Moon, Name = "Luna" }
+            };
+            var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
+            var solarSystemService = new Mock<ISolarSystemService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var eventService = new Mock<IEventService>();
+            
+            solarSystemService.Setup(x => x.GetBodies()).Returns(bodies);
+            solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
+            solarSystemService.Setup(x => x.GetStar()).Returns(sol);
+            solarSystemService.Setup(x => x.GetBody(destination.Name)).Returns(destination);
+            gameTimeService.Setup(u => u.Now()).Returns(now);
+            solarSystemService.Setup(u => u.GetDistanceInKm(currentLocation, destination)).Returns(distance);
+            var shipService = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
+            shipService.Ship = new Ship("The Wichman", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation};
+
+            //Act
+            var gameEvent = shipService.SetCourse(destination.Name);
+
+            //Assert
+            Assert.Equal(shipService.Ship.TargetLocation, destination);
+            Assert.Equal(shipService.Ship.Status, ShipStatus.Enroute);
+            Assert.Equal(1982926, gameEvent.DeltaVSpent,0);
+            Assert.Equal(now.AddTicks(4957314373731), gameEvent.EventTime);
         }
     }
 }

@@ -40,7 +40,9 @@ namespace Kuiper.Services
             {
                 throw new ArgumentException("Celestial Body not found");
             }
-            if(!GetPossibleDestinations().ToList().Contains(celestialBody))
+
+            var possibleDestinations = GetPossibleDestinations().ToList();
+            if(possibleDestinations.Where(des => des.Name == destination) == null)
             {
                 throw new ArgumentException("Chosen CelestialBody is not possible from this location");
             }
