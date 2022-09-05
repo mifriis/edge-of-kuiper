@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Kuiper.Domain;
+using Kuiper.Domain.Ship;
 using Kuiper.Systems;
 
 namespace Kuiper.Services

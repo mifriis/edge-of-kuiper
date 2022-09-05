@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Kuiper.Domain;
 using Kuiper.Domain.CelestialBodies;
+using Kuiper.Domain.Ship;
 using Kuiper.Systems.Events;
 
 namespace Kuiper.Services

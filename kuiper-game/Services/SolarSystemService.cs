@@ -4,6 +4,7 @@ using Kuiper.Repositories;
 using System.Linq;
 using System.Numerics;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kuiper.Services
 {
@@ -19,6 +20,12 @@ namespace Kuiper.Services
         {
             var star = SolarSystem.SingleOrDefault(b => b.CelestialBodyType == CelestialBodyType.Star);
             return star.Satellites;
+        }
+        
+        public CelestialBody GetStar()
+        {
+            var star = SolarSystem.SingleOrDefault(b => b.CelestialBodyType == CelestialBodyType.Star);
+            return star;
         } 
 
         public CelestialBody GetBody(string name)
@@ -48,6 +55,35 @@ namespace Kuiper.Services
         public void LoadFromRepository()
         {
             SolarSystem = _repository.GetSolarSystem().ToList();
+        }
+
+        public CelestialBody AddCelestialBody(CelestialBody celestialBody)
+        {
+            if (GetBody(celestialBody.Name) != null)
+            {
+                throw new ArgumentException("Celestial body already exists. A unique name is required");
+            }    
+            SolarSystem.Add(celestialBody);
+            celestialBody = GetBody(celestialBody.Name);
+            return celestialBody;
+        }
+        
+        public void RemoveCelestialBody(CelestialBody celestialBody)
+        {
+            if (GetBody(celestialBody.Name) == null)
+            {
+                return; //Doesn't exist, all good?
+            }
+            celestialBody = GetBody(celestialBody.Name);
+            if (celestialBody.Satellites.Count > 0)
+            {
+                //No orhans
+                foreach (var satellite in celestialBody.Satellites)
+                {
+                    SolarSystem.Remove(satellite);
+                }
+            }
+            SolarSystem.Remove(celestialBody);
         }
 
         

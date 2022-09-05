@@ -1,4 +1,4 @@
-namespace Kuiper.Domain
+namespace Kuiper.Domain.Ship
 {
     public class ShipEngine : IShipEngine
     {
