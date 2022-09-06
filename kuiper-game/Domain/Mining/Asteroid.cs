@@ -4,18 +4,12 @@ using Kuiper.Domain.CelestialBodies;
 
 namespace Kuiper.Domain.Mining;
 
-public class Asteroid
+public class Asteroid : CelestialBody
 {
     public AsteroidType AsteroidType { get; set; }
     public AsteroidSize AsteroidSize { get; set; }
     public int Yield { get; set; }
     
-    public String Name { get; set; }
-    public CelestialBody Parent { get; set; }
-    public double OrbitRadius { get; set; }
-    public double OriginDegrees { get; set; }
-    public double Velocity { get; set; }
-
     public Asteroid(AsteroidType type, AsteroidSize size, int yield, Double orbitRadius, Double originDegrees, Double velocity, CelestialBody parent)
     {
         AsteroidType = type;
@@ -26,6 +20,7 @@ public class Asteroid
         OriginDegrees = originDegrees;
         Parent = parent;
         Velocity = velocity;
+        CelestialBodyType = CelestialBodyType.Asteroid;
     }
 
     private String GenerateName()

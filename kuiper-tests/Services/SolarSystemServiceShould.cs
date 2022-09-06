@@ -202,7 +202,7 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.LoadFromRepository();
             //Act
 
-            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            var body = CelestialBody.Create("Planet", 2, testData.First(), CelestialBodyType.Planet);
             var returnBody = solarSystemService.AddCelestialBody(body);
 
             //Assert
@@ -225,7 +225,7 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.LoadFromRepository();
             
             //Act
-            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            var body = CelestialBody.Create("Planet", 2, testData.First(), CelestialBodyType.Planet);
             body = solarSystemService.AddCelestialBody(body);
             solarSystemService.RemoveCelestialBody(body);
             var returnBody = solarSystemService.GetBody(body.Name);
@@ -249,9 +249,9 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.LoadFromRepository();
             
             //Act
-            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
-            var sat1 = CelestialBody.Create("MyAsteroid2", 2, body, CelestialBodyType.Asteroid);
-            var sat2 = CelestialBody.Create("MyAsteroid3", 2, body, CelestialBodyType.Asteroid);
+            var body = CelestialBody.Create("Planet1", 2, testData.First(), CelestialBodyType.Planet);
+            var sat1 = CelestialBody.Create("Moon1", 2, body, CelestialBodyType.Moon);
+            var sat2 = CelestialBody.Create("Moon2", 2, body, CelestialBodyType.Moon);
             body = solarSystemService.AddCelestialBody(body);
             sat1 = solarSystemService.AddCelestialBody(sat1);
             sat2 = solarSystemService.AddCelestialBody(sat2);
@@ -280,7 +280,7 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.LoadFromRepository();
             
             //Act
-            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
+            var body = CelestialBody.Create("Planet9", 2, testData.First(), CelestialBodyType.Planet);
             solarSystemService.RemoveCelestialBody(body);
             var returnBody = solarSystemService.GetBody(body.Name);
 
@@ -303,9 +303,9 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.LoadFromRepository();
             
             //Act
-            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
-            var sat1 = CelestialBody.Create("MyAsteroid2", 2, body, CelestialBodyType.Asteroid);
-            var sat2 = CelestialBody.Create("MyAsteroid3", 2, body, CelestialBodyType.Asteroid);
+            var body = CelestialBody.Create("MyPlanet", 2, testData.First(), CelestialBodyType.Planet);
+            var sat1 = CelestialBody.Create("Moon1", 2, body, CelestialBodyType.Moon);
+            var sat2 = CelestialBody.Create("Moon2", 2, body, CelestialBodyType.Moon);
             body = solarSystemService.AddCelestialBody(body);
             sat1 = solarSystemService.AddCelestialBody(sat1);
             sat2 = solarSystemService.AddCelestialBody(sat2);
@@ -337,12 +337,88 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.LoadFromRepository();
             
             //Act
-            var body = CelestialBody.Create("MyAsteroid", 2, testData.First(), CelestialBodyType.Asteroid);
-            var body2 = CelestialBody.Create("MyAsteroid", 2, body, CelestialBodyType.Asteroid);
+            var body = CelestialBody.Create("MyPlanet", 2, testData.First(), CelestialBodyType.Planet);
+            var body2 = CelestialBody.Create("MyPlanet", 2, body, CelestialBodyType.Planet);
             body = solarSystemService.AddCelestialBody(body);
             
             //Assert
             Assert.Throws<ArgumentException>(() => solarSystemService.AddCelestialBody(body2));
+        }
+        
+        [Fact]
+        public void AddAnAsteroidToTheSolarSystemSuccessfully()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            //Act
+
+            var body = new Asteroid(AsteroidType.C, AsteroidSize.Gigantic, 2, 2, 2, 2, testData.First());
+            var returnBody = solarSystemService.AddAsteroid(body);
+
+            //Assert
+            Assert.Equal(body.Name,returnBody.Name);
+            Assert.Equal(body.Velocity,returnBody.Velocity);
+        }
+        
+        [Fact]
+        public void RemoveAnAsteroidFromTheSolarSystemSuccessfully()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            
+            //Act
+            var body = new Asteroid(AsteroidType.C, AsteroidSize.Gigantic, 2, 2, 2, 2, testData.First());
+            body = solarSystemService.AddAsteroid(body);
+            solarSystemService.RemoveAsteroid(body);
+            var returnBody = solarSystemService.GetBody(body.Name);
+
+            //Assert
+            Assert.Null(returnBody);
+        }
+        
+        [Fact]
+        public void ReturnCorrectAuDistanceBetweenABodyAndAsteroidCorrectly()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7,0,0,0));
+
+            var testData = createTestData();
+            var repository = new Mock<ISolarSystemRepository>();
+            repository.Setup(x => x.GetSolarSystem()).Returns(testData);
+
+            var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
+            solarSystemService.LoadFromRepository();
+            var standin = solarSystemService.GetBody("Mars");
+
+            var asteroid = new Asteroid(AsteroidType.C, AsteroidSize.Gigantic, 2, standin.OrbitRadius,
+                standin.OriginDegrees, standin.Velocity, standin.Parent); 
+            solarSystemService.Asteroids.Add(asteroid);
+
+            //Act
+            var origin = solarSystemService.GetBody("Earth");
+            var destination = solarSystemService.GetAsteroid(asteroid.Name);
+
+            var distance = solarSystemService.GetDistanceInAu(origin, destination);
+
+            //Assert
+            Assert.Equal(1.6427351236343384, distance, 6);
         }
         
             
