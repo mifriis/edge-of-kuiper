@@ -8,6 +8,4 @@ public interface IMiningService
 {
     public IEnumerable<Asteroid> ScannedAsteroids();
     public ScanForAsteroidsEvent ScanForAsteroids();
-    public void DeleteAsteroid(Asteroid asteroid);
-    public void AddAsteroid(Asteroid asteroid);
 }

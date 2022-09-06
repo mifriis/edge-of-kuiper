@@ -214,5 +214,19 @@ namespace Kuiper.Tests.Unit.Domain
             // Assert
             Assert.NotNull(earth.OriginDegrees);
         }
+        
+        [Fact]
+        public void DontAddBodyAsSatelliteIfItsAnAsteroid()
+        {
+            //Arrange
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var asteroid = CelestialBody.Create("tp01", 1.0f, 29.8f, 170, star, CelestialBodyType.Asteroid);
+
+            //Act
+
+            //Assert
+            Assert.Empty(star.Satellites);
+            Assert.DoesNotContain(asteroid, star.Satellites);
+        }
     }
 }

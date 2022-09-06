@@ -27,6 +27,7 @@ namespace Kuiper.Services
         private Captain _currentCaptain;
         
 
+        //This whole class is a bit of a mess of "load" and testing data from some systems.
         public Captain SetupCaptain()
         {
             if(_currentCaptain == null) 
@@ -73,6 +74,7 @@ namespace Kuiper.Services
         {
             var saveFile = new SaveFile();
             saveFile.SolarSystem = _solarSystemService.SolarSystem;
+            saveFile.Asteroids = _solarSystemService.Asteroids;
             saveFile.GameEvents = _eventService.GameEvents;                        
             saveFile.Ship = _shipService.Ship;
             _currentCaptain.LastLoggedIn = _gameTimeService.Now();
@@ -84,6 +86,7 @@ namespace Kuiper.Services
         {
             var saveFile = _saveService.Load(save);
             _solarSystemService.SolarSystem = saveFile.SolarSystem;
+            _solarSystemService.Asteroids = saveFile.Asteroids;
             _currentCaptain = saveFile.Captain;
             _shipService.Ship = saveFile.Ship;
             _eventService.GameEvents = saveFile.GameEvents;

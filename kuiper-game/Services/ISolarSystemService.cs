@@ -1,5 +1,6 @@
 using Kuiper.Domain.CelestialBodies;
 using System.Collections.Generic;
+using Kuiper.Domain.Mining;
 
 namespace Kuiper.Services
 {
@@ -15,5 +16,9 @@ namespace Kuiper.Services
         List<CelestialBody> SolarSystem { get; set; }
         void LoadFromRepository();
         CelestialBody GetStar();
+        List<Asteroid> Asteroids { get; set; }
+        Asteroid AddAsteroid(Asteroid asteroid);
+        void RemoveAsteroid(Asteroid asteroid);
+        Asteroid GetAsteroid(string name);
     }
 }
