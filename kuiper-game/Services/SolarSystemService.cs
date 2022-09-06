@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Kuiper.Domain.Mining;
 
 namespace Kuiper.Services
 {
@@ -12,6 +13,7 @@ namespace Kuiper.Services
     {
         private const int AUINKM =  149597871; // 1 AU in KM. Maybe this belongs somewhere else?
         public List<CelestialBody> SolarSystem { get; set; }
+        public List<Asteroid> Asteroids { get; set; }
 
         private ISolarSystemRepository _repository;
         private readonly IGameTimeService _gameTimeService;
@@ -26,7 +28,7 @@ namespace Kuiper.Services
         {
             var star = SolarSystem.SingleOrDefault(b => b.CelestialBodyType == CelestialBodyType.Star);
             return star;
-        } 
+        }
 
         public CelestialBody GetBody(string name)
         {
@@ -55,6 +57,7 @@ namespace Kuiper.Services
         public void LoadFromRepository()
         {
             SolarSystem = _repository.GetSolarSystem().ToList();
+            Asteroids = new List<Asteroid>();
         }
 
         public CelestialBody AddCelestialBody(CelestialBody celestialBody)
@@ -84,6 +87,32 @@ namespace Kuiper.Services
                 }
             }
             SolarSystem.Remove(celestialBody);
+        }
+        
+        public Asteroid GetAsteroid(string name)
+        {
+            return Asteroids.Where(b => string.Equals(name, b.Name, System.StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+        }
+        public Asteroid AddAsteroid(Asteroid asteroid)
+        {
+            if (GetBody(asteroid.Name) != null)
+            {
+                throw new ArgumentException("Asteroid already exists. A unique name is required");
+            }    
+            Asteroids.Add(asteroid);
+            asteroid = GetAsteroid(asteroid.Name);
+            return asteroid;
+        }
+        
+        public void RemoveAsteroid(Asteroid asteroid)
+        {
+            if (GetBody(asteroid.Name) == null)
+            {
+                return; //Doesn't exist, all good?
+            }
+            asteroid = GetAsteroid(asteroid.Name);
+
+            Asteroids.Remove(asteroid);
         }
 
         

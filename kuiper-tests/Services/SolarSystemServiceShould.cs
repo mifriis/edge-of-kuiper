@@ -62,11 +62,11 @@ namespace Kuiper.Tests.Unit.Services
             var solarSystemService = new SolarSystemService(repository.Object, gameTimeService.Object);
             solarSystemService.LoadFromRepository();
 
-            var asteroid = new Asteroid(2, solarSystemService.GetStar(), AsteroidType.S, AsteroidSize.Tiny, 10);
-            solarSystemService.AddCelestialBody(asteroid);
+            var asteroid = new Asteroid(AsteroidType.S, AsteroidSize.Tiny, 10,2,2,2,testData.First());
+            solarSystemService.AddAsteroid(asteroid);
 
             //Act
-            var body = solarSystemService.GetBody(asteroid.Name);
+            var body = solarSystemService.GetAsteroid(asteroid.Name);
 
             //Assert
             Assert.Equal(body.OrbitRadius, asteroid.OrbitRadius);

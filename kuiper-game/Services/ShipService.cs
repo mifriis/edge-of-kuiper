@@ -41,11 +41,11 @@ namespace Kuiper.Services
                 throw new ArgumentException("Celestial Body not found");
             }
 
-            var possibleDestinations = GetPossibleDestinations().ToList();
-            if(possibleDestinations.Where(des => des.Name == destination) == null)
+            if(!GetPossibleDestinations().ToList().Contains(celestialBody))
             {
                 throw new ArgumentException("Chosen CelestialBody is not possible from this location");
             }
+            
             Ship.TargetLocation = celestialBody;
             Ship.Status = ShipStatus.Enroute;
             var travelTime = CalculateTravelTime(celestialBody);
