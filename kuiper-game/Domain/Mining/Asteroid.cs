@@ -21,6 +21,7 @@ public class Asteroid : CelestialBody
         Parent = parent;
         Velocity = velocity;
         CelestialBodyType = CelestialBodyType.Asteroid;
+        Satellites = new List<CelestialBody>();
     }
 
     private String GenerateName()

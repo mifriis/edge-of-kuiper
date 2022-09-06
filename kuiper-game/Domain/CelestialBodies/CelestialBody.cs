@@ -65,7 +65,7 @@ namespace Kuiper.Domain.CelestialBodies
                 CelestialBodyType = bodyType
             };
 
-            if (body.Parent != null)
+            if (body.Parent != null && body.CelestialBodyType != CelestialBodyType.Asteroid) //yeeeeeahhh...
             {
                 parent.AddSatellite(body);
             }

@@ -20,6 +20,7 @@ namespace Kuiper.Tests.Unit.Domain
             // Assert
             Assert.Equal(asteroid.OrbitRadius, 2);
             Assert.Equal(asteroid.Parent, star);
+            Assert.NotNull(asteroid.Satellites);
         }
 
         

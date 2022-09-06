@@ -27,8 +27,10 @@ namespace Kuiper.Services
             var destinations = new List<CelestialBody>();
             var planets = _solarSystemService.GetBodies().ToList();
             var moons = _solarSystemService.GetSatellites(Ship.CurrentLocation).ToList();
+            var asteroids = _solarSystemService.Asteroids;
             destinations.AddRange(planets);
             destinations.AddRange(moons);
+            destinations.AddRange(asteroids);
             destinations.Remove(Ship.CurrentLocation);
             return destinations;
         }
@@ -36,14 +38,17 @@ namespace Kuiper.Services
         public SetCourseEvent SetCourse(string destination)
         {
             var celestialBody = _solarSystemService.GetBody(destination);
+            var asteroid = _solarSystemService.GetAsteroid(destination);
+            celestialBody = celestialBody ?? asteroid;
             if(celestialBody == null)
             {
-                throw new ArgumentException("Celestial Body not found");
+                throw new ArgumentException("Destination not found");
             }
 
-            if(!GetPossibleDestinations().ToList().Contains(celestialBody))
+            var possibleDestinations = GetPossibleDestinations().ToList();
+            if(!possibleDestinations.Contains(celestialBody))
             {
-                throw new ArgumentException("Chosen CelestialBody is not possible from this location");
+                throw new ArgumentException("Chosen destination is not possible from this location");
             }
             
             Ship.TargetLocation = celestialBody;

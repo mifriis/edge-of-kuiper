@@ -39,6 +39,8 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             solarSystemService.Verify(x => x.GetStar(), Times.Exactly(1));
             solarSystemService.Verify(x => x.AddAsteroid(It.IsAny<Asteroid>()), Times.Exactly(1));
+            solarSystemService.Verify(x => x.AddCelestialBody(It.IsAny<Asteroid>()), Times.Exactly(0));
+            solarSystemService.Verify(x => x.AddCelestialBody(It.IsAny<CelestialBody>()), Times.Exactly(0));
         }
     }
 }
