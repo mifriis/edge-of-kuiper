@@ -20,13 +20,16 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
 
             //Act
             var acceleration = ship.Acceleration;
 
             //Assert
-            Assert.Equal(2.857,acceleration,3);
+            Assert.Equal(3.257,acceleration,3);
         }
 
         [Fact]
@@ -34,13 +37,16 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
 
             //Act
             var acceleration = ship.AccelerationGs;
 
             //Assert
-            Assert.Equal(0.29,acceleration,2);
+            Assert.Equal(0.33,acceleration,2);
         }
 
         [Fact]
@@ -48,13 +54,16 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
 
             //Act
             var dV = ship.deltaV;
 
             //Assert
-            Assert.Equal(3629632,dV,0);
+            Assert.Equal(1917679,dV,0);
         }
 
         [Fact]
@@ -62,16 +71,19 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
             var deltaV = ship.deltaV;
 
             //Act
             var fuel = ship.SpendFuel(deltaV / 2);
 
             //Assert
-            Assert.Equal(50, fuel);
-            Assert.Equal(50, ship.FuelMass);
-            Assert.Equal(1966760, ship.deltaV, 0); //Ship has become lighter by expending fuel, capable of slightly more 
+            Assert.Equal(25, fuel);
+            Assert.Equal(25, ship.FuelMass);
+            Assert.Equal(1001397, ship.deltaV, 0); //Ship has become lighter by expending fuel, capable of slightly more 
         }
 
         [Fact]
@@ -79,15 +91,18 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
-            var deltaV = ship.deltaV * 0.25;
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
+            var deltaV = ship.deltaV * 0.50;
 
             //Act
             var fuel = ship.SpendFuel(deltaV);
 
             //Assert
             Assert.Equal(25, fuel);
-            Assert.Equal(75, ship.FuelMass);
+            Assert.Equal(25, ship.FuelMass);
         }
 
         [Fact]
@@ -95,7 +110,10 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
             var deltaV = ship.deltaV;
 
             //Act
@@ -111,13 +129,17 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 100};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
             var deltaV = ship.deltaV + 1;
+            
 
             //Act
             //Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => ship.SpendFuel(deltaV));
-            Assert.Equal(100, ship.FuelMass);
+            Assert.Equal(50, ship.FuelMass);
         }
 
         [Fact]
@@ -125,7 +147,9 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 50};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
             var deltaV = ship.deltaV;
 
             //Act
@@ -133,7 +157,7 @@ namespace Kuiper.Tests.Unit.Services
 
             //Assert
             Assert.Equal(50, fuel);
-            Assert.Equal(100, ship.FuelMass);
+            Assert.Equal(50, ship.FuelMass);
         }
 
         [Fact]
@@ -141,7 +165,9 @@ namespace Kuiper.Tests.Unit.Services
         {
             //Arrange
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("LongLars", engine, 250) { FuelMass = 50};
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
             var deltaV = ship.deltaV;
 
             //Act
@@ -149,7 +175,22 @@ namespace Kuiper.Tests.Unit.Services
 
             //Assert
             Assert.Equal(20, fuel);
-            Assert.Equal(70, ship.FuelMass);
+            Assert.Equal(20, ship.FuelMass);
+        }
+        
+        [Fact]
+        public void CalculateMassBasedOnModules()
+        {
+            //Arrange
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("LongLars", engine, 250);
+            var fuelTank = new FuelTank(ModuleSize.Medium);
+            ship.Modules = new List<IShipModule> {fuelTank};
+            ship.Refuel(50);
+
+            //Act
+            //Assert
+            Assert.Equal(ship.WetMass, 307);
         }
     }
 }

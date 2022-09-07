@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Kuiper.Domain;
 using Kuiper.Domain.Ship;
@@ -52,8 +53,9 @@ namespace Kuiper.Services
                 _solarSystemService.LoadFromRepository();
                 
                 _currentCaptain.LastLoggedIn = _gameTimeService.Now();
-                _currentCaptain.Ship = new Ship("Bullrun", new ShipEngine(10000,3,1000000,1100000), 250) { FuelMass = 100 };
-                
+                _currentCaptain.Ship = new Ship("Bullrun", new ShipEngine(10000,3,1000000,1100000), 250);
+                _currentCaptain.Ship.Modules = new List<IShipModule> { new FuelTank(ModuleSize.Medium),new FuelTank(ModuleSize.Medium) } ;
+                _currentCaptain.Ship.Refuel(100);
                 _currentCaptain.Ship.CurrentLocation = _solarSystemService.GetBody("Earth");
                 ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {_gameTimeService.Now()}");
                 return _currentCaptain;

@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Kuiper.Domain.CelestialBodies;
 
 namespace Kuiper.Domain.Ship
 {
     public class Ship
     {
-        public Ship(string name, IShipEngine engine, double dryMass)
+        public Ship(string name, IShipEngine engine, double shipMass)
         {
             Name = name;
             Engine = engine;
-            DryMass = dryMass;
+            ShipMass = shipMass;
         }
 
         public string Name { get; }
@@ -20,14 +21,25 @@ namespace Kuiper.Domain.Ship
         public ShipStatus Status { get; set; }
         public double WetMass 
         { 
-            get 
+            get
             {
-                return FuelMass + DryMass;
+                return FuelMass +
+                       DryMass;
             }
         }
         public double FuelMass { get; set;}
-        public double DryMass { get; }
 
+        public double DryMass
+        {
+            get
+            {
+                return ShipMass + 
+                       Engine.Mass +
+                       Modules.Sum(x => x.Mass);
+            }
+        }
+
+        public double ShipMass { get; }
         public IEnumerable<IShipModule> Modules { get; set;}
 
         public double deltaV 
@@ -73,15 +85,17 @@ namespace Kuiper.Domain.Ship
 
         public double Refuel(double tonsRefueled)
         {
+            var maxFuel = Modules.Where(x => x.Type == ModuleType.FuelTank)
+                                        .OfType<FuelTank>()
+                                        .Sum(x => x.FuelMass);
             var fuel = FuelMass + tonsRefueled;
-            if(fuel > 100)
+            if(fuel > maxFuel)
             {
-                FuelMass = 100;
-                return tonsRefueled - (fuel - 100);
+                FuelMass = maxFuel;
+                return maxFuel;
             }
             FuelMass = fuel;
             return tonsRefueled;
-            
         }
     }
 }

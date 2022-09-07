@@ -18,7 +18,7 @@ namespace Kuiper.Domain.Ship
             }    
         }
 
-        public decimal DryMass
+        public double Mass
         {
             get
             {
@@ -27,19 +27,11 @@ namespace Kuiper.Domain.Ship
             }
         }
 
-        public decimal FuelMass
+        public double FuelMass
         {
             get
             {
-                return (int)Size * Convert.ToDecimal(6.25);
-            }
-        }
-
-        public decimal Mass
-        {
-            get
-            {
-                return DryMass + FuelMass;
+                return (int)Size * Convert.ToDouble(6.25);
             }
         }
     }
