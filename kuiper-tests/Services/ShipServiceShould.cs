@@ -75,16 +75,18 @@ namespace Kuiper.Tests.Unit.Services
             gameTimeService.Setup(u => u.Now()).Returns(now);
             solarSystemService.Setup(u => u.GetDistanceInKm(currentLocation, destination)).Returns(distance);
             var shipService = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
-            shipService.Ship = new Ship("The Wichman", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation};
-
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = currentLocation };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
+            ship.Refuel(50);
+            shipService.Ship = ship;
             //Act
             var gameEvent = shipService.SetCourse("Mars");
-
             //Assert
             Assert.Equal(shipService.Ship.TargetLocation, destination);
             Assert.Equal(shipService.Ship.Status, ShipStatus.Enroute);
-            Assert.Equal(1982926, gameEvent.DeltaVSpent,0);
-            Assert.Equal(now.AddTicks(4957314373731), gameEvent.EventTime);
+            Assert.Equal(1789399, gameEvent.DeltaVSpent,0);
+            Assert.Equal(now.AddTicks(5493455925225), gameEvent.EventTime);
         }
 
         [Fact]
@@ -154,8 +156,12 @@ namespace Kuiper.Tests.Unit.Services
             var eventService = new Mock<IEventService>();
             var shipService = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
             var deltaVToSpend = 1000000;
-            shipService.Ship = new Ship("The Wichman", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation, TargetLocation = destination, FuelMass = 100};
-
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = currentLocation, TargetLocation = destination };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
+            ship.Refuel(50);
+            shipService.Ship = ship;
+            
             //Act
             shipService.FinalizeJourney(deltaVToSpend);
 
@@ -163,7 +169,7 @@ namespace Kuiper.Tests.Unit.Services
             Assert.Equal(shipService.Ship.CurrentLocation, destination);
             Assert.Equal(shipService.Ship.TargetLocation, null);
             Assert.Equal(shipService.Ship.Status, ShipStatus.InOrbit);
-            Assert.Equal(72, shipService.Ship.FuelMass, 0);
+            Assert.Equal(24, shipService.Ship.FuelMass, 0);
         }
 
         [Fact]
@@ -174,7 +180,8 @@ namespace Kuiper.Tests.Unit.Services
             var origin = new CelestialBody() { Name = "Earth" };
             var destination = new CelestialBody() { Name = "Mars" };
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("The Boolean", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = origin, FuelMass=100 };
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = origin };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
             var solarSystemService = new Mock<ISolarSystemService>();
             var gameTimeService = new Mock<IGameTimeService>();
             var eventService = new Mock<IEventService>();
@@ -182,12 +189,12 @@ namespace Kuiper.Tests.Unit.Services
             service.Ship = ship;
 
             solarSystemService.Setup(u => u.GetDistanceInKm(origin,destination)).Returns(distance);
-            
+            ship.Refuel(50);
             //Act
             var dV = service.CalculateDeltaVForJourney(destination);
 
             //Assert
-            Assert.Equal(1675878, dV, 0);
+            Assert.Equal(1789399, dV, 0);
         }
 
         [Fact]
@@ -198,12 +205,14 @@ namespace Kuiper.Tests.Unit.Services
             var origin = new CelestialBody() { Name = "Earth" };
             var destination = new CelestialBody() { Name = "Mars" };
             var engine = new ShipEngine(10000,3,1000000,1100000);
-            var ship = new Ship("The Boolean", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = origin, FuelMass=100 };
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = origin };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
             var solarSystemService = new Mock<ISolarSystemService>();
             var gameTimeService = new Mock<IGameTimeService>();
             var eventService = new Mock<IEventService>();
             var service = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
             service.Ship = ship;
+            ship.Refuel(50);
 
             solarSystemService.Setup(u => u.GetDistanceInKm(origin,destination)).Returns(distance);
             
@@ -211,7 +220,7 @@ namespace Kuiper.Tests.Unit.Services
             var timespan = service.CalculateTravelTime(destination);
 
             //Assert
-            Assert.Equal(TimeSpan.FromTicks(5865573468979), timespan);
+            Assert.Equal(TimeSpan.FromTicks(5493455925225), timespan);
         }
         
         [Fact]
@@ -234,6 +243,11 @@ namespace Kuiper.Tests.Unit.Services
                 destination
             };
             var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
+            
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = currentLocation };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
+            
             var solarSystemService = new Mock<ISolarSystemService>();
             var gameTimeService = new Mock<IGameTimeService>();
             var eventService = new Mock<IEventService>();
@@ -244,16 +258,15 @@ namespace Kuiper.Tests.Unit.Services
             gameTimeService.Setup(u => u.Now()).Returns(now);
             solarSystemService.Setup(u => u.GetDistanceInKm(currentLocation, destination)).Returns(distance);
             var shipService = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
-            shipService.Ship = new Ship("The Wichman", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation};
-
+            shipService.Ship = ship;
+            ship.Refuel(50);
+            
             //Act
             var gameEvent = shipService.SetCourse(destination.Name);
 
             //Assert
             Assert.Equal(shipService.Ship.TargetLocation, destination);
             Assert.Equal(shipService.Ship.Status, ShipStatus.Enroute);
-            Assert.Equal(1982926, gameEvent.DeltaVSpent,0);
-            Assert.Equal(now.AddTicks(4957314373731), gameEvent.EventTime);
         }
         
         [Fact]
@@ -276,6 +289,12 @@ namespace Kuiper.Tests.Unit.Services
                 destination
             };
             var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
+            
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = currentLocation };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
+            ship.Refuel(50);
+            
             var solarSystemService = new Mock<ISolarSystemService>();
             var gameTimeService = new Mock<IGameTimeService>();
             var eventService = new Mock<IEventService>();
@@ -285,17 +304,15 @@ namespace Kuiper.Tests.Unit.Services
             solarSystemService.Setup(x => x.GetAsteroid(destination.Name)).Returns(destination);
             gameTimeService.Setup(u => u.Now()).Returns(now);
             solarSystemService.Setup(u => u.GetDistanceInKm(currentLocation, destination)).Returns(distance);
+            
             var shipService = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
-            shipService.Ship = new Ship("The Wichman", new ShipEngine(10000,3,1000000,1100000), 250) { CurrentLocation = currentLocation};
-
+            shipService.Ship = ship;
             //Act
             var gameEvent = shipService.SetCourse(destination.Name);
 
             //Assert
             Assert.Equal(shipService.Ship.TargetLocation, destination);
             Assert.Equal(shipService.Ship.Status, ShipStatus.Enroute);
-            Assert.Equal(1982926, gameEvent.DeltaVSpent,0);
-            Assert.Equal(now.AddTicks(4957314373731), gameEvent.EventTime);
         }
     }
 }

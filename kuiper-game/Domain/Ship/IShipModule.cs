@@ -4,5 +4,7 @@ namespace Kuiper.Domain.Ship
     {
         ModuleSize Size { get; }
         ModuleType Type { get; }
+        
+        double Mass { get; }
     }
 }

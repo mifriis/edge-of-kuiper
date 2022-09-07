@@ -22,7 +22,7 @@ namespace Kuiper.Tests.Unit.Services
             var now = DateTime.Now;
             var container = new Mock<IContainer>();
             var shipService = new Mock<IShipService>();
-            var ship = new Ship("Johnny5", new ShipEngine(1,1,1,1),1) { FuelMass = 10, CurrentLocation = new CelestialBody() { Name = "Earth"}};
+            var ship = new Ship("Johnny5", new ShipEngine(1,1,1,1),1) { CurrentLocation = new CelestialBody() { Name = "Earth"}};
             container.Setup(u => u.GetInstance<IShipService>()).Returns(shipService.Object);
             shipService.SetupGet(u => u.Ship).Returns(ship);
             var deltaVSpent = 100000;
