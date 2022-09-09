@@ -20,29 +20,19 @@ namespace Kuiper.Systems
 
         public override void Execute(string[] args)
         {
-            ConsoleWriter.Write("Solar System");
-            var minX = -20;
-            var maxX = 20;
-            var minY = -20;
-            var maxY = 20;
-            
-            var bodies = _shipService.GetPossibleDestinations().ToList()
-                .Where(x => x.CelestialBodyType != CelestialBodyType.Moon)
-                .Where(x => x.CelestialBodyType != CelestialBodyType.Asteroid);
-            var now = _gameTimeService.ElapsedGameTime;
-            var sortedBodies = bodies.OrderByDescending(p => p.GetPosition(now).Y).ThenBy(p => p.GetPosition(now).X);
-            foreach (var body in sortedBodies)
-            {
-                var pos = body.GetPosition(now);
-                var indents = "";
-                for (int i = maxX; i >= pos.X; i--)
-                {
-                    indents += " ";
-                }
-                ConsoleWriter.Write((indents + body.Name.Substring(0,2)));
+            var now = _gameTimeService.Now();
                 
+            for (DateTime i = now; i < now.AddYears(100); i = i.AddMonths(1))
+            {
+                var solarSystem =_shipService.LookupSolarSystem(i);
+                Console.Clear();
+                ConsoleWriter.Write(i.Month + "-" + i.Year);
+                ConsoleWriter.Write(solarSystem);
+                //System.Threading.Thread.Sleep(100);
+                Console.ReadKey();
             }
-            
+             // var solarSystem =_shipService.LookupSolarSystem(now);
+             // ConsoleWriter.Write(solarSystem);
         }
     }
 } 

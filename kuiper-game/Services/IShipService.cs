@@ -15,5 +15,6 @@ namespace Kuiper.Services
         void FinalizeJourney(double deltaVSpent);
         TimeSpan CalculateTravelTime(CelestialBody destination);
         double CalculateDeltaVForJourney(CelestialBody destination);
+        String LookupSolarSystem(DateTime time);
     }
 }
