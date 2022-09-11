@@ -11,7 +11,7 @@ namespace Kuiper.Tests.Unit.Domain
         public void CreateAStar()
         {
             //Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
 
             //Act
 
@@ -23,8 +23,8 @@ namespace Kuiper.Tests.Unit.Domain
         public void CreateAPlanet()
         {
             //Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var planet = CelestialBody.Create("Earth", 1.0, 29.8, 170, star, CelestialBodyType.Planet);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var planet = CelestialBody.Create("Earth", 1.0, 29.8, 170, star, CelestialBodyType.Planet,"White");
 
             //Act
 
@@ -36,9 +36,9 @@ namespace Kuiper.Tests.Unit.Domain
         public void CreateAMoon()
         {
             //Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var planet = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
-            var moon = CelestialBody.Create("Luna", 0.00257356604f, 1.022f, 125, planet, CelestialBodyType.Moon);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var planet = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet,"White");
+            var moon = CelestialBody.Create("Luna", 0.00257356604f, 1.022f, 125, planet, CelestialBodyType.Moon,"White");
 
             //Act
 
@@ -50,8 +50,8 @@ namespace Kuiper.Tests.Unit.Domain
         public void CreateAGasGiant()
         {
             //Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var gasGiant = CelestialBody.Create("Saturn", 9.582f, 9.7f, 345, star, CelestialBodyType.GasGiant);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var gasGiant = CelestialBody.Create("Saturn", 9.582f, 9.7f, 345, star, CelestialBodyType.GasGiant,"White");
             //Act
 
             //Assert
@@ -62,8 +62,8 @@ namespace Kuiper.Tests.Unit.Domain
         public void CreateADwarfPlanet()
         {
             //Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var dwarfPlanet = CelestialBody.Create("Pluto", 39.48f, 4.74f, 260, star, CelestialBodyType.DwarfPlanet);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var dwarfPlanet = CelestialBody.Create("Pluto", 39.48f, 4.74f, 260, star, CelestialBodyType.DwarfPlanet,"White");
             //Act
 
             //Assert
@@ -79,10 +79,10 @@ namespace Kuiper.Tests.Unit.Domain
             var velocity = 34f;
             var degrees = 90f;
 
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
             
             //Act
-            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet);
+            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet,"White");
 
             //Assert
             Assert.Equal(name, dwarfPlanet.Name);
@@ -97,10 +97,10 @@ namespace Kuiper.Tests.Unit.Domain
             var velocity = 34f;
             var degrees = 90f;
 
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
             
             //Act
-            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet);
+            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet,"White");
 
             //Assert
             Assert.Equal(radius, dwarfPlanet.OrbitRadius);
@@ -115,10 +115,10 @@ namespace Kuiper.Tests.Unit.Domain
             var velocity = 34f;
             var degrees = 90f;
 
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
             
             //Act
-            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet);
+            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet,"White");
 
             //Assert
             Assert.Equal(velocity, dwarfPlanet.Velocity);
@@ -133,10 +133,10 @@ namespace Kuiper.Tests.Unit.Domain
             var velocity = 34f;
             var degrees = 90f;
 
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
             
             //Act
-            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet);
+            var dwarfPlanet = CelestialBody.Create(name, radius, velocity, degrees, star, CelestialBodyType.DwarfPlanet,"White");
 
             //Assert
             Assert.Equal(degrees, dwarfPlanet.OriginDegrees);
@@ -146,8 +146,8 @@ namespace Kuiper.Tests.Unit.Domain
         public void AddBodyAsSatelliteIfItHasAParent()
         {
             //Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var planet = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var planet = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet,"White");
 
             //Act
 
@@ -161,8 +161,8 @@ namespace Kuiper.Tests.Unit.Domain
         {
             // Arrange
             var startingPoint = new Vector2(-0.9848077f, 0.17364818f);
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var earth = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var earth = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet,"White");
 
             //Act
             var results = earth.GetPosition(new TimeSpan(0));
@@ -176,9 +176,9 @@ namespace Kuiper.Tests.Unit.Domain
         {
             // Arrange
             var currentPoint = new Vector2(-0.9917729f, 0.14527623f);
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var earth = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet);
-            var moon = CelestialBody.Create("Luna", 0.00257356604f, 1.022f, 125, earth, CelestialBodyType.Moon);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var earth = CelestialBody.Create("Earth", 1.0f, 29.8f, 170, star, CelestialBodyType.Planet,"White");
+            var moon = CelestialBody.Create("Luna", 0.00257356604f, 1.022f, 125, earth, CelestialBodyType.Moon,"White");
 
             //Act
             var results = moon.GetPosition(new TimeSpan(42,0,0));
@@ -192,7 +192,7 @@ namespace Kuiper.Tests.Unit.Domain
         {
             // Arrange
             var currentPoint = new Vector2(-0.9917729f, 0.14527623f);
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
         
             //Act
             var earth = CelestialBody.Create("Earth", 1.0f, 170, star, CelestialBodyType.Planet);
@@ -206,7 +206,7 @@ namespace Kuiper.Tests.Unit.Domain
         {
             // Arrange
             var currentPoint = new Vector2(-0.9917729f, 0.14527623f);
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star, "White");
         
             //Act
             var earth = CelestialBody.Create("Earth", 1.0f, star, CelestialBodyType.Planet);
@@ -219,8 +219,8 @@ namespace Kuiper.Tests.Unit.Domain
         public void DontAddBodyAsSatelliteIfItsAnAsteroid()
         {
             //Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
-            var asteroid = CelestialBody.Create("tp01", 1.0f, 29.8f, 170, star, CelestialBodyType.Asteroid);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star,"White");
+            var asteroid = CelestialBody.Create("tp01", 1.0f, 29.8f, 170, star, CelestialBodyType.Asteroid,"White");
 
             //Act
 

@@ -5,6 +5,7 @@
     "velocity": 0,
     "originDegrees": 0,
     "type": "Star",
+    "color": "DarkYellow",
     "satellites": [
         {
             "position": 1,
@@ -13,7 +14,8 @@
             "velocity": 47.4,
             "originDegrees": 30,
             "type": "Planet",
-            "satellites": []
+            "satellites": [],
+            "color": "Gray"
         },
         {
             "position": 2,
@@ -22,7 +24,8 @@
             "velocity": 35.0,
             "originDegrees": 170,
             "type": "Planet",
-            "satellites": []
+            "satellites": [],
+            "color": "DarkRed"
         },
         {
             "position": 3,
@@ -40,7 +43,8 @@
                     "originDegrees": 125,
                     "type": "Moon"
                 }
-            ]
+            ],
+            "color": "Blue"
         },
         {
             "position": 4,
@@ -49,7 +53,8 @@
             "velocity": 24.1,
             "originDegrees": 95,
             "type": "Planet",
-            "satellites": []
+            "satellites": [],
+            "color": "Red"
         },
         {
             "position": 5,
@@ -58,7 +63,8 @@
             "velocity": 13.1,
             "originDegrees": 45,
             "type": "GasGiant",
-            "satellites": []
+            "satellites": [],
+            "color": "DarkYellow"
         },
         {
             "position": 6,
@@ -67,7 +73,8 @@
             "velocity": 9.7,
             "originDegrees": 345,
             "type": "GasGiant",
-            "satellites": []
+            "satellites": [],
+            "color": "White"
         },
         {
             "position": 7,
@@ -76,7 +83,8 @@
             "velocity": 6.81,
             "originDegrees": 340,
             "type": "Planet",
-            "satellites": []
+            "satellites": [],
+            "color": "Magenta"
         },
         {
             "position": 8,
@@ -85,7 +93,8 @@
             "velocity": 5.43,
             "originDegrees": 135,
             "type": "Planet",
-            "satellites": []
+            "satellites": [],
+            "color": "DarkBlue"
         },
         {
             "position": 9,
@@ -94,7 +103,8 @@
             "velocity": 4.74,
             "originDegrees": 260,
             "type": "DwarfPlanet",
-            "satellites": []
+            "satellites": [],
+            "color": "DarkMagenta"
         }
     ]
 }

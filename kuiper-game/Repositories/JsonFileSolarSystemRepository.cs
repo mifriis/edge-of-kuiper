@@ -57,7 +57,7 @@ namespace Kuiper.Repositories
 
             var body = CelestialBody.Create((string)element["name"], (double)element["distance"], 
                 (double)element["velocity"], (double)element["originDegrees"], parent,
-                bodyType);
+                bodyType, (string)element["color"]);
             outputList.Add(body);
 
             var satellites = (JArray)element["satellites"];

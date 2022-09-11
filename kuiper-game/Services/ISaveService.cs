@@ -11,5 +11,6 @@ namespace Kuiper.Services
         void Save(SaveFile saveFile);
         SaveFile Load(string captainName);
         IEnumerable<string> LookForSaves(string captain);
+        IEnumerable<string> LookForSaves();
     }
 }

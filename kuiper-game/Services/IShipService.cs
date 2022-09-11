@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Kuiper.Domain;
 using Kuiper.Domain.CelestialBodies;
@@ -15,6 +16,6 @@ namespace Kuiper.Services
         void FinalizeJourney(double deltaVSpent);
         TimeSpan CalculateTravelTime(CelestialBody destination);
         double CalculateDeltaVForJourney(CelestialBody destination);
-        String LookupSolarSystem(DateTime time);
+        IEnumerable<CelestialBody> LookupSolarSystem(DateTime time);
     }
 }

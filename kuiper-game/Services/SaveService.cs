@@ -40,6 +40,13 @@ namespace Kuiper.Services
             files = files.Where(file => file.Equals($"{captain}.save"));
             return files; 
         }
+        
+        public IEnumerable<string> LookForSaves()
+        {
+            var filePaths = Directory.GetFiles(savePath).ToList().Where(file => file.Contains(".save"));
+            var files = filePaths.Select(file => file.Split(Path.DirectorySeparatorChar).LastOrDefault());
+            return files; 
+        }
 
         public SaveFile Load(string captainName)
         {

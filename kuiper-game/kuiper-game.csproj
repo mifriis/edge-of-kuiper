@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Humanizer" Version="2.13.14" />
+    <PackageReference Include="Terminal.Gui" Version="1.7.2" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\*.solarsystem">

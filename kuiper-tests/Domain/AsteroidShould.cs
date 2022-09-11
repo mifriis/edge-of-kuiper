@@ -12,7 +12,7 @@ namespace Kuiper.Tests.Unit.Domain
         public void Create() 
         {
             // Arrange
-            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star);
+            var star = CelestialBody.Create("Sun", 0, 0, 0, null, CelestialBodyType.Star, "White");
         
             //Act
             var asteroid = new Asteroid(AsteroidType.M, AsteroidSize.Tiny, 2,2,2,2,star);
