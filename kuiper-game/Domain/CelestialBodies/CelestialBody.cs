@@ -14,6 +14,8 @@ namespace Kuiper.Domain.CelestialBodies
         public double Velocity { get; set; }
 
         public double OriginDegrees { get; set; }
+        
+        public string Color { get; set; }
 
         public Vector2 GetPosition(TimeSpan gametimePassed)
         {
@@ -48,12 +50,16 @@ namespace Kuiper.Domain.CelestialBodies
             const double VELOCITYCONSTANT = 29.8;
             var velocity = VELOCITYCONSTANT / (orbitRadius / Math.Sqrt(orbitRadius));
 
-            return Create(name, orbitRadius, velocity, originDegrees, parent, bodyType);
+            return Create(name, orbitRadius, velocity, originDegrees, parent, bodyType, "White");
         }
 
         public static CelestialBody Create(string name, double orbitRadius, double velocity, 
-            double originDegrees, CelestialBody parent, CelestialBodyType bodyType)
+            double originDegrees, CelestialBody parent, CelestialBodyType bodyType, string color)
         {
+            if (string.IsNullOrEmpty(color))
+            {
+                color = "White";
+            }
             var body = new CelestialBody
             {
                 Name = name,
@@ -62,7 +68,8 @@ namespace Kuiper.Domain.CelestialBodies
                 OriginDegrees = originDegrees,
                 Satellites = new List<CelestialBody>(),
                 Parent = parent,
-                CelestialBodyType = bodyType
+                CelestialBodyType = bodyType,
+                Color = color
             };
 
             if (body.Parent != null && body.CelestialBodyType != CelestialBodyType.Asteroid) //yeeeeeahhh...

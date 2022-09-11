@@ -15,5 +15,13 @@ namespace Kuiper.Systems
             Console.WriteLine(input);
             Console.ResetColor();
         }
+        
+        public static void Write(string input, string color)
+        {
+            Enum.TryParse(color, out ConsoleColor enumColor);
+            Console.ForegroundColor = enumColor;
+            Console.WriteLine(input);
+            Console.ResetColor();
+        }
     }
 }

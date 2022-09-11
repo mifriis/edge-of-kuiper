@@ -1,3 +1,4 @@
+using System;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
@@ -22,7 +23,7 @@ namespace Kuiper
                 _.AssemblyContainingType<IConsoleCommand>();
                 _.AddAllTypesOf<IConsoleCommand>(ServiceLifetime.Singleton);
             });
-            this.AddSingleton<ISolarSystemRepository>(x => new JsonFileSolarSystemRepository(new FileInfo("Data/Sol.solarsystem")));
+            this.AddSingleton<ISolarSystemRepository>(x => new JsonFileSolarSystemRepository(new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "/Data/Sol.solarsystem")));
             this.AddSingleton<ISolarSystemService, SolarSystemService>();
             this.AddSingleton<IShipService, ShipService>();
             this.AddSingleton<ICaptainService, CaptainService>();

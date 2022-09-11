@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Kuiper.Domain;
 
 namespace Kuiper.Services
@@ -7,5 +9,7 @@ namespace Kuiper.Services
         Captain GetCaptain();
         Captain SetupCaptain();
         void SaveGame();
+        void LoadGame(string save);
+        IEnumerable<string> FindSaves();
     }
 }

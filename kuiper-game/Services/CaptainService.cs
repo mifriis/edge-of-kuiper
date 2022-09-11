@@ -93,7 +93,13 @@ namespace Kuiper.Services
             _shipService.Ship = saveFile.Ship;
             _eventService.GameEvents = saveFile.GameEvents;
             _gameTimeService.RealStartTime = _currentCaptain.StartTime;
+            ConsoleWriter.Write($"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastLoggedIn}!");    
             _eventService.ExecuteEvents(_gameTimeService.Now());
+        }
+
+        public IEnumerable<string> FindSaves()
+        {
+            return _saveService.LookForSaves();
         }
     }
 }
