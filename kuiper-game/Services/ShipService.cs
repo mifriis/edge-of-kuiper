@@ -93,54 +93,16 @@ namespace Kuiper.Services
 
         public IEnumerable<CelestialBody> LookupSolarSystem(DateTime time)
         {
-            var bodies = _solarSystemService.SolarSystem
-                .Where(x => x.CelestialBodyType != CelestialBodyType.Moon)
-                .Where(x => x.CelestialBodyType != CelestialBodyType.Asteroid);
             var elapsedTime = _gameTimeService.GameStartDate - time;
-            var sortedBodies = bodies.OrderBy(p => GetDistanceFromSun(p.GetPosition(elapsedTime).X,p.GetPosition(elapsedTime).Y));
-            return sortedBodies;
-            // for (int t = maxY; t >= minY; t--)
-            // {
-            //     var totalIndentsOnLine = 0;
-            //     solarSystemString += Math.Abs(t) + ")";
-            //     var firstOnLine = true;
-            //     foreach (var body in sortedBodies)
-            //     {
-            //         var pos = body.GetPosition(elapsedTime);
-            //         if (Math.Round(new decimal(pos.Y),0) == t 
-            //             && Math.Round(new decimal(pos.X),0) <= maxX
-            //             && Math.Round(new decimal(pos.X),0) >= minX)
-            //         {
-            //             var indents = (int)Math.Abs(minX - pos.X);
-            //             
-            //             if (!firstOnLine)
-            //             {
-            //                 var sameLineIdents = indents-totalIndentsOnLine;
-            //                 solarSystemString += (indentBuilder(sameLineIdents) + body.Name.Substring(0, 2));
-            //                 totalIndentsOnLine += sameLineIdents;
-            //             }
-            //             
-            //             if (firstOnLine)
-            //             {
-            //                 firstOnLine = false;
-            //                 solarSystemString += (indentBuilder(indents) + body.Name.Substring(0, 2));
-            //                 totalIndentsOnLine = indents;
-            //             }
-            //         }
-            //     }
-            //     solarSystemString += System.Environment.NewLine;
-            // }
-        }
-        
-        private string indentBuilder(int numberOfIndents)
-        {
-            var indents = "";
-            for (int i = 1; i <= numberOfIndents; i++)
-            {
-                indents += "    ";
-            }
+            var destinations = new List<CelestialBody>();
+            var planets = _solarSystemService.GetBodies().ToList();
+            var asteroids = _solarSystemService.Asteroids;
+            
+            destinations.AddRange(planets);
+            destinations.AddRange(asteroids);
 
-            return indents;
+            var sortedBodies = destinations.OrderBy(p => GetDistanceFromSun(p.GetPosition(elapsedTime).X,p.GetPosition(elapsedTime).Y));
+            return sortedBodies;
         }
     }
 }

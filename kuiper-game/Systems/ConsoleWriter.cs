@@ -7,6 +7,9 @@ namespace Kuiper.Systems
     {
         static int origRow;
         static int origCol;
+        static int InfoBoxMaxWidth = 30;
+        static int InfoBoxMaxHeight = Console.WindowHeight;
+        static int InfoBoxActualWidth = Console.WindowWidth - InfoBoxMaxWidth;
         
         static ConsoleWriter()
         {
@@ -51,25 +54,19 @@ namespace Kuiper.Systems
         
         public static void WriteInfoBox(string input)
         {
-            var maxWidth = 30;
-            var boxWidth = Console.WindowWidth - maxWidth;
             var split = input.Split(System.Environment.NewLine);
-            
-            WriteAt("+", boxWidth, 0, "Green");
-            WriteAt("|", boxWidth, 1, "Green");
-            WriteAt("|", boxWidth, 2, "Green");
-            WriteAt("|", boxWidth, 3, "Green");
-            WriteAt("+", boxWidth, 4, "Green");
-            WriteAt("-", boxWidth+3, 0, "Green");
-            WriteAt("-", boxWidth+2, 0, "Green");
-            WriteAt("-", boxWidth+1, 0, "Green");
+            WriteAt(BuildBoxBorder(), InfoBoxActualWidth, 0, "Green");
+            WriteAt(BuildBoxBorder(), InfoBoxActualWidth, split.Length+1, "Green");
 
             var lineCount = 1;
             foreach (var inputLine in split)
             {
-                WriteAt(inputLine + BuildLinePadding(inputLine,maxWidth), boxWidth+1, lineCount, "Green");
+                WriteAt("|", InfoBoxActualWidth, lineCount, "Green");
+                WriteAt(inputLine + BuildLinePadding(inputLine), InfoBoxActualWidth+1, lineCount, "Green");
                 lineCount++;
             }
+
+            CleanInfoBox(split.Length);
         }
 
         public static void WriteInfoBox(string input, Vector2 cursorPos)
@@ -79,16 +76,43 @@ namespace Kuiper.Systems
             Console.CursorVisible = true;
         }
 
-        private static string BuildLinePadding(string input, int maxWidth)
+        private static string BuildLinePadding(string input)
+        {
+            return BuildLinePadding(input.Length);
+        }
+        
+        private static string BuildLinePadding(int input)
         {
             var linePadding = "";
             
-            for (int i = 0; i <= maxWidth - input.Length - 1; i++)
+            for (int i = 0; i <= InfoBoxMaxWidth - input - 1; i++)
             {
                 linePadding += " ";
             }
 
             return linePadding;
+        }
+        
+        private static string BuildBoxBorder()
+        {
+            var linePadding = "+";
+            
+            for (int i = 0; i <= InfoBoxMaxWidth - 2; i++)
+            {
+                linePadding += "-";
+            }
+
+            return linePadding;
+        }
+
+        private static void CleanInfoBox(int skipLines)
+        {
+            var padding = BuildLinePadding(0);
+            for (int i = skipLines+2; i < InfoBoxMaxHeight-5; i++)
+            {
+                WriteAt(padding, InfoBoxActualWidth, i, "Green");
+            }
+            
         }
         
     }

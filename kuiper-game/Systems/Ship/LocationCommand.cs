@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using Kuiper.Domain;
+using Kuiper.Domain.Ship;
 using Kuiper.Services;
 
 namespace Kuiper.Systems
@@ -14,8 +16,18 @@ namespace Kuiper.Systems
 
         public override void Execute(string[] args)
         {
-            
-            ConsoleWriter.Write("Your ship is currently at " + _shipService.Ship.CurrentLocation.Name);
+            switch (_shipService.Ship.Status)
+            {
+                case ShipStatus.Enroute:
+                    ConsoleWriter.Write("Your ship is enroute to " + _shipService.Ship.TargetLocation.Name);
+                    break;
+                case ShipStatus.InOrbit:
+                    ConsoleWriter.Write("Your ship is in orbit above " + _shipService.Ship.CurrentLocation.Name);
+                    break;
+                default:
+                    ConsoleWriter.Write("Your ship has been eaten by the Kraken");
+                    break;
+            }
         }
     }
 } 

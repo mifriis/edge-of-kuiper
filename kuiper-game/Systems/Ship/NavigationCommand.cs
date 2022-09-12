@@ -31,7 +31,7 @@ namespace Kuiper.Systems
             var elapsedTime = _gameTimeService.GameStartDate - now;
             var solarSystem =_shipService.LookupSolarSystem(now);
             Console.Clear();
-            ConsoleWriter.Write(now.Month + "-" + now.Year);
+            ConsoleWriter.Write(now.ToString("d"));
 
             var solarSystemSize = solarSystem.Count()*2+1;
             
@@ -73,9 +73,38 @@ namespace Kuiper.Systems
                     var nav = navigationBodies[currentNavBodyIndex];
                     var infoString = BuildInfo(nav.CelestialBody);
                     ConsoleWriter.WriteInfoBox(infoString, nav.NormalisedCoordinate);
+                }
+                if (input.Key == ConsoleKey.Enter)
+                {
+                    var nav = navigationBodies[currentNavBodyIndex];
+                    var deltaVneeded = _shipService.CalculateDeltaVForJourney(nav.CelestialBody);
+                    if (_shipService.Ship.CurrentLocation == nav.CelestialBody)
+                    {
+                        var infoString = "You are already here";
+                    
+                        ConsoleWriter.WriteInfoBox(infoString, nav.NormalisedCoordinate);
+                    }
+                    else if (_shipService.Ship.deltaV >= deltaVneeded)
+                    {
+                        var gameEvent = _shipService.SetCourse(nav.CelestialBody.Name);
+                        var infoString = "Ship is enroute" + System.Environment.NewLine +
+                                         "Arrival: " + gameEvent.EventTime.ToString("d");
+                    
+                        ConsoleWriter.WriteInfoBox(infoString, nav.NormalisedCoordinate);
+                    }
+                    else
+                    {
+                        var infoString = "Not enough fuel" + System.Environment.NewLine +
+                                         "Needed: " + deltaVneeded + System.Environment.NewLine +
+                                         "Available: " + _shipService.Ship.deltaV;
+                    
+                        ConsoleWriter.WriteInfoBox(infoString, nav.NormalisedCoordinate);
+                    }
                     
                 }
             } while (input.Key != ConsoleKey.Escape);
+            Console.Clear();
+            ConsoleWriter.Write("Navigation program ended. Input command.");
         }
 
         private string BuildInfo(CelestialBody body)
@@ -83,8 +112,13 @@ namespace Kuiper.Systems
             var navName = body.Name;
             var navTime = TravelTime(body);
             var navCost = TravelCost(body);
-            var infoString = navName + System.Environment.NewLine + navCost + System.Environment.NewLine +
-                             navTime;
+            var help = "Esc to Cancel";
+            var help2 = "Enter to set course";
+            var infoString = navName + System.Environment.NewLine +
+                             navCost + System.Environment.NewLine +
+                             navTime + System.Environment.NewLine +
+                             help + System.Environment.NewLine +
+                             help2;
             return infoString;
         }
 
