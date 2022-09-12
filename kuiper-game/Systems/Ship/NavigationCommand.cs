@@ -31,50 +31,27 @@ namespace Kuiper.Systems
                 Console.Clear();
                 ConsoleWriter.Write(i.Month + "-" + i.Year);
 
-                var solX = 19;
-                var solY = 19;
-                origRow = Console.CursorTop;
-                origCol = Console.CursorLeft;
+                var solarSystemSize = solarSystem.Count()*2+1;
                 
-                WriteAt("S",solX*2,solY,"DarkYellow");
-
-                var counter = 2;
+                var celestialBodySpacer = 2;
                 foreach (var body in solarSystem)
                 {
-                    if (body.CelestialBodyType != CelestialBodyType.Star)
+                    var posX = body.GetPosition(elapsedTime).X;
+                    var posY = body.GetPosition(elapsedTime).Y;
+                    var realAngle = ((Math.Atan2(0 - posY, 0 - posX) * (180 / Math.PI)) + 360) % 360;
+                    realAngle *= Math.PI / 180;
+                    var normalX = (int) Math.Round(celestialBodySpacer * Math.Cos(realAngle));
+                    var normalY = (int)Math.Round(celestialBodySpacer * Math.Sin(realAngle));
+                    if (normalX+solarSystemSize >= 0 && normalY+solarSystemSize >= 0) //Don't render planets outside the viewport
                     {
-                        var posX = body.GetPosition(elapsedTime).X;
-                        var posY = body.GetPosition(elapsedTime).Y;
-                        var realAngle = ((Math.Atan2(0 - posY, 0 - posX) * (180 / Math.PI)) + 360) % 360;
-                        realAngle *= Math.PI / 180;
-                        var cos = Math.Cos(realAngle);
-                        var sin = Math.Sin(realAngle);
-                        var fakePoint = new Point((int)Math.Round(counter * cos), (int)Math.Round(counter * sin));
-                        if (fakePoint.X+solX >= 0 && fakePoint.Y+solY >= 0)
-                        {
-                            WriteAt(body.Name.Substring(0,1),(fakePoint.X+solX)*2,fakePoint.Y+solY, body.Color);
-                        }
-                        counter+=2;
+                        ConsoleWriter.WriteAt(body.Name.Substring(0,2),(normalX+solarSystemSize)*2,normalY+solarSystemSize, body.Color);
                     }
+                    celestialBodySpacer+=2;
                 }
                 Console.ReadKey();
             }
         }
         
-        int origRow;
-        int origCol;
-        private void WriteAt(string s, int x, int y, string color)
-        {
-            try
-            {
-                Console.SetCursorPosition(origCol+x, origRow+y);
-                ConsoleWriter.Write(s,color);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                Console.Clear();
-                Console.WriteLine(e.Message);
-            }
-        }
+        
     }
 } 
