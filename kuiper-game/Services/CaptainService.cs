@@ -35,13 +35,7 @@ namespace Kuiper.Services
             {
                 ConsoleWriter.Write("Greetings captain, what is your name?");
                 var name = Console.ReadLine();
-                var saves = _saveService.LookForSaves(name);
-                if(saves.Count() > 0)
-                {
-                    LoadGame(saves.FirstOrDefault());
-                    ConsoleWriter.Write($"Welcome back Captain {_currentCaptain.Name}, you were last seen on {_currentCaptain.LastLoggedIn}!");    
-                    return _currentCaptain;
-                }             
+          
                 _currentCaptain = new Captain(name, DateTime.Now, new Account(100M));
                 _gameTimeService.RealStartTime = _currentCaptain.StartTime;
                 _accountService.Account = _currentCaptain.Account;
@@ -57,6 +51,7 @@ namespace Kuiper.Services
                 _currentCaptain.Ship.Modules = new List<IShipModule> { new FuelTank(ModuleSize.Medium),new FuelTank(ModuleSize.Medium) } ;
                 _currentCaptain.Ship.Refuel(100);
                 _currentCaptain.Ship.CurrentLocation = _solarSystemService.GetBody("Earth");
+                _currentCaptain.Ship.Status = ShipStatus.InOrbit;
                 ConsoleWriter.Write($"Welcome, Captain {name}, you have logged in on {_gameTimeService.Now()}");
                 return _currentCaptain;
             }

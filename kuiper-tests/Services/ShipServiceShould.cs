@@ -366,5 +366,50 @@ namespace Kuiper.Tests.Unit.Services
             eventService.Verify(x => x.RemoveEvent(It.IsAny<IEvent>()), Times.Exactly(1));
 
         }
+        
+        [Fact]
+        public void HandleNullGameEventsList()
+        {
+            //Arrange
+            var distance = 245749658; //As calculated by the solarSystemService
+            var now = DateTime.Now;
+            var destination = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Mars" };
+            var bodies = new List<CelestialBody>() { 
+                destination,
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.GasGiant, Name = "Jupiter" }
+            };
+            var moons = new List<CelestialBody>() { 
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.Moon, Name = "Luna" }
+            };
+            var asteroids = new List<Asteroid>()
+            {
+
+            };
+            var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
+            var solarSystemService = new Mock<ISolarSystemService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var eventService = new Mock<IEventService>();
+
+            eventService.Setup(x => x.GameEvents).Returns((List<IEvent>)null);
+            solarSystemService.Setup(x => x.GetBodies()).Returns(bodies);
+            solarSystemService.Setup(x => x.Asteroids).Returns(asteroids);
+            solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
+            solarSystemService.Setup(x => x.GetBody("Mars")).Returns(destination);
+            gameTimeService.Setup(u => u.Now()).Returns(now);
+            solarSystemService.Setup(u => u.GetDistanceInKm(currentLocation, destination)).Returns(distance);
+            var shipService = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = currentLocation };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
+            ship.Refuel(50);
+            shipService.Ship = ship;
+            //Act
+            var gameEvent = shipService.SetCourse(destination.Name);
+            
+            //Assert
+            eventService.Verify(x => x.AddEvent(It.IsAny<IEvent>()), Times.Exactly(1));
+            eventService.Verify(x => x.RemoveEvent(It.IsAny<IEvent>()), Times.Exactly(0));
+
+        }
     }
 }
