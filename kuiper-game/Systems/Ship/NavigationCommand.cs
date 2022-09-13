@@ -8,8 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using Kuiper.Domain.CelestialBodies;
 using Kuiper.Domain.Navigation;
-using Terminal.Gui;
-using Terminal.Gui.Graphs;
 
 namespace Kuiper.Systems
 {
@@ -52,7 +50,7 @@ namespace Kuiper.Systems
             do
             {
                 input = Console.ReadKey(true);
-                if (input.Key == ConsoleKey.Add)
+                if (input.Key == ConsoleKey.DownArrow)
                 {
                     if (currentNavBodyIndex < navigationBodies.Count()-1)
                     {
@@ -63,7 +61,7 @@ namespace Kuiper.Systems
                     ConsoleWriter.WriteInfoBox(infoString, nav.NormalisedCoordinate);
                     
                 }
-                if (input.Key == ConsoleKey.Subtract)
+                if (input.Key == ConsoleKey.UpArrow)
                 {
                     if (currentNavBodyIndex > 0)
                     {
