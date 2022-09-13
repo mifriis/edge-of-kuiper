@@ -59,6 +59,13 @@ namespace Kuiper.Services
             var deltaV = CalculateDeltaVForJourney(celestialBody);
             var arrivalTime = _gameTimeService.Now().Add(travelTime);
             var gameEvent = new SetCourseEvent() { EventTime = arrivalTime, EventName = "Travel Event", DeltaVSpent = deltaV};
+            foreach (var currentEvent in _eventService.GameEvents.ToList())
+            {
+                if (currentEvent is SetCourseEvent)
+                {
+                    _eventService.RemoveEvent(currentEvent);
+                }
+            }
             _eventService.AddEvent(gameEvent);
             return gameEvent;
         }

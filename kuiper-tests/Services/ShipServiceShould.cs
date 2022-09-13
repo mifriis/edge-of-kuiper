@@ -9,6 +9,7 @@ using System;
 using Kuiper.Domain;
 using Kuiper.Domain.Mining;
 using Kuiper.Domain.Ship;
+using Kuiper.Systems.Events;
 using LamarCodeGeneration.Util;
 
 namespace Kuiper.Tests.Unit.Services
@@ -68,6 +69,7 @@ namespace Kuiper.Tests.Unit.Services
             var solarSystemService = new Mock<ISolarSystemService>();
             var gameTimeService = new Mock<IGameTimeService>();
             var eventService = new Mock<IEventService>();
+            eventService.Setup(x => x.GameEvents).Returns(new List<IEvent>());
             solarSystemService.Setup(x => x.GetBodies()).Returns(bodies);
             solarSystemService.Setup(x => x.Asteroids).Returns(asteroids);
             solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
@@ -251,6 +253,7 @@ namespace Kuiper.Tests.Unit.Services
             var solarSystemService = new Mock<ISolarSystemService>();
             var gameTimeService = new Mock<IGameTimeService>();
             var eventService = new Mock<IEventService>();
+            eventService.Setup(x => x.GameEvents).Returns(new List<IEvent>());
             solarSystemService.Setup(x => x.GetBodies()).Returns(bodies);
             solarSystemService.Setup(x => x.Asteroids).Returns(asteroids);
             solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
@@ -298,6 +301,7 @@ namespace Kuiper.Tests.Unit.Services
             var solarSystemService = new Mock<ISolarSystemService>();
             var gameTimeService = new Mock<IGameTimeService>();
             var eventService = new Mock<IEventService>();
+            eventService.Setup(x => x.GameEvents).Returns(new List<IEvent>());
             solarSystemService.Setup(x => x.GetBodies()).Returns(bodies);
             solarSystemService.Setup(x => x.Asteroids).Returns(asteroids);
             solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
@@ -313,6 +317,54 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.Equal(shipService.Ship.TargetLocation, destination);
             Assert.Equal(shipService.Ship.Status, ShipStatus.Enroute);
+        }
+        
+        [Fact]
+        public void RemovePreviousDestinationFromGameEventsIfAlreadyEnroute()
+        {
+            //Arrange
+            var distance = 245749658; //As calculated by the solarSystemService
+            var now = DateTime.Now;
+            var destination = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Mars" };
+            var bodies = new List<CelestialBody>() { 
+                destination,
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.GasGiant, Name = "Jupiter" }
+            };
+            var moons = new List<CelestialBody>() { 
+                new CelestialBody() { CelestialBodyType = CelestialBodyType.Moon, Name = "Luna" }
+            };
+            var asteroids = new List<Asteroid>()
+            {
+
+            };
+            var currentLocation = new CelestialBody() { CelestialBodyType = CelestialBodyType.Planet, Name = "Earth" };
+            var solarSystemService = new Mock<ISolarSystemService>();
+            var gameTimeService = new Mock<IGameTimeService>();
+            var eventService = new Mock<IEventService>();
+            var gameEvents = new List<IEvent>()
+            {
+                new SetCourseEvent() { DeltaVSpent = 10,EventName = "Set Course to Venus", EventTime = now.AddDays(14)}
+            };
+            eventService.Setup(x => x.GameEvents).Returns(gameEvents);
+            solarSystemService.Setup(x => x.GetBodies()).Returns(bodies);
+            solarSystemService.Setup(x => x.Asteroids).Returns(asteroids);
+            solarSystemService.Setup(x => x.GetSatellites(currentLocation)).Returns(moons);
+            solarSystemService.Setup(x => x.GetBody("Mars")).Returns(destination);
+            gameTimeService.Setup(u => u.Now()).Returns(now);
+            solarSystemService.Setup(u => u.GetDistanceInKm(currentLocation, destination)).Returns(distance);
+            var shipService = new ShipService(solarSystemService.Object, eventService.Object, gameTimeService.Object);
+            var engine = new ShipEngine(10000,3,1000000,1100000);
+            var ship = new Ship("The Boolean", engine, 250) { CurrentLocation = currentLocation };
+            ship.Modules = new List<IShipModule> {new FuelTank(ModuleSize.Medium)};
+            ship.Refuel(50);
+            shipService.Ship = ship;
+            //Act
+            var gameEvent = shipService.SetCourse(destination.Name);
+            
+            //Assert
+            eventService.Verify(x => x.AddEvent(It.IsAny<IEvent>()), Times.Exactly(1));
+            eventService.Verify(x => x.RemoveEvent(It.IsAny<IEvent>()), Times.Exactly(1));
+
         }
     }
 }

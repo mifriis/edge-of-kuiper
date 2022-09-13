@@ -112,8 +112,20 @@ namespace Kuiper.Systems
             {
                 WriteAt(padding, InfoBoxActualWidth, i, "Green");
             }
-            
         }
         
+        public static string BuildBoxLine(int width)
+        {
+            var linePadding = "+";
+            
+            for (int i = 0; i <= width - 2; i++)
+            {
+                linePadding += "-";
+            }
+            
+            linePadding += "+";
+
+            return linePadding;
+        }
     }
 }
