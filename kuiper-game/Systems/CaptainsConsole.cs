@@ -100,6 +100,8 @@ namespace Kuiper.Systems
                     {
                         Console.Clear();
                         _captainService.SetupCaptain();
+                        shipService.Ship = _captainService.GetCaptain().Ship;
+                        
                         break;
                     }
                     Console.Clear();
