@@ -17,7 +17,7 @@ namespace Kuiper.Systems.CommandInfrastructure
             foreach (var command in commands)
             {
                 var commandName = command.Group == null ? $"{command.Name}" : $"{command.Group} --{command.Name}";
-                this.commands[commandName.ToLower()] = (args) => command.Execute(args);
+                this.commands[commandName.ToLower()] = command.Execute;
             }
 
             this.commands["help"] = (args) => Help();

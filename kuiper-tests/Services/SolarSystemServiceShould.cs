@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using Kuiper.Domain.Mining;
+using Kuiper.Tests.FakeRepositories;
 
 namespace Kuiper.Tests.Unit.Services
 {
@@ -420,8 +421,66 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.Equal(1.6427351236343384, distance, 6);
         }
-        
-            
-            
+
+        [Fact]
+        public void GetStarCorrectly()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7, 0, 0, 0));
+
+            var fakeRepository = new FakeSolarSystemRepository();
+
+            var solarSystemService = new SolarSystemService(fakeRepository, gameTimeService.Object);
+
+            solarSystemService.LoadFromRepository();
+
+            //Act
+            var star = solarSystemService.GetStar();
+
+            //Assert
+            Assert.NotNull(star);
+            Assert.IsType<CelestialBody>(star);
+            Assert.Equal(CelestialBodyType.Star, star.CelestialBodyType);
+        }
+
+        [Fact]
+        public void GetStarReturnsNull()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7, 0, 0, 0));
+
+            var fakeRepository = new FakeSolarSystemRepository();
+
+            var solarSystemService = new SolarSystemService(fakeRepository, gameTimeService.Object);
+
+            solarSystemService.LoadFromRepository();
+
+            var sun = solarSystemService.GetStar();
+            solarSystemService.RemoveCelestialBody(sun);
+
+            //Act
+            var star = solarSystemService.GetStar();
+
+            //Assert
+            Assert.Null(star);
+        }
+
+        [Fact]
+        public void GetStarThrowsException()
+        {
+            //Arrange
+            var gameTimeService = new Mock<IGameTimeService>();
+            gameTimeService.Setup(u => u.ElapsedGameTime).Returns(new TimeSpan(7, 0, 0, 0));
+
+            var solarSystemService = new SolarSystemService(null, gameTimeService.Object);
+
+            //Act & Assert
+            Assert.Throws<ArgumentNullException>(() => solarSystemService.GetStar());
+        }
+
+
+
     }
 }
