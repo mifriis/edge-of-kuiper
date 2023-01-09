@@ -54,6 +54,7 @@ namespace Kuiper.Tests.Unit.Services
             //Assert
             Assert.NotNull(scanForAsteroidsEvent);
             Assert.Equal("Asteroid Scanning", scanForAsteroidsEvent.EventName);
+            //test
         }
     }
 }
