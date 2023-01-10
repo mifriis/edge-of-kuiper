@@ -14,35 +14,35 @@ namespace Kuiper.Domain.Ship
             ShipMass = shipMass;
         }
 
-        public string Name { get; }
-        public IShipEngine Engine { get; }
+        public string Name { get; set; }
+        public IShipEngine Engine { get; set; }
         public CelestialBody CurrentLocation { get; set; }
         public CelestialBody TargetLocation { get; set; }
         public ShipStatus Status { get; set; }
-        public double WetMass 
-        { 
+        public double WetMass
+        {
             get
             {
                 return FuelMass +
                        DryMass;
             }
         }
-        public double FuelMass { get; set;}
+        public double FuelMass { get; set; }
 
         public double DryMass
         {
             get
             {
-                return ShipMass + 
+                return ShipMass +
                        Engine.Mass +
                        Modules.Sum(x => x.Mass);
             }
         }
 
-        public double ShipMass { get; }
-        public IEnumerable<IShipModule> Modules { get; set;}
+        public double ShipMass { get; set; }
+        public IEnumerable<IShipModule> Modules { get; set; }
 
-        public double deltaV 
+        public double deltaV
         {
             get
             {
@@ -68,11 +68,11 @@ namespace Kuiper.Domain.Ship
 
         public double SpendFuel(double deltaVToSpend)
         {
-            if(deltaVToSpend > deltaV)
+            if (deltaVToSpend > deltaV)
             {
                 throw new ArgumentOutOfRangeException("Not possible to spend more fuel than is availiable");
             }
-            if(deltaVToSpend == deltaV) //Avoiding divideByZero
+            if (deltaVToSpend == deltaV) //Avoiding divideByZero
             {
                 FuelMass = 0;
                 return 100;
@@ -80,7 +80,7 @@ namespace Kuiper.Domain.Ship
             var fraction = deltaVToSpend / deltaV;
             var fuelSpent = FuelMass * fraction;
             FuelMass = FuelMass - fuelSpent;
-            return fuelSpent;        
+            return fuelSpent;
         }
 
         public double Refuel(double tonsRefueled)
@@ -89,7 +89,7 @@ namespace Kuiper.Domain.Ship
                                         .OfType<FuelTank>()
                                         .Sum(x => x.FuelMass);
             var fuel = FuelMass + tonsRefueled;
-            if(fuel > maxFuel)
+            if (fuel > maxFuel)
             {
                 FuelMass = maxFuel;
                 return maxFuel;

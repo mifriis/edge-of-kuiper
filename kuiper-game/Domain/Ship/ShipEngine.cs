@@ -9,12 +9,12 @@ namespace Kuiper.Domain.Ship
             Thrust = thrust;
             SpecificImpulse = specificImpulse;
         }
-        public double Cost { get; } //Credits
-        public double Mass { get; } //Tons
-        public double Thrust { get; } //Newtons
-        public double SpecificImpulse { get; } //ISP
+        public double Cost { get; set; } //Credits
+        public double Mass { get; set; } //Tons
+        public double Thrust { get; set; } //Newtons
+        public double SpecificImpulse { get; set; } //ISP
 
-        public double ThrustToWeightRatio 
+        public double ThrustToWeightRatio
         {
             get
             {
@@ -23,7 +23,7 @@ namespace Kuiper.Domain.Ship
             }
         }
 
-        public double ExhaustVelocity 
+        public double ExhaustVelocity
         {
             get
             {
