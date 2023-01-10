@@ -1,0 +1,24 @@
+{
+  "ships": [
+    {
+      "Name": "Test1",
+      "Engine": {
+        "Cost": 100,
+        "Mass": 100,
+        "Thrust": 100,
+        "SpecificImpulse": 100
+      },
+      "ShipMass": 100
+    },
+    {
+      "Name": "Test2",
+      "Engine": {
+        "Cost": 100,
+        "Mass": 100,
+        "Thrust": 100,
+        "SpecificImpulse": 100
+      },
+      "ShipMass": 100
+    }
+  ]
+}

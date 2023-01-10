@@ -24,6 +24,7 @@ namespace Kuiper
                 _.AddAllTypesOf<IConsoleCommand>(ServiceLifetime.Singleton);
             });
             this.AddSingleton<ISolarSystemRepository>(x => new JsonFileSolarSystemRepository(new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "/Data/Sol.solarsystem")));
+            this.AddSingleton<ITraderShipsRepository>(x => new JsonFileTraderShipsRepository(new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "/Data/Trader.ships")));
             this.AddSingleton<ISolarSystemService, SolarSystemService>();
             this.AddSingleton<IShipService, ShipService>();
             this.AddSingleton<ICaptainService, CaptainService>();
@@ -38,6 +39,7 @@ namespace Kuiper
             this.AddSingleton<IGameTimeService, GameTimeService>();
             this.AddSingleton<IAccountService, AccountService>();
             this.AddSingleton<IMiningService, MiningService>();
+            this.AddSingleton<ITraderService, TraderService>();
         }
     }
 }
