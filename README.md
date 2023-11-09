@@ -35,6 +35,14 @@ It's an async realtime game experience where time since your last visit is accel
 
 The game is entirely based on Console commands, text and perhaps some nice ASCII graphics. The core of the game should be adaptable to discord bots or web. 
 
+### Screenshots
+
+Navigation:
+https://user-images.githubusercontent.com/1443594/189667049-aede481b-bbe9-47ec-906e-d80df58e1f1d.mov
+
+Solar System:
+https://user-images.githubusercontent.com/1443594/189550662-09b48292-ec67-4434-97e3-365b3ce85522.mov
+
 ## Lore
 
 The year is 2078, fusion-cores have been minimized to the point where they fit into bulky spaceships. The fusion-cores power torchdrives that make it possible to be under near constant thrust within our solar system. Trips to Mars are frequent and fast, taking no more than a week or so. 
