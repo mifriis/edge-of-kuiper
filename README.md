@@ -1,85 +1,92 @@
 # Edge of Kuiper
 
-```
- ┌────────────────────────────────────┐
- │                                    │
- │   ┌───────────┐     ┌───────────┐  │
- │   │   Combat  │     │  Missions │  │
- │   └───────────┘     └───────────┘  │
- │                                    │
- │   ┌───────────┐     ┌───────────┐  │
- │   │  Mining   │     │ Exploring │  │
- │   └───────────┘     └───────────┘  │
- │                                    │
- │   ┌───────────┐     ┌───────────┐  │
- │   │  Trading  │     │ Investing │  │
- │   └───────────┘     └───────────┘  │
- │                                    │
- │           Edge-of-Kuiper           │
- │      A Real-Time SpaceSim RPG      │
- └────────────────────────────────────┘
-```
+A realtime Discord space game. Ships travel the solar system, mine asteroids, and trade — all on a **7× time compression** so 1 real minute = 7 game minutes.
 
-This game puts you into the captains chair of your very own spaceship in the Sol system. Your purpose is to make money and retire.
+---
 
-* Trade
-* Invest
-* Mine asteroids
-* Take missions
-* Combat
-* Interact with random events
-* Hire crew
-* Outfit your ship
+## Setup
 
-It's an async realtime game experience where time since your last visit is accelerated and happenings are generated.
-
-The game is entirely based on Console commands, text and perhaps some nice ASCII graphics. The core of the game should be adaptable to discord bots or web. 
-
-### Screenshots
-
-Navigation:
-https://user-images.githubusercontent.com/1443594/189667049-aede481b-bbe9-47ec-906e-d80df58e1f1d.mov
-
-Solar System:
-https://user-images.githubusercontent.com/1443594/189550662-09b48292-ec67-4434-97e3-365b3ce85522.mov
-
-## Lore
-
-The year is 2078, fusion-cores have been minimized to the point where they fit into bulky spaceships. The fusion-cores power torchdrives that make it possible to be under near constant thrust within our solar system. Trips to Mars are frequent and fast, taking no more than a week or so. 
-
-Space is still big, and not much exists beyond the Kuiper belt which exists as an informal barrier between the inner solarsystem and the outer. The innersystem is largely controlled from earth, where as the outersystem is less civilized, less orderly and more akin to the classic wild west North America.
-
-Kuiper belt contains untold riches in ice-water, iron, gold and rare elements.
-
-The perfect time for someone to make a fortune.
-
-## Getting started
-
-### Prerequisites 
-
-* [.NET 6](https://dotnet.microsoft.com/download)
-* [JetBrains Rider](https://www.jetbrains.com/rider/)
-* [Visual Studio (Code)](https://visualstudio.microsoft.com/)
-
-Recommended plugins:
-* [C# Omnisharp](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
-* [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
-* [Coverage Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
-
-### Build and run
-
-CLI:
-* dotnet restore
-* dotnet run --project kuiper-game/kuiper-game.csproj
-* dotnet test
-
-IDE: 
-* Press the F5 button
-* Observe the Terminal output
-
-### Test
+`docker run -it -v "${PWD}:/app" -w /app node:24-slim sh`
 
 ```bash
-dotnet test --collect:"XPlat Code Coverage"
-dotnet ~/.nuget/packages/reportgenerator/5.0.0/tools/net6.0/ReportGenerator.dll "-reports:**/coverage.cobertura.xml;" "-targetdir:kuiper-tests/TestResults/report" "-reporttypes:Html" -title:coveragesummary.txt
+npm install
+cp .env.example .env
+# Fill in DISCORD_TOKEN, CLIENT_ID, GUILD_ID
+node src/deploy-commands.js   # register slash commands once
+npm start
 ```
+
+
+
+---
+
+## Project structure
+
+```
+src/
+  index.js              — Bot entry point, interaction routing
+  deploy-commands.js    — One-shot command registration
+  lib/
+    db.js               — SQLite schema + all query helpers
+    orbital.js          — Travel time math, body definitions
+    processor.js        — Event queue heartbeat (runs every 15s)
+  commands/
+    route.js            — /route  — plan and launch a transit
+    mine.js             — /mine   — extract ore at current body
+    sell.js             — /sell   — sell cargo at local market
+    scan.js             — /scan   — spectral scan for intel
+    status.js           — /status — ship + account overview
+data/
+  kuiper.db          — SQLite database (auto-created)
+```
+
+---
+
+## How the event system works
+
+Every player action creates a row in the `events` table:
+
+```
+type       | what happens when it resolves
+-----------+-----------------------------------------------
+TRANSIT    | ship.location updated, player notified on arrival
+MINE       | random ore added to cargo hold
+SELL       | cargo cleared, credits added to player account
+SCAN       | random intel on target body returned to player
+```
+
+`resolve_at` is a Unix timestamp in **real** seconds.  
+Travel durations are calculated in real seconds, so the 7× compression is applied at the display layer only — `formatGameTime()` multiplies by 7 for the "game time" shown to players.
+
+The processor polls every 15 real seconds. You can tighten this as needed — just watch SQLite write contention if you go below ~5s.
+
+---
+
+## Time maths
+
+```
+Earth → Luna        ~3 game days    = ~10 real hours
+Earth → Mars        ~60 game days   = ~8.5 real days   (opposition distance)
+Earth → Ceres       ~130 game days  = ~19 real days
+Earth → Jupiter     ~320 game days  = ~46 real days
+```
+
+Drive model: constant 0.3g Epstein-style acceleration, flip-and-burn at midpoint.  
+`travelTimeSeconds()` in `orbital.js` is the single source of truth.
+
+---
+
+## Extending
+
+**Add a new body** — drop a row into `BODIES` in `orbital.js`. That's it; `/route` picks it up automatically.
+
+**Add a new command** — create `src/commands/yourcommand.js` exporting `data` (SlashCommandBuilder) and `execute(interaction)`. Import and register in `index.js` and `deploy-commands.js`, then re-run `deploy-commands.js`.
+
+**Add a new event type** — add a resolver function in `processor.js` and a `case` in `resolveEvent()`. Enqueue it from any command with `enqueueEvent({ type: 'YOUR_TYPE', ... })`.
+
+**Multiplayer economy ideas:**
+- Market prices that fluctuate based on supply (track aggregate sales per body)
+- Intel trading: sell scan results to other players
+- Piracy events: random chance of being interdicted in transit
+- Ship upgrades: bigger cargo hold, better drive (shorter travel time multiplier)
+- Factions: alignment affects prices and event outcomes

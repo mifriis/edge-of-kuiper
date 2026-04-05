@@ -1,0 +1,17 @@
+{
+  "name": "kuiper",
+  "version": "0.1.0",
+  "description": "Realtime solar system Discord game — 7x time compression",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/index.js",
+    "deploy-commands": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/deploy-commands.js",
+    "dev": "node --disable-warning=ExperimentalWarning --experimental-sqlite --watch src/index.js",
+    "cli": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/cli.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5"
+  }
+}
