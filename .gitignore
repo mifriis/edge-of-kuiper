@@ -151,3 +151,4 @@ vite.config.ts.timestamp-*
 .vite/
 
 .DS_Store
+data/kuiper.db
