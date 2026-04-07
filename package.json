@@ -9,7 +9,9 @@
     "deploy-commands": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/deploy-commands.js",
     "dev": "node --disable-warning=ExperimentalWarning --experimental-sqlite --watch src/index.js",
     "cli": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/cli.js",
-    "test": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/orbital.test.js"
+    "test": "node --disable-warning=ExperimentalWarning --experimental-sqlite --test src/tests/*.test.js",
+    "test:unit": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/orbital.test.js",
+    "test:integration": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/transit.integration.test.js"
   },
   "dependencies": {
     "discord.js": "^14.14.1",

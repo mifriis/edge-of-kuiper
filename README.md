@@ -1,92 +1,100 @@
 # Edge of Kuiper
 
-A realtime Discord space game. Ships travel the solar system, mine asteroids, and trade — all on a **7× time compression** so 1 real minute = 7 game minutes.
+```
+ ┌────────────────────────────────────┐
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │  Transit  │     │  Missions │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │  Mining   │     │ Exploring │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │   ┌───────────┐     ┌───────────┐  │
+ │   │  Trading  │     │ Investing │  │
+ │   └───────────┘     └───────────┘  │
+ │                                    │
+ │           Edge-of-Kuiper           │
+ │      A Real-Time SpaceSim RPG      │
+ └────────────────────────────────────┘
+```
+
+An async real-time space RPG running as a Discord bot. You captain a ship in the Sol system. Your purpose is to make money and retire.
+
+- Route between planets and stations
+- Mine asteroids in the belt and Kuiper Belt
+- Trade ore and commodities
+- Outfit your ship with better drives and cargo holds
+- Take missions, interact with random events
+- Hire crew
+
+All interactions are Discord slash commands. Time runs at **7× compression** — 1 real minute is 7 game minutes. Issue an order and come back later.
 
 ---
 
-## Setup
+## Lore
 
-`docker run -it -v "${PWD}:/app" -w /app node:24-slim sh`
+The year is 2078. Fusion cores have been miniaturised to the point where they fit inside a bulky freighter. They power torchdrives that make near-constant thrust practical within the Sol system. Trips to Mars take no more than a week or so.
+
+Space is still big, and not much exists beyond the Kuiper Belt — an informal barrier between the orderly inner system, controlled from Earth, and the outer system: less civilised, less regulated, more akin to the old frontier west.
+
+The Kuiper Belt contains untold riches in ice-water, iron, gold, and rare elements.
+
+The perfect time for someone to make a fortune.
+
+---
+
+## Getting started
 
 ```bash
 npm install
-cp .env.example .env
-# Fill in DISCORD_TOKEN, CLIENT_ID, GUILD_ID
-node src/deploy-commands.js   # register slash commands once
+```
+
+**Development — CLI** (no Discord token needed):
+
+```bash
+npm run cli -- player create p1 Alice
+npm run cli -- player status p1
+npm run cli -- route p1 mars
+npm run cli -- fasttick          # advance the event queue instantly
+```
+
+**Running the bot** (requires a Discord application):
+
+```bash
+cp .env.example .env              # fill in DISCORD_TOKEN, CLIENT_ID, GUILD_ID
+node src/deploy-commands.js       # register slash commands once
 npm start
 ```
 
+With Docker:
 
-
----
-
-## Project structure
-
-```
-src/
-  index.js              — Bot entry point, interaction routing
-  deploy-commands.js    — One-shot command registration
-  lib/
-    db.js               — SQLite schema + all query helpers
-    orbital.js          — Travel time math, body definitions
-    processor.js        — Event queue heartbeat (runs every 15s)
-  commands/
-    route.js            — /route  — plan and launch a transit
-    mine.js             — /mine   — extract ore at current body
-    sell.js             — /sell   — sell cargo at local market
-    scan.js             — /scan   — spectral scan for intel
-    status.js           — /status — ship + account overview
-data/
-  kuiper.db          — SQLite database (auto-created)
+```bash
+docker run -it -v "${PWD}:/app" -w /app node:24-slim sh
 ```
 
 ---
 
-## How the event system works
+## Testing
 
-Every player action creates a row in the `events` table:
-
-```
-type       | what happens when it resolves
------------+-----------------------------------------------
-TRANSIT    | ship.location updated, player notified on arrival
-MINE       | random ore added to cargo hold
-SELL       | cargo cleared, credits added to player account
-SCAN       | random intel on target body returned to player
+```bash
+npm test                  # all tests
+npm run test:unit         # unit tests
+npm run test:integration  # integration tests
 ```
 
-`resolve_at` is a Unix timestamp in **real** seconds.  
-Travel durations are calculated in real seconds, so the 7× compression is applied at the display layer only — `formatGameTime()` multiplies by 7 for the "game time" shown to players.
-
-The processor polls every 15 real seconds. You can tighten this as needed — just watch SQLite write contention if you go below ~5s.
+Uses Node's built-in `node:test` — no test framework to install.
+`--experimental-sqlite` is required because the game uses Node's built-in SQLite module.
 
 ---
 
-## Time maths
+## Contributing
 
-```
-Earth → Luna        ~3 game days    = ~10 real hours
-Earth → Mars        ~60 game days   = ~8.5 real days   (opposition distance)
-Earth → Ceres       ~130 game days  = ~19 real days
-Earth → Jupiter     ~320 game days  = ~46 real days
-```
+All features start with a spec. Before writing code:
 
-Drive model: constant 0.3g Epstein-style acceleration, flip-and-burn at midpoint.  
-`travelTimeSeconds()` in `orbital.js` is the single source of truth.
+1. Read [`specs/README.md`](specs/README.md) for the spec format and workflow.
+2. If using GitHub Copilot, type `/spec-planning` in chat — it will ask the right questions and write the spec for you.
+3. Get the spec agreed before touching any code.
 
----
-
-## Extending
-
-**Add a new body** — drop a row into `BODIES` in `orbital.js`. That's it; `/route` picks it up automatically.
-
-**Add a new command** — create `src/commands/yourcommand.js` exporting `data` (SlashCommandBuilder) and `execute(interaction)`. Import and register in `index.js` and `deploy-commands.js`, then re-run `deploy-commands.js`.
-
-**Add a new event type** — add a resolver function in `processor.js` and a `case` in `resolveEvent()`. Enqueue it from any command with `enqueueEvent({ type: 'YOUR_TYPE', ... })`.
-
-**Multiplayer economy ideas:**
-- Market prices that fluctuate based on supply (track aggregate sales per body)
-- Intel trading: sell scan results to other players
-- Piracy events: random chance of being interdicted in transit
-- Ship upgrades: bigger cargo hold, better drive (shorter travel time multiplier)
-- Factions: alignment affects prices and event outcomes
+For architecture invariants and layer boundaries, see [`DESIGN.md`](DESIGN.md).
