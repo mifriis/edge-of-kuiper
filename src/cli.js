@@ -25,6 +25,8 @@ import 'dotenv/config';
 import { ensurePlayer, getPlayer, getShip, getActiveEvents, enqueueEvent,
          updateShip, adjustCredits, getDb } from './lib/db.js';
 import { BODIES, travelTimeSeconds, formatGameTime, formatRealTime } from './lib/orbital.js';
+import { renderSolarSystem } from './lib/renderer.js';
+import { writeFileSync } from 'fs';
 
 const MARKETS = {
   earth: { name: 'Earth Orbital Exchange', pricePerT: 150 },
@@ -266,6 +268,13 @@ const commands = {
     db.prepare('DELETE FROM players WHERE id = ?').run(id);
     console.log(`Reset complete for player ${id}.`);
   },
+
+  async map() {
+    const buf  = await renderSolarSystem(new Date());
+    const path = './tmp/kuiper-map.png';
+    writeFileSync(path, buf);
+    console.log(path);
+  },
 };
 
 // ─── Entry ─────────────────────────────────────────────────────────────────
@@ -286,7 +295,11 @@ if (!cmd || !commands[cmd]) {
   console.log('  travel <from> <to> [speed]  Show travel time');
   console.log('  bodies                      List all bodies');
   console.log('  reset <player_id>           Wipe player data');
+  console.log('  map                         Render solar system → /tmp/kuiper-map.png');
   process.exit(0);
 }
 
-commands[cmd](args);
+Promise.resolve(commands[cmd](args)).catch(err => {
+  console.error(err);
+  process.exit(1);
+});

@@ -86,7 +86,8 @@ MARGIN = 40px
 | `DarkMagenta` | `#882288` |
 | Fallback | `#FFFFFF` |
 
-**Dependencies:** `canvas` (npm package `canvas`, provides `createCanvas`).
+**Dependencies:** `@napi-rs/canvas` — prebuilt binaries for macOS/Linux/Windows, no system
+libraries required, drop-in `createCanvas` API. No Dockerfile changes needed.
 
 ---
 
@@ -122,10 +123,10 @@ prints the path. No other output.
 
 ### `package.json` — updated
 
-Add `canvas` to dependencies:
+Add `@napi-rs/canvas` to dependencies:
 
 ```json
-"canvas": "^3.0.0"
+"@napi-rs/canvas": "^0.1.0"
 ```
 
 ---

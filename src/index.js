@@ -15,8 +15,9 @@ import * as mine   from './commands/mine.js';
 import * as sell   from './commands/sell.js';
 import * as scan   from './commands/scan.js';
 import * as status from './commands/status.js';
+import * as map    from './commands/map.js';
 
-const COMMANDS = [route, mine, sell, scan, status];
+const COMMANDS = [route, mine, sell, scan, status, map];
 
 // ─── Client ────────────────────────────────────────────────────────────────
 const client = new Client({

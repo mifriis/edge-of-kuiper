@@ -16,8 +16,9 @@ import * as mine   from './commands/mine.js';
 import * as sell   from './commands/sell.js';
 import * as scan   from './commands/scan.js';
 import * as status from './commands/status.js';
+import * as map    from './commands/map.js';
 
-const commands = [route, mine, sell, scan, status].map(c => c.data.toJSON());
+const commands = [route, mine, sell, scan, status, map].map(c => c.data.toJSON());
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
