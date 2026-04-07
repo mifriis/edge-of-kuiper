@@ -43,6 +43,8 @@ The Kuiper Belt contains untold riches in ice-water, iron, gold, and rare elemen
 
 The perfect time for someone to make a fortune.
 
+![](assets/kuiper-map.png)
+
 ---
 
 ## Getting started
