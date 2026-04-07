@@ -1,15 +1,28 @@
 /**
- * orbital.js — Solar system bodies and travel time
+ * orbital.js — Solar system bodies, travel time, and orbital positions
  *
- * Orbital positions are fixed on rails — no phase angles, no synodic math.
- * Distances are in "units" (loosely AU-inspired) and tuned for fun, not science.
+ * Two models coexist:
  *
- * Travel time = distance / engine.speed  (both in units/day, game-time)
- * Real-world seconds = game-seconds / TIME_COMPRESSION
- *
- * Engine speed lives on the ship record in the DB.
- * Default starter engine: speed 1.0 u/day
+ * 1. Travel-time model (unchanged): fixed dist values, travelTimeSeconds().
+ * 2. Position model: circular 2D ecliptic orbits anchored to J2000 longitudes.
+ *    getBodyPosition(body, date) → {x, y} AU
+ *    distanceBetweenBodies(bodyA, bodyB, date) → km
+ *    Functions accept plain body objects — DB rows and procedural bodies work identically.
  */
+
+import { createRequire } from 'module';
+import { AU_IN_KM, J2000 } from './physics.js';
+
+const require = createRequire(import.meta.url);
+const solarSystem = require('../../data/solsystem.json');
+
+// Flat map of body name (lowercase) → body object, built once at startup.
+function flattenBodies(node, map = {}) {
+  map[node.name.toLowerCase()] = node;
+  for (const s of node.satellites ?? []) flattenBodies(s, map);
+  return map;
+}
+export const SOLAR_BODIES = flattenBodies(solarSystem);
 
 export const TIME_COMPRESSION = 7; // 1 real minute = 7 game minutes
 
@@ -80,4 +93,47 @@ export function formatRealTime(realSeconds) {
   if (h > 0) parts.push(`${h}h`);
   if (m > 0 || parts.length === 0) parts.push(`${m}m`);
   return parts.join(' ');
+}
+
+/**
+ * Cartesian position of a body in AU at a given date.
+ * body must have { distance, longitudeJ2000 } fields (AU semi-major axis, J2000 ecliptic degrees).
+ *
+ * @param {{ distance: number, longitudeJ2000: number }} body
+ * @param {Date} date
+ * @param {{ distance: number, longitudeJ2000: number }|null} [parent] - parent body for moons
+ * @returns {{ x: number, y: number }}
+ */
+export function getBodyPosition(body, date, parent = null) {
+  const daysSinceJ2000 = (date - J2000) / 86_400_000;
+  const orbitalPeriodDays = Math.pow(body.distance, 1.5) * 365.25;
+  const meanMotionDeg = 360 / orbitalPeriodDays;
+  const longitude = ((body.longitudeJ2000 + meanMotionDeg * daysSinceJ2000) % 360 + 360) % 360;
+  const rad = longitude * (Math.PI / 180);
+  const x = body.distance * Math.cos(rad);
+  const y = body.distance * Math.sin(rad);
+
+  if (parent) {
+    const parentPos = getBodyPosition(parent, date);
+    return { x: parentPos.x + x, y: parentPos.y + y };
+  }
+  return { x, y };
+}
+
+/**
+ * Distance in km between two bodies at a given date.
+ *
+ * @param {{ distance: number, longitudeJ2000: number }} bodyA
+ * @param {{ distance: number, longitudeJ2000: number }} bodyB
+ * @param {Date} date
+ * @param {{ distance: number, longitudeJ2000: number }|null} [parentA] - parent body if bodyA is a moon
+ * @param {{ distance: number, longitudeJ2000: number }|null} [parentB] - parent body if bodyB is a moon
+ * @returns {number} distance in km
+ */
+export function distanceBetweenBodies(bodyA, bodyB, date, parentA = null, parentB = null) {
+  const posA = getBodyPosition(bodyA, date, parentA);
+  const posB = getBodyPosition(bodyB, date, parentB);
+  const dx = posA.x - posB.x;
+  const dy = posA.y - posB.y;
+  return Math.sqrt(dx * dx + dy * dy) * AU_IN_KM;
 }

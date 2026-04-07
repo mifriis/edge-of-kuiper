@@ -8,7 +8,8 @@
     "start": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/index.js",
     "deploy-commands": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/deploy-commands.js",
     "dev": "node --disable-warning=ExperimentalWarning --experimental-sqlite --watch src/index.js",
-    "cli": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/cli.js"
+    "cli": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/cli.js",
+    "test": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/orbital.test.js"
   },
   "dependencies": {
     "discord.js": "^14.14.1",

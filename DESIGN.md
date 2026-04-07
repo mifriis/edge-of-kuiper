@@ -15,9 +15,12 @@ These are invariants. Do not violate them, do not work around them.
 - Never store game-time. Never do arithmetic in game-time.
 
 **Orbital model**
-- Bodies have a fixed `dist`. They do not move. No orbital phases, no transfer windows.
-- `travelTime = abs(a.dist - b.dist) / ship.engineSpeed` — that's the whole model.
-- Do not add real orbital mechanics. Ever.
+- Circular 2D orbits. No eccentricity, no inclination, no Lagrange points, no three-body problem.
+- `longitude(t) = longitudeJ2000 + (360 / (distance^1.5 × 365.25)) × daysSinceJ2000(t)`
+- `getBodyPosition(body, date)` → `{x, y}` AU. `distanceBetweenBodies(bodyA, bodyB, date)` → km.
+- Functions accept plain body objects — DB rows and procedural bodies work without changes to orbital math.
+- Travel time is still `abs(a.dist - b.dist) / engineSpeed`. Orbital positions don't affect routing.
+- Physical constants (`AU_IN_KM`, `J2000`, `GAME_START_DATE`, future gravity/rocket constants) live in `lib/physics.js`.
 
 **Ship stats**
 - Never read `ship.engine_speed` or `ship.cargo_max` directly in commands or game logic.
@@ -40,7 +43,7 @@ These are invariants. Do not violate them, do not work around them.
 
 ## Adding things
 
-**New body:** add to `BODIES` in `lib/orbital.js`. Nothing else changes.
+**New body:** add to `data/solsystem.json` with `distance` (AU semi-major axis) and `longitudeJ2000` (J2000 ecliptic longitude, degrees). Nothing else changes.
 
 **New module:** add to `MODULES` in `game/modules.js` with a `stats` block. Nothing else changes.
 

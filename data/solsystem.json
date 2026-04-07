@@ -1,0 +1,101 @@
+{
+    "position": 1,
+    "name": "Sol",
+    "distance": 0,
+    "longitudeJ2000": 0,
+    "type": "Star",
+    "color": "DarkYellow",
+    "satellites": [
+        {
+            "position": 1,
+            "name": "Mercury",
+            "distance": 0.387,
+            "longitudeJ2000": 252.25,
+            "type": "Planet",
+            "color": "Gray",
+            "satellites": []
+        },
+        {
+            "position": 2,
+            "name": "Venus",
+            "distance": 0.723,
+            "longitudeJ2000": 181.98,
+            "type": "Planet",
+            "color": "DarkRed",
+            "satellites": []
+        },
+        {
+            "position": 3,
+            "name": "Earth",
+            "distance": 1.000,
+            "longitudeJ2000": 100.46,
+            "type": "Planet",
+            "color": "Blue",
+            "satellites": [
+                {
+                    "position": 1,
+                    "name": "Luna",
+                    "distance": 0.00257,
+                    "longitudeJ2000": 218.32,
+                    "type": "Moon",
+                    "color": "Gray",
+                    "satellites": []
+                }
+            ]
+        },
+        {
+            "position": 4,
+            "name": "Mars",
+            "distance": 1.524,
+            "longitudeJ2000": 355.45,
+            "type": "Planet",
+            "color": "Red",
+            "satellites": []
+        },
+        {
+            "position": 5,
+            "name": "Jupiter",
+            "distance": 5.203,
+            "longitudeJ2000": 34.40,
+            "type": "GasGiant",
+            "color": "DarkYellow",
+            "satellites": []
+        },
+        {
+            "position": 6,
+            "name": "Saturn",
+            "distance": 9.537,
+            "longitudeJ2000": 49.94,
+            "type": "GasGiant",
+            "color": "White",
+            "satellites": []
+        },
+        {
+            "position": 7,
+            "name": "Uranus",
+            "distance": 19.191,
+            "longitudeJ2000": 313.23,
+            "type": "Planet",
+            "color": "Magenta",
+            "satellites": []
+        },
+        {
+            "position": 8,
+            "name": "Neptune",
+            "distance": 30.069,
+            "longitudeJ2000": 304.88,
+            "type": "Planet",
+            "color": "DarkBlue",
+            "satellites": []
+        },
+        {
+            "position": 9,
+            "name": "Pluto",
+            "distance": 39.482,
+            "longitudeJ2000": 238.93,
+            "type": "DwarfPlanet",
+            "color": "DarkMagenta",
+            "satellites": []
+        }
+    ]
+}
