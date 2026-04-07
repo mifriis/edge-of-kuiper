@@ -8,8 +8,21 @@
  * Each planet's angle is the real ecliptic longitude from the orbital model.
  */
 
-import { createCanvas } from '@napi-rs/canvas';
+import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
 import { SOLAR_BODIES, getBodyPosition } from './orbital.js';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import fs from 'fs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const fontPath = path.join(__dirname, 'renderer-font/inter.ttf');
+GlobalFonts.registerFromPath(
+  fontPath,
+  'Inter'
+);
+
+console.log('Font path:', fontPath);
+console.log('Exists:', fs.existsSync(fontPath));
 
 const CANVAS_SIZE = 800;
 const CENTRE      = CANVAS_SIZE / 2;
@@ -68,7 +81,7 @@ export async function renderSolarSystem(date, options = {}) {
   ctx.fill();
 
   // Planets
-  ctx.font = '22px sans-serif';
+  ctx.font = '22px Inter';
   planets.forEach((body, i) => {
     const orbitR    = (i + 1) * ringStep;
     const pos       = getBodyPosition(body, date);

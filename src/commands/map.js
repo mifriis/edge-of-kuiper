@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
   .setDescription('Render the current solar system map');
 
 export async function execute(interaction) {
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
   const buffer     = await renderSolarSystem(new Date());
   const attachment = new AttachmentBuilder(buffer, { name: 'solar-system.png' });
   await interaction.editReply({ files: [attachment] });

@@ -38,7 +38,7 @@ export async function execute(interaction) {
       { name: 'Cargo',     value: `${ship.cargo_ore}/${ship.cargo_max}t ore`, inline: true },
     )
     .setTimestamp()
-    .setFooter({ text: 'SOLARWIND' });
+    .setFooter({ text: 'Edge of Kuiper' });
 
   if (events.length > 0) {
     const lines = events.map(e => {

@@ -77,7 +77,7 @@ export async function execute(interaction) {
           { name: 'Hold',            value: `${ship.cargo_ore}/${ship.cargo_max}t`,    inline: true },
         )
         .setTimestamp()
-        .setFooter({ text: 'SOLARWIND' }),
+        .setFooter({ text: 'Edge of Kuiper' }),
     ],
     ephemeral: true,
   });

@@ -75,7 +75,7 @@ export async function execute(interaction) {
           { name: 'Est. total', value: `₡${revenue.toLocaleString()}`, inline: true },
         )
         .setTimestamp()
-        .setFooter({ text: 'SOLARWIND' }),
+        .setFooter({ text: 'Edge of Kuiper' }),
     ],
     ephemeral: true,
   });

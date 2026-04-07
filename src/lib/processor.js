@@ -73,7 +73,7 @@ function resolveTransit(event, payload) {
       { name: 'Status',   value: 'Docked',  inline: true },
     )
     .setTimestamp()
-    .setFooter({ text: 'SOLARWIND' });
+    .setFooter({ text: 'Edge of Kuiper' });
 }
 
 function resolveMine(event, payload) {
@@ -105,7 +105,7 @@ function resolveMine(event, payload) {
       { name: 'Hold',          value: `${ship.cargo_ore + actual}/${ship.cargo_max}t`, inline: true },
     )
     .setTimestamp()
-    .setFooter({ text: 'SOLARWIND' });
+    .setFooter({ text: 'Edge of Kuiper' });
 }
 
 function resolveSell(event, payload) {
@@ -131,7 +131,7 @@ function resolveSell(event, payload) {
       { name: 'Price/t',   value: `₡${pricePerT}`,                        inline: true },
     )
     .setTimestamp()
-    .setFooter({ text: 'SOLARWIND' });
+    .setFooter({ text: 'Edge of Kuiper' });
 }
 
 function resolveScan(event, payload) {
@@ -157,7 +157,7 @@ function resolveScan(event, payload) {
       { name: 'Quality',   value: find.quality, inline: true },
     )
     .setTimestamp()
-    .setFooter({ text: 'SOLARWIND' });
+    .setFooter({ text: 'Edge of Kuiper' });
 }
 
 // ─── Notification ──────────────────────────────────────────────────────────

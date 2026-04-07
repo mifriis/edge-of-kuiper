@@ -69,7 +69,7 @@ export async function execute(interaction) {
           { name: 'Real ETA',        value: formatRealTime(SCAN_DURATION_REAL_SEC), inline: true },
         )
         .setTimestamp()
-        .setFooter({ text: 'SOLARWIND' }),
+        .setFooter({ text: 'Edge of Kuiper' }),
     ],
     ephemeral: true,
   });
