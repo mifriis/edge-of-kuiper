@@ -4,7 +4,7 @@
  ┌────────────────────────────────────┐
  │                                    │
  │   ┌───────────┐     ┌───────────┐  │
- │   │   Combat  │     │  Missions │  │
+ │   │  Transit  │     │  Missions │  │
  │   └───────────┘     └───────────┘  │
  │                                    │
  │   ┌───────────┐     ┌───────────┐  │
@@ -20,66 +20,83 @@
  └────────────────────────────────────┘
 ```
 
-This game puts you into the captains chair of your very own spaceship in the Sol system. Your purpose is to make money and retire.
+An async real-time space RPG running as a Discord bot. You captain a ship in the Sol system. Your purpose is to make money and retire.
 
-* Trade
-* Invest
-* Mine asteroids
-* Take missions
-* Combat
-* Interact with random events
-* Hire crew
-* Outfit your ship
+- Route between planets and stations
+- Mine asteroids in the belt and Kuiper Belt
+- Trade ore and commodities
+- Outfit your ship with better drives and cargo holds
+- Take missions, interact with random events
+- Hire crew
 
-It's an async realtime game experience where time since your last visit is accelerated and happenings are generated.
+All interactions are Discord slash commands. Time runs at **7× compression** — 1 real minute is 7 game minutes. Issue an order and come back later.
 
-The game is entirely based on Console commands, text and perhaps some nice ASCII graphics. The core of the game should be adaptable to discord bots or web. 
-
-### Screenshots
-
-Navigation:
-https://user-images.githubusercontent.com/1443594/189667049-aede481b-bbe9-47ec-906e-d80df58e1f1d.mov
-
-Solar System:
-https://user-images.githubusercontent.com/1443594/189550662-09b48292-ec67-4434-97e3-365b3ce85522.mov
+---
 
 ## Lore
 
-The year is 2078, fusion-cores have been minimized to the point where they fit into bulky spaceships. The fusion-cores power torchdrives that make it possible to be under near constant thrust within our solar system. Trips to Mars are frequent and fast, taking no more than a week or so. 
+The year is 2078. Fusion cores have been miniaturised to the point where they fit inside a bulky freighter. They power torchdrives that make near-constant thrust practical within the Sol system. Trips to Mars take no more than a week or so.
 
-Space is still big, and not much exists beyond the Kuiper belt which exists as an informal barrier between the inner solarsystem and the outer. The innersystem is largely controlled from earth, where as the outersystem is less civilized, less orderly and more akin to the classic wild west North America.
+Space is still big, and not much exists beyond the Kuiper Belt — an informal barrier between the orderly inner system, controlled from Earth, and the outer system: less civilised, less regulated, more akin to the old frontier west.
 
-Kuiper belt contains untold riches in ice-water, iron, gold and rare elements.
+The Kuiper Belt contains untold riches in ice-water, iron, gold, and rare elements.
 
 The perfect time for someone to make a fortune.
 
+![](assets/kuiper-map.png)
+
+---
+
 ## Getting started
 
-### Prerequisites 
+```bash
+npm install
+```
 
-* [.NET 6](https://dotnet.microsoft.com/download)
-* [JetBrains Rider](https://www.jetbrains.com/rider/)
-* [Visual Studio (Code)](https://visualstudio.microsoft.com/)
-
-Recommended plugins:
-* [C# Omnisharp](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
-* [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
-* [Coverage Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
-
-### Build and run
-
-CLI:
-* dotnet restore
-* dotnet run --project kuiper-game/kuiper-game.csproj
-* dotnet test
-
-IDE: 
-* Press the F5 button
-* Observe the Terminal output
-
-### Test
+**Development — CLI** (no Discord token needed):
 
 ```bash
-dotnet test --collect:"XPlat Code Coverage"
-dotnet ~/.nuget/packages/reportgenerator/5.0.0/tools/net6.0/ReportGenerator.dll "-reports:**/coverage.cobertura.xml;" "-targetdir:kuiper-tests/TestResults/report" "-reporttypes:Html" -title:coveragesummary.txt
+npm run cli -- player create p1 Alice
+npm run cli -- player status p1
+npm run cli -- route p1 mars
+npm run cli -- fasttick          # advance the event queue instantly
 ```
+
+**Running the bot** (requires a Discord application):
+
+```bash
+cp .env.example .env              # fill in DISCORD_TOKEN, CLIENT_ID, GUILD_ID
+node src/deploy-commands.js       # register slash commands once
+npm start
+```
+
+With Docker:
+
+```bash
+docker run -it -v "${PWD}:/app" -w /app node:24-slim sh
+```
+
+---
+
+## Testing
+
+```bash
+npm test                  # all tests
+npm run test:unit         # unit tests
+npm run test:integration  # integration tests
+```
+
+Uses Node's built-in `node:test` — no test framework to install.
+`--experimental-sqlite` is required because the game uses Node's built-in SQLite module.
+
+---
+
+## Contributing
+
+All features start with a spec. Before writing code:
+
+1. Read [`specs/README.md`](specs/README.md) for the spec format and workflow.
+2. If using GitHub Copilot, type `/spec-planning` in chat — it will ask the right questions and write the spec for you.
+3. Get the spec agreed before touching any code.
+
+For architecture invariants and layer boundaries, see [`DESIGN.md`](DESIGN.md).
