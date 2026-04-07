@@ -86,9 +86,6 @@ test('2023 Solar conjunction: In November. Earth and Mars was on opposite sides 
   const earth = SOLAR_BODIES['earth'];
   const mars  = SOLAR_BODIES['mars'];
 
-  const posEarth = getBodyPosition(earth, date);
-  const posMars  = getBodyPosition(mars,  date);
-
   const dist = distanceBetweenBodies(earth, mars, date);
   const minKm = 370_000_000;
   const maxKm = 400_000_000;
