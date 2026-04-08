@@ -58,7 +58,31 @@ expose in `getEffectiveStats()` return object.
 
 ---
 
-## Data model notes
+## Breaking change checklist
+
+Run this mentally before merging any feature. A change is breaking if it affects players
+who are mid-session — ship in flight, event queued, or cargo in hold.
+
+**Schema**
+- New columns must have `DEFAULT NULL` or a safe default. Wrap in try/catch `ALTER TABLE` — never drop or rename columns.
+- New JSON payload fields must be optional (`??` fallback in resolvers) so in-flight events with the old payload still resolve.
+
+**Markets / locations**
+- Removing a sell location strands players with cargo there. Either keep a fallback in `resolveSell`, or note the forced migration in the spec.
+- Removing a minable location is safe only if no ship is currently `status = 'mining'` there.
+
+**Status values**
+- Resolver resets are `status: 'docked'` — keep it that way. Display label (`displayStatus()`) handles zone / station flavour text without touching the stored value.
+
+**Events**
+- Old event types in the queue must still resolve after a deploy. Keep legacy branches until the queue is confirmed drained, or add a migration that cancels stale events.
+
+**Specs must call it out**
+- Any spec that hits one of the above categories must have an explicit "Breaking change:" note in its *What this is, and what it is not* section and in the relevant file-changes section.
+
+---
+
+
 
 `ships.modules` — JSON column, maps slot type → module ID:
 ```json
