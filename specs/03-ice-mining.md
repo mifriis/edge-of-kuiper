@@ -32,7 +32,6 @@ blind net is unlikely to hit good ice.
 - Costs, fees, and mining permits (future spec)
 - Price volatility — all ice prices are static
 - Ship position marker (deferred)
-- Multiple scan stacking (one `scan_result` per ship, last-write wins)
 - Renaming `cargo_ore` (tracked as tech debt; the field stores ice tonnage for now)
 
 All ships start with enough belt-capable kit to mine. Stats work (scan_quality from
@@ -40,7 +39,67 @@ scanner module) but no new stat keys are added here.
 
 ---
 
-## DESIGN.md amendment
+## Lore copy
+
+All user-facing text for ice mining ops. Implementers must use these strings verbatim.
+Voice: terse Belter fatalism — short sentences, sensory detail, no heroics.
+
+### `/scan` enqueue embeds
+
+**Initial scan (no prior result):**
+> You pull yourself out the airlock and hang in the black, suit pinging the rocks ahead.
+> Lidar's sweeping. Should know something in a couple hours.
+
+**Re-scan (prior hint is `'poor'` or `'standard'`):**
+> Not satisfied. You fire another lidar pass, closer this time — watching for cracks
+> in the surface, anything that catches the light differently.
+
+**Blocked — already `'promising'`:**
+> Sensors are already singing. Any more scanning is just burning time.
+> Net it.
+
+### `/scan` result embeds (embed `.setDescription()`)
+
+**`poor`:**
+> Bounced lidar off a dozen rocks. Mostly silica — dark and heavy, water locked up
+> in the mineral structure if it's there at all. Not great.
+
+**`standard`:**
+> You can see ice veins in the surface cracks. Dirty, mixed with carbonates,
+> but there's water in there. Workable.
+
+**`promising`:**
+> The 1.5-micron band is lit up. Spectral signature is almost pure H₂O —
+> that blue tint under your work light isn't a trick. That's ice.
+
+### `/mine` enqueue embed
+
+> You suit up and cycle the airlock. The thumper confirms it's solid — one clean
+> thud, vibration through the hull like a bell. You start running the net.
+
+### Mine result embeds (embed `.setDescription()`)
+
+**Grade `black` (hold not full):**
+> Net's in. Mostly slag — silicates and iron oxide with water locked up too deep
+> to be worth anything. You'll get something for it, but not much.
+
+**Grade `dirty` (hold not full):**
+> Net's in. Mixed haul — dark rock with ice veins running through it like
+> cracked glass. Refinery can work with this.
+
+**Grade `blue` (hold not full):**
+> Net's in. *keya*, that's the real thing — nearly pure water ice, almost glows
+> under the work lights. Ceres will pay good for this.
+
+**Any grade, hold full:**
+> Hold's topped off. Head to Ceres or the Outer Belt Refinery to offload.
+
+### Sell result embed (embed `.setDescription()`)
+
+> Cargo offloaded and weighed. Credits transferred. Another run in the books.
+
+---
+
 
 None. All new behaviour fits within existing rules.
 
@@ -64,8 +123,15 @@ None. All new behaviour fits within existing rules.
 2.  arrival at belt      → status: docked
 
 3.  /scan                → SCAN event (mode: 'ice', 2 game hrs)
-4.  scan resolves        → ship.scan_result = { hint, location: 'belt' }
-                           embed: grade hint + estimated quality description
+4.  scan resolves        → ship.scan_result = { hint, location: 'belt', scans: N }
+                           embed: grade hint + grade probability table
+                           (if hint is not yet 'promising', embed notes re-scan is possible)
+
+3b. /scan again          → SCAN event with payload: { ..., currentHint: 'poor'|'standard' }
+4b. scan resolves        → upgrade roll; hint may improve one tier
+                           ship.scan_result updated with new hint and scans: N+1
+                           embed: updated odds table
+                           (if hint === 'promising', command blocks further scans)
 
 5.  /mine                → MINE event (mode: 'ice', 6 game hrs)
 6.  mine resolves        → grade roll using hint
@@ -149,9 +215,13 @@ Branch on `ship.location`:
 - No target option is read or required
 - Duration: `SCAN_ICE_DURATION_GAME_SEC = 2 * 60 * 60` (2 game hours)
   → `SCAN_ICE_DURATION_REAL_SEC = Math.ceil(SCAN_ICE_DURATION_GAME_SEC / TIME_COMPRESSION)` → **1029 real seconds**
-- Enqueue `SCAN` with `payload: { target: 'belt', mode: 'ice' }`
+- Parse `ship.scan_result` if present:
+  - If `hint === 'promising'`: reply with error — "Already at peak signal quality. Save the time and net."
+  - Otherwise: read `currentHint` from the stored result (or `null` if no prior scan)
+- Enqueue `SCAN` with `payload: { target: 'belt', mode: 'ice', currentHint: <string|null> }`
 - `updateShip(ship.id, { status: 'scanning' })`
-- Embed copy: "Passive spectral + lidar sweep underway. Results in [duration]."
+- Embed description: use lore copy from **Lore copy § `/scan` enqueue embeds** matching the case
+             (`initial`, `re-scan`, or `blocked`)
 
 **When `ship.location !== 'belt'`:**
 - Existing behaviour unchanged (target option, existing SCAN event payload, no scan_result written)
@@ -170,8 +240,7 @@ Duration: `MINE_ICE_DURATION_GAME_SEC = 6 * 60 * 60` (6 game hours)
 → `MINE_ICE_DURATION_REAL_SEC = Math.ceil(MINE_ICE_DURATION_GAME_SEC / TIME_COMPRESSION)` → **3086 real seconds**
 
 Payload: `{ location: 'belt', mode: 'ice' }`
-
-Embed copy: "Thumper confirmed. Netting operation underway."
+- Embed description: use lore copy from **Lore copy § `/mine` enqueue embed**
 
 The existing ore-mine branch (ceres, vesta) is **removed**. All mine events from this point
 forward originate at belt and carry `mode: 'ice'`. No fallback ore-mine path.
@@ -184,27 +253,56 @@ Append four new exported functions. Do not change any existing functions.
 
 ---
 
-**`iceScanResult({ scanQuality = 1.0 })`**
+**`iceScanResult({ scanQuality = 1.0, currentHint = null })`**
 
-Returns a grade hint. `scanQuality` shifts probability toward 'promising'.
-Interpolate linearly by `(scanQuality - 1)` clamped to [0, 1].
+**Initial scan** (`currentHint === null`): rolls a hint from scratch.
+`scanQuality` shifts probability toward 'promising'. Interpolate linearly by
+`(scanQuality - 1)` clamped to [0, 1].
 
 | scanQuality | 'poor' | 'standard' | 'promising' |
 |---|---|---|---|
 | 1.0 | 0.25 | 0.55 | 0.20 |
 | 2.0 | 0.15 | 0.40 | 0.45 |
 
+**Re-scan** (`currentHint` is `'poor'` or `'standard'`): rolls for a one-tier upgrade.
+Hint can only improve, never downgrade. `scanQuality` applies the same `t` modifier
+to the upgrade chance.
+
+| currentHint | stays (base) | upgrades one tier (base) |
+|---|---|---|
+| `'poor'` | 0.45 − 0.15×t | 0.55 + 0.15×t → `'standard'` |
+| `'standard'` | 0.50 − 0.20×t | 0.50 + 0.20×t → `'promising'` |
+
+Returns `{ hint, scans, estQuality, gradeOdds }` where `gradeOdds` mirrors
+`GRADE_TABLES[hint]` for display in the embed.
+
 ```js
-export function iceScanResult({ scanQuality = 1.0 }) {
+export function iceScanResult({ scanQuality = 1.0, currentHint = null, scans = 0 }) {
   const t = Math.min(Math.max(scanQuality - 1, 0), 1);
-  const pPoor      = 0.25 - 0.10 * t;
-  const pPromising = 0.20 + 0.25 * t;
-  // pStandard = 1 - pPoor - pPromising
-  const roll = Math.random();
-  const hint = roll < pPoor ? 'poor'
-             : roll < (1 - pPromising) ? 'standard'
-             : 'promising';
-  return { hint, estQuality: SCAN_DESCRIPTIONS[hint] };
+  let hint;
+
+  if (currentHint === null) {
+    // Initial scan
+    const pPoor      = 0.25 - 0.10 * t;
+    const pPromising = 0.20 + 0.25 * t;
+    const roll = Math.random();
+    hint = roll < pPoor ? 'poor'
+         : roll < (1 - pPromising) ? 'standard'
+         : 'promising';
+  } else if (currentHint === 'poor') {
+    hint = Math.random() < (0.55 + 0.15 * t) ? 'standard' : 'poor';
+  } else if (currentHint === 'standard') {
+    hint = Math.random() < (0.50 + 0.20 * t) ? 'promising' : 'standard';
+  } else {
+    hint = currentHint; // 'promising' — already maxed
+  }
+
+  return {
+    hint,
+    scans:      scans + 1,
+    estQuality: SCAN_DESCRIPTIONS[hint],
+    gradeOdds:  GRADE_TABLES[hint],
+  };
 }
 
 const SCAN_DESCRIPTIONS = {
@@ -213,6 +311,9 @@ const SCAN_DESCRIPTIONS = {
   promising: 'Strong H₂O spectral signature. Possible blue ice.',
 };
 ```
+
+The `gradeOdds` array `[pBlack, pDirty, pBlue]` is exposed so the processor can
+build a human-readable odds field in the embed without re-importing `GRADE_TABLES`.
 
 ---
 
@@ -306,21 +407,39 @@ Add a branch at the top, before existing logic:
 ```js
 if (payload.mode === 'ice') {
   const ship  = getShip(event.player_id);
-  const stats = getEffectiveStats(ship);          // from game/ships.js
-  const result = iceScanResult({ scanQuality: stats.scanQuality });
+  const stats = getEffectiveStats(ship);
+
+  // Pick up prior scan state if this is a re-scan
+  const prior     = ship.scan_result ? JSON.parse(ship.scan_result) : null;
+  const prevScans = prior?.scans ?? 0;
+
+  const result = iceScanResult({
+    scanQuality:  stats.scanQuality,
+    currentHint:  payload.currentHint ?? null,
+    scans:        prevScans,
+  });
 
   updateShip(event.ship_id, {
     status:      'docked',
-    scan_result: JSON.stringify({ hint: result.hint, location: 'belt' }),
+    scan_result: JSON.stringify({ hint: result.hint, location: 'belt', scans: result.scans }),
   });
 
+  const [pBlack, pDirty, pBlue] = result.gradeOdds;
+  const oddsStr = `Black ${Math.round(pBlack * 100)}%  ·  Dirty ${Math.round(pDirty * 100)}%  ·  Blue ${Math.round(pBlue * 100)}%`;
+  const rescanNote = result.hint === 'promising'
+    ? 'Peak signal reached. No benefit to scanning again.'
+    : `Scan ${result.scans} complete. Run /scan again to improve your odds.`;
+
+  // description: lore copy from Lore copy § /scan result embeds, keyed by result.hint
   return new EmbedBuilder()
     .setColor(0x9B59B6)
     .setTitle('📡 Belt scan results')
     .setDescription(result.estQuality)
     .addFields(
-      { name: 'Quality hint', value: result.hint,    inline: true },
-      { name: 'Assessment',   value: result.estQuality, inline: true },
+      { name: 'Quality hint', value: result.hint,  inline: true },
+      { name: 'Scans run',    value: `${result.scans}`, inline: true },
+      { name: 'Mine odds',    value: oddsStr,       inline: false },
+      { name: '\u200b',       value: rescanNote,    inline: false },
     )
     .setTimestamp()
     .setFooter({ text: 'Edge of Kuiper' });
@@ -356,13 +475,11 @@ if (payload.mode === 'ice') {
     status:      'docked',
   });
 
+  // description: lore copy from Lore copy § Mine result embeds, keyed by grade + full
   return new EmbedBuilder()
     .setColor(0xF4A736)
     .setTitle('⛏️ Net retrieved — Asteroid Belt')
-    .setDescription(full
-      ? `Hold is **full**. Head to Ceres or the Outer Belt Refinery to sell.`
-      : `Net retrieved. Hold at ${ship.cargo_ore + actual}/${stats.cargoMax}t.`
-    )
+    .setDescription(MINE_LORE[full ? 'full' : grade]) // see Lore copy § Mine result embeds
     .addFields(
       { name: 'Hauled',       value: `${actual}t`,   inline: true },
       { name: 'Ice grade',    value: grade,           inline: true },
@@ -395,6 +512,8 @@ updateShip(event.ship_id, {
   cargo_grade: null,
   status:      'docked',
 });
+
+// description: lore copy from Lore copy § Sell result embed
 ```
 
 Import `icePrice` from `game/outcomes.js`.
@@ -533,15 +652,35 @@ Add to `package.json`: `"test:ice": "node ... src/tests/ice-mining.test.js"`
 
 ---
 
-### `iceScanResult()` — probability calibration
+### `iceScanResult()` — initial scan probability calibration
 
-Run 10 000 iterations with `scanQuality: 1.0`:
+Run 10 000 iterations with `scanQuality: 1.0, currentHint: null`:
 
 | hint | expected p | tolerance |
 |---|---|---|
 | `poor` | 0.25 | ±0.03 |
 | `standard` | 0.55 | ±0.03 |
 | `promising` | 0.20 | ±0.03 |
+
+### `iceScanResult()` — re-scan upgrade calibration
+
+Run 10 000 iterations with `scanQuality: 1.0, currentHint: 'poor'`:
+
+| hint | expected p | tolerance |
+|---|---|---|
+| `standard` (upgraded) | 0.55 | ±0.04 |
+| `poor` (stayed) | 0.45 | ±0.04 |
+
+Run 10 000 iterations with `scanQuality: 1.0, currentHint: 'standard'`:
+
+| hint | expected p | tolerance |
+|---|---|---|
+| `promising` (upgraded) | 0.50 | ±0.04 |
+| `standard` (stayed) | 0.50 | ±0.04 |
+
+Run 1 000 iterations with `currentHint: 'promising'` — result is always `'promising'` (no downgrade).
+
+`scans` counter increments by 1 on every call regardless of outcome (deterministic — assert directly).
 
 ---
 
