@@ -8,7 +8,7 @@
 
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { ensurePlayer, getShip, enqueueEvent, hasActiveEvent } from '../lib/db.js';
-import { BODIES, travelTimeSeconds, formatGameTime, formatRealTime, TIME_COMPRESSION } from '../lib/orbital.js';
+import { BODIES, travelTimeSeconds, formatGameTime, formatRealTime, TIME_COMPRESSION, displayStatus } from '../lib/orbital.js';
 
 export const data = new SlashCommandBuilder()
   .setName('route')
@@ -43,7 +43,7 @@ export async function execute(interaction) {
 
   if (ship.status !== 'docked') {
     return interaction.reply({
-      content: `⚠️ Your ship is currently **${ship.status}**. Wait for current operation to complete.`,
+      content: `⚠️ Your ship is currently **${displayStatus(ship)}**. Wait for current operation to complete.`,
       ephemeral: true,
     });
   }

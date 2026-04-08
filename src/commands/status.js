@@ -4,13 +4,14 @@
 
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { ensurePlayer, getShip, getActiveEvents } from '../lib/db.js';
-import { BODIES, formatRealTime } from '../lib/orbital.js';
+import { BODIES, formatRealTime, displayStatus } from '../lib/orbital.js';
 
 const STATUS_EMOJI = {
-  docked:  '🟢',
-  transit: '🔵',
-  mining:  '🟡',
-  scanning:'🟣',
+  docked:   '🟢',
+  drifting: '🔵',
+  transit:  '🔵',
+  mining:   '🟡',
+  scanning: '🟣',
 };
 
 export const data = new SlashCommandBuilder()
@@ -24,7 +25,8 @@ export async function execute(interaction) {
   if (!ship) return interaction.reply({ content: '❌ No ship found.', ephemeral: true });
 
   const body        = BODIES[ship.location];
-  const statusEmoji = STATUS_EMOJI[ship.status] ?? '⚪';
+  const statusLabel = displayStatus(ship);
+  const statusEmoji = STATUS_EMOJI[statusLabel] ?? '⚪';
   const events      = getActiveEvents(interaction.user.id);
   const now         = Math.floor(Date.now() / 1000);
 
@@ -33,7 +35,7 @@ export async function execute(interaction) {
     .setTitle(`📊 Status — ${ship.name}`)
     .addFields(
       { name: 'Location',  value: body?.name ?? ship.location,                inline: true },
-      { name: 'Status',    value: `${statusEmoji} ${ship.status}`,            inline: true },
+      { name: 'Status',    value: `${statusEmoji} ${statusLabel}`,            inline: true },
       { name: 'Credits',   value: `₡${player.credits.toLocaleString()}`,      inline: true },
       { name: 'Cargo',     value: `${ship.cargo_ore}/${ship.cargo_max}t ore`, inline: true },
     )

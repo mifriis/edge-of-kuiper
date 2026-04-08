@@ -10,11 +10,11 @@ import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { ensurePlayer, getShip, enqueueEvent, hasActiveEvent, updateShip } from '../lib/db.js';
 import { BODIES, formatGameTime, formatRealTime, TIME_COMPRESSION } from '../lib/orbital.js';
 
-// Mining duration in game-seconds → convert to real seconds
-const MINE_DURATION_GAME_SEC = 4 * 60 * 60; // 4 game hours
-const MINE_DURATION_REAL_SEC = Math.ceil(MINE_DURATION_GAME_SEC / TIME_COMPRESSION);
+// Mining duration — belt ice netting (6 game hours)
+const MINE_DURATION_GAME_SEC = 6 * 60 * 60;
+const MINE_DURATION_REAL_SEC = Math.ceil(MINE_DURATION_GAME_SEC / TIME_COMPRESSION); // 3086
 
-const MINABLE = new Set(['ceres', 'vesta']); // expand as you add more rocks
+const MINABLE = new Set(['belt']);
 
 export const data = new SlashCommandBuilder()
   .setName('mine')
@@ -36,7 +36,7 @@ export async function execute(interaction) {
   if (!MINABLE.has(ship.location)) {
     const body = BODIES[ship.location];
     return interaction.reply({
-      content: `⛔ **${body?.name ?? ship.location}** has no minable resources. Head to an asteroid belt.`,
+      content: `⛔ **${body?.name ?? ship.location}** is not a mining zone. Head to the Asteroid Belt.`,
       ephemeral: true,
     });
   }
@@ -59,7 +59,7 @@ export async function execute(interaction) {
     playerId:  interaction.user.id,
     shipId:    ship.id,
     type:      'MINE',
-    payload:   { location: ship.location },
+    payload:   { location: ship.location, mode: 'ice' },
     resolveAt,
   });
 
@@ -69,12 +69,12 @@ export async function execute(interaction) {
     embeds: [
       new EmbedBuilder()
         .setColor(0xF4A736)
-        .setTitle(`⛏️ Mining — ${body.name}`)
-        .setDescription('Extraction underway. You\'ll be notified when the hold is loaded.')
+        .setTitle(`⛏️ Netting operation underway — ${body.name}`)
+        .setDescription('You suit up and cycle the airlock. The thumper confirms it\'s solid — one clean thud, vibration through the hull like a bell. You start running the net.')
         .addFields(
-          { name: 'Duration (game)', value: formatGameTime(MINE_DURATION_REAL_SEC),    inline: true },
-          { name: 'Real ETA',        value: formatRealTime(MINE_DURATION_REAL_SEC),    inline: true },
-          { name: 'Hold',            value: `${ship.cargo_ore}/${ship.cargo_max}t`,    inline: true },
+          { name: 'Duration (game)', value: formatGameTime(MINE_DURATION_REAL_SEC), inline: true },
+          { name: 'Real ETA',        value: formatRealTime(MINE_DURATION_REAL_SEC), inline: true },
+          { name: 'Hold',            value: `${ship.cargo_ore}/${ship.cargo_max}t`, inline: true },
         )
         .setTimestamp()
         .setFooter({ text: 'Edge of Kuiper' }),

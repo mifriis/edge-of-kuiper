@@ -710,7 +710,7 @@ All at `engineSpeed: 1.0`. Values derived from
 
 | from | to | expected real seconds |
 |---|---|---|
-| `mars` | `belt` | 14 516 |
+| `mars` | `belt` | 14 812 (mars dist in BODIES is 1.5; \|2.7−1.5\| × 86400 / 7) |
 | `belt` | `outer_station` | 16 046 |
 | `belt` | `ceres` | 1 235 |
 | `outer_station` | `jupiter` | 14 812 |

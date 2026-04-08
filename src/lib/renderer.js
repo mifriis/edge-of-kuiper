@@ -21,11 +21,24 @@ GlobalFonts.registerFromPath(
   'Inter'
 );
 
-console.log('Font path:', fontPath);
-console.log('Exists:', fs.existsSync(fontPath));
-
 const CANVAS_SIZE = 800;
 const CENTRE      = CANVAS_SIZE / 2;
+
+// ─── LCG helpers for deterministic asteroid belt scatter ───────────────────
+
+function seedFrom(str) {
+  return [...str].reduce((h, c) => (Math.imul(31, h) + c.charCodeAt(0)) | 0, 0x12345678);
+}
+
+function lcgNext(seed, n) {
+  let s = (seed + n * 2654435761) >>> 0;
+  s = Math.imul(s ^ (s >>> 16), 0x45d9f3b);
+  s = Math.imul(s ^ (s >>> 16), 0x45d9f3b);
+  return (s >>> 0) / 0x100000000;
+}
+
+function lcgAngle(seed, n)        { return lcgNext(seed, n * 2) * Math.PI * 2; }
+function lcgRadial(seed, n, band) { return (lcgNext(seed, n * 2 + 1) - 0.5) * 2 * band; }
 
 const COLOR_MAP = {
   Blue:        '#4A9EFF',
@@ -37,6 +50,7 @@ const COLOR_MAP = {
   Magenta:     '#CC44CC',
   DarkBlue:    '#224488',
   DarkMagenta: '#882288',
+  Cyan:        '#44DDDD',
 };
 
 /**
@@ -89,7 +103,29 @@ export async function renderSolarSystem(date, options = {}) {
     const dotX      = CENTRE + orbitR * Math.cos(longitude);
     const dotY      = CENTRE + orbitR * Math.sin(longitude);
 
-    // Dot
+    // ── Zone bodies: scattered-dot ring instead of a single dot ───────────
+    if (body.type === 'Zone') {
+      const seed      = seedFrom(body.name);
+      const DOT_COUNT = 180;
+      const BAND_WIDTH = ringStep * 0.45;
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+      for (let n = 0; n < DOT_COUNT; n++) {
+        const angle  = lcgAngle(seed, n);
+        const radial = lcgRadial(seed, n, BAND_WIDTH);
+        const r      = orbitR + radial;
+        const x      = CENTRE + r * Math.cos(angle);
+        const y      = CENTRE + r * Math.sin(angle);
+        ctx.beginPath();
+        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(204, 204, 204, 0.7)';
+      ctx.fillText(body.name, CENTRE + orbitR + 6, CENTRE - 6);
+      return;
+    }
+
+    // ── Normal body dot ────────────────────────────────────────────────────
     ctx.fillStyle = COLOR_MAP[body.color] ?? '#ffffff';
     ctx.beginPath();
     ctx.arc(dotX, dotY, 10, 0, Math.PI * 2);

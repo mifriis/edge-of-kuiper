@@ -54,6 +54,34 @@
         },
         {
             "position": 5,
+            "name": "Asteroid Belt",
+            "distance": 2.7,
+            "longitudeJ2000": 90.0,
+            "type": "Zone",
+            "color": "Gray",
+            "satellites": [
+                {
+                    "position": 1,
+                    "name": "Ceres",
+                    "distance": 2.77,
+                    "longitudeJ2000": 291.4,
+                    "type": "DwarfPlanet",
+                    "color": "Gray",
+                    "satellites": []
+                }
+            ]
+        },
+        {
+            "position": 6,
+            "name": "Outer Belt Refinery",
+            "distance": 4.0,
+            "longitudeJ2000": 270.0,
+            "type": "Station",
+            "color": "Cyan",
+            "satellites": []
+        },
+        {
+            "position": 7,
             "name": "Jupiter",
             "distance": 5.203,
             "longitudeJ2000": 34.40,
@@ -62,7 +90,7 @@
             "satellites": []
         },
         {
-            "position": 6,
+            "position": 8,
             "name": "Saturn",
             "distance": 9.537,
             "longitudeJ2000": 49.94,
@@ -71,7 +99,7 @@
             "satellites": []
         },
         {
-            "position": 7,
+            "position": 9,
             "name": "Uranus",
             "distance": 19.191,
             "longitudeJ2000": 313.23,
@@ -80,7 +108,7 @@
             "satellites": []
         },
         {
-            "position": 8,
+            "position": 10,
             "name": "Neptune",
             "distance": 30.069,
             "longitudeJ2000": 304.88,
@@ -89,7 +117,7 @@
             "satellites": []
         },
         {
-            "position": 9,
+            "position": 11,
             "name": "Pluto",
             "distance": 39.482,
             "longitudeJ2000": 238.93,

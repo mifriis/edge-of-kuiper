@@ -9,10 +9,12 @@
     "deploy-commands": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/deploy-commands.js",
     "dev": "node --disable-warning=ExperimentalWarning --experimental-sqlite --watch src/index.js",
     "cli": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/cli.js",
-    "test": "node --disable-warning=ExperimentalWarning --experimental-sqlite --test src/tests/*.test.js",
+    "test": "node --disable-warning=ExperimentalWarning --experimental-sqlite --test 'src/tests/orbital.test.js' 'src/tests/renderer.test.js' 'src/tests/ice-mining.test.js'",
     "test:unit": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/orbital.test.js",
     "test:integration": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/transit.integration.test.js",
-    "test:render": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/renderer.test.js"
+    "test:render": "node --disable-warning=ExperimentalWarning --experimental-sqlite src/tests/renderer.test.js",
+    "test:ice": "node --disable-warning=ExperimentalWarning --experimental-sqlite --test src/tests/ice-mining.test.js",
+    "test:cli": "node --disable-warning=ExperimentalWarning --experimental-sqlite --test src/tests/cli.integration.test.js"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.97",

@@ -35,9 +35,11 @@ export const BODIES = {
   earth:   { name: 'Earth',    dist: 1.0,  type: 'planet'   },
   luna:    { name: 'Luna',     dist: 1.03, type: 'moon'     },
   mars:    { name: 'Mars',     dist: 1.5,  type: 'planet'   },
-  ceres:   { name: 'Ceres',    dist: 2.8,  type: 'dwarf'    },
-  vesta:   { name: '4 Vesta',  dist: 2.4,  type: 'asteroid' },
-  jupiter: { name: 'Jupiter',  dist: 5.2,  type: 'planet'   },
+  ceres:         { name: 'Ceres',              dist: 2.8, type: 'dwarf'   },
+  vesta:         { name: '4 Vesta',            dist: 2.4, type: 'asteroid'},
+  belt:          { name: 'Asteroid Belt',      dist: 2.7, type: 'zone'    },
+  outer_station: { name: 'Outer Belt Refinery', dist: 4.0, type: 'station' },
+  jupiter:       { name: 'Jupiter',            dist: 5.2, type: 'planet'  },
   saturn:  { name: 'Saturn',   dist: 9.6,  type: 'planet'   },
   titan:   { name: 'Titan',    dist: 9.65, type: 'moon'     },
 };
@@ -81,8 +83,18 @@ export function formatGameTime(realSeconds) {
 }
 
 /**
- * Real seconds → human-readable real-time string.
+ * Display-friendly status label for a ship.
+ * Ships at zone-type bodies (e.g. the Asteroid Belt) show "drifting"
+ * instead of "docked" — the internal value stays 'docked' everywhere.
+ *
+ * @param {{ status: string, location: string }} ship
+ * @returns {string}
  */
+export function displayStatus(ship) {
+  if (ship.status === 'docked' && BODIES[ship.location]?.type === 'zone') return 'drifting';
+  return ship.status;
+}
+
 export function formatRealTime(realSeconds) {
   const d = Math.floor(realSeconds / 86400);
   const h = Math.floor((realSeconds % 86400) / 3600);

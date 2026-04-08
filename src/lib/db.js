@@ -66,6 +66,10 @@ function migrate(db) {
       created_at  INTEGER NOT NULL DEFAULT (unixepoch())
     );
   `);
+
+  // Idempotent column additions — silently ignored if columns already exist
+  try { db.exec(`ALTER TABLE ships ADD COLUMN cargo_grade TEXT DEFAULT NULL`); } catch {}
+  try { db.exec(`ALTER TABLE ships ADD COLUMN scan_result TEXT DEFAULT NULL`); } catch {}
 }
 
 // ─── Players ───────────────────────────────────────────────────────────────
