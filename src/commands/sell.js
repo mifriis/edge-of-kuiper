@@ -81,5 +81,4 @@ export async function execute(interaction) {
     ],
     ephemeral: true,
   });
-  });
 }
