@@ -66,6 +66,17 @@ Write tests as specified. Expected values must be hardcoded — do not compute t
 the same formula under test. Add new test scripts to `package.json` following the existing
 `test`, `test:unit`, `test:integration` pattern.
 
+### 7. Discord sanity check
+
+After implementing, run through the [Discord command sanity check](../../../DESIGN.md#discord-command-sanity-check) in DESIGN.md before closing the feature:
+
+- Redeploy slash commands (`node src/deploy-commands.js`)
+- Verify all options and choices appear correctly in Discord
+- Walk the happy path, wrong-location path, and busy-ship path manually
+- Let the processor resolve and confirm the notification embed is correct
+
+Tests run against the CLI. Discord has extra constraints (required options, choice lists, deploy lag) that unit tests cannot catch.
+
 ---
 
 ## Layer rules (from DESIGN.md)
