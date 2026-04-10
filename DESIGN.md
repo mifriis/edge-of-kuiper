@@ -41,9 +41,37 @@ These are invariants. Do not violate them, do not work around them.
 
 ---
 
-## Adding things
+## Body representations
 
-**New body:** add to `data/solsystem.json` with `distance` (AU semi-major axis) and `longitudeJ2000` (J2000 ecliptic longitude, degrees). Nothing else changes.
+There are **two independent body maps** in `src/lib/orbital.js`. They serve different purposes and must be kept in sync whenever a new navigable body is added.
+
+| | `BODIES` | `SOLAR_BODIES` |
+|---|---|---|
+| Source | Hardcoded in `orbital.js` | Built at startup from `data/solsystem.json` via `flattenBodies()` |
+| Key | Lowercase game ID (`earth`, `belt`, `outer_station`) | `node.name.toLowerCase()` from JSON (`sol`, `asteroid belt`, …) |
+| `dist` values | Rounded for routing (`mars: 1.5`, not 1.524) | Full semi-major axis AU used for orbital math |
+| Used for | `travelTimeSeconds()`, route validation, all command logic | `getBodyPosition()`, `distanceBetweenBodies()`, renderer |
+| Includes | Navigable bodies only (ships can be *here*) | Every body in the JSON tree, including satellite-only bodies |
+
+**Adding a new navigable body requires updating both:**
+1. `data/solsystem.json` — for the renderer and orbital math (needs `distance`, `longitudeJ2000`)
+2. `BODIES` in `orbital.js` — for routing, travel time, and all game logic (needs `dist`, `type`)
+
+A body in `SOLAR_BODIES` but not `BODIES` will appear on the map but ships cannot travel to it.
+A body in `BODIES` but not `SOLAR_BODIES` can be navigated to but will not appear on the map or in orbital calculations.
+
+**`type` values in `BODIES`** drive display and game rules:
+- `zone` — ships display as *drifting* (not docked); `/scan` runs an ice spectral scan
+- `station` — ships display as *docked*; ice market
+- `planet`, `moon`, `dwarf`, `star` — display as *docked*; `/scan` runs a legacy ore survey
+
+`/scan` always targets `ship.location` — no target option. Sensors don't work at astronomical range.
+
+---
+
+**New body (map/orbital only):** add to `data/solsystem.json` with `distance` (AU semi-major axis) and `longitudeJ2000`.
+
+**New navigable body (ships can travel there):** update *both* `data/solsystem.json` *and* `BODIES` in `orbital.js`. See *Body representations* above for the rules.
 
 **New module:** add to `MODULES` in `game/modules.js` with a `stats` block. Nothing else changes.
 
@@ -93,6 +121,19 @@ Player IDs are arbitrary strings (`TEXT`). Discord sends snowflakes, CLI uses sh
 Never assume format.
 
 Multiple ships per player is supported by the schema. Commands currently use `LIMIT 1`.
+
+---
+
+## Discord command sanity check
+
+After implementing any command (new or modified), manually verify the following in Discord before marking the feature done. Tests run against the CLI; Discord has extra constraints that tests cannot catch.
+
+1. **Deploy commands** — run `node src/deploy-commands.js`. Slash command changes (new options, changed `required`, added/removed choices) are invisible to Discord until redeployed.
+2. **Option visibility** — open the command in Discord and confirm every option and choice appears as expected. Check `required` flags: a required option forces the player to pick *before* submitting, which can block context-driven logic.
+3. **Happy path** — navigate to the correct location, run the command, confirm the embed looks right and the ship status updates.
+4. **Wrong-location path** — run the command from a location it shouldn't work at. Confirm a clear error message (not a generic ❌ Something went wrong).
+5. **Busy ship path** — trigger the command while a scan/mine/transit is active. Confirm it is blocked.
+6. **After resolution** — let the processor resolve the event (or fasttick via CLI). Confirm the Discord notification embed looks right and the ship/cargo state is correct.
 
 ---
 

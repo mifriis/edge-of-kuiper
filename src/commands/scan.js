@@ -1,8 +1,8 @@
 /**
- * /scan — Run a spectral scan on a nearby body.
+ * /scan — Run a spectral scan at your current location.
  *
- * Duration: 1 game hour (real: ~8.5 min).
- * Returns random ore quality intel, resolved by processor.
+ * No target option — sensors only work at short range.
+ * Belt: ice spectral scan (2 game hours). Elsewhere: ore survey (1 game hour).
  */
 
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
@@ -14,19 +14,9 @@ const SCAN_DURATION_REAL_SEC     = Math.ceil(SCAN_DURATION_GAME_SEC / TIME_COMPR
 const SCAN_ICE_DURATION_GAME_SEC = 2 * 60 * 60; // 2 game hours (belt)
 const SCAN_ICE_DURATION_REAL_SEC = Math.ceil(SCAN_ICE_DURATION_GAME_SEC / TIME_COMPRESSION); // 1029
 
-const SCANNABLE = ['ceres', 'vesta', 'mars', 'luna'];
-
 export const data = new SlashCommandBuilder()
   .setName('scan')
-  .setDescription('Run a spectral scan on a nearby body for mining intel')
-  .addStringOption(opt =>
-    opt.setName('target')
-       .setDescription('Body to scan')
-       .setRequired(true)
-       .addChoices(
-         ...SCANNABLE.map(k => ({ name: BODIES[k].name, value: k }))
-       )
-  );
+  .setDescription('Run a spectral scan at your current location');
 
 export async function execute(interaction) {
   ensurePlayer(interaction.user.id, interaction.user.username);
@@ -91,16 +81,16 @@ export async function execute(interaction) {
     });
   }
 
-  // ── Non-belt scan (existing behaviour) ─────────────────────────────────
-  const target    = interaction.options.getString('target');
-  const resolveAt = Math.floor(Date.now() / 1000) + SCAN_DURATION_REAL_SEC;
-  const targetBody = BODIES[target];
+  // ── Non-belt scan ───────────────────────────────────────────────────────
+  const target     = ship.location;
+  const targetBody = BODIES[target] ?? { name: target };
+  const resolveAt  = Math.floor(Date.now() / 1000) + SCAN_DURATION_REAL_SEC;
 
   enqueueEvent({
     playerId:  interaction.user.id,
     shipId:    ship.id,
     type:      'SCAN',
-    payload:   { target },
+    payload:   { target: ship.location },
     resolveAt,
   });
 
